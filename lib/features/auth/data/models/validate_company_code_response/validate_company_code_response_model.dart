@@ -15,7 +15,7 @@ class ValidateCompanyCodeResponseModel {
     return ValidateCompanyCodeResponseModel(
       status: json['Status'] as int? ?? 0,
       message: json['Message'] as String? ?? "",
-      companyDetailList: (json['CompanyDetailList'] as List<dynamic>? ?? [])
+      companyDetailList: (json['CompanyDetails'] as List<dynamic>? ?? [])
           .map((e) => CompanyDetailsModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );

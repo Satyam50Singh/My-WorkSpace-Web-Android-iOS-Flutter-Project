@@ -4,7 +4,9 @@ import 'package:my_worksphere_web/features/auth/presentation/widgets/company_log
 import '../../../../core/theme/app_colors.dart';
 
 class UserLoginPage extends StatefulWidget {
-  const UserLoginPage({super.key});
+  final String? companyId;
+
+  const UserLoginPage({super.key, required this.companyId});
 
   @override
   State<UserLoginPage> createState() => _UserLoginPageState();
@@ -16,6 +18,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
   String? _username;
   String? _password;
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    debugPrint('CompanyId: ${widget.companyId}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

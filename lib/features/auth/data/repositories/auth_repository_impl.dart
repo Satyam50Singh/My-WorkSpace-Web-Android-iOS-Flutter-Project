@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/company.dart';
 import 'package:my_worksphere_web/features/auth/domain/repositories/auth_repository.dart';
@@ -17,11 +16,11 @@ class AuthRepositoryImpl implements AuthRepository {
     required String companyCode,
   }) async {
     try {
-      final response = remoteDataSource.validateCompanyCode(
+      final response = await remoteDataSource.validateCompanyCode(
         companyCode: companyCode,
       );
 
-      return Right(response as Company);
+      return Right(response.companyDetailList.first);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     }

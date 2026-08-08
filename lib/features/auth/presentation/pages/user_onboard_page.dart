@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/auth_bloc.dart';
 import 'package:my_worksphere_web/features/auth/presentation/widgets/company_logo_web_card.dart';
+
+import '../../../../core/routes/app_routes.dart';
 
 class UserOnboardPage extends StatefulWidget {
   const UserOnboardPage({super.key});
@@ -28,85 +31,112 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (!isMobile) CompanyLogoWebCard(),
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 600,
-                        minHeight: 400,
-                      ),
-                      child: Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Company Code',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Form(
-                                key: _formKey,
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      onChanged: (value) {
-                                        _companyCode = value;
-                                      },
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please enter company code';
-                                        }
-                                        return null;
-                                      },
-                                      textInputAction: TextInputAction.next,
-                                      decoration: InputDecoration(
-                                        hoverColor: Colors.transparent,
-                                        prefixIcon: Icon(Icons.business),
-                                        hint: Text('Enter Company Code'),
-                                        label: Text('Company Code'),
-                                      ),
-                                      autofillHints: null,
+                BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthLoading) {
+                      // show loading indicator
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Center(child: CircularProgressIndicator());
+                        },
+                      );
+                    } else if (state is AuthFailure) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.errorMessage)),
+                      );
+                    } else if (state is ValidatedCompanyCodeSuccess) {
+                      Navigator.of(context).pop();
+                      context.goNamed(AppRoutes.login, pathParameters: {
+                        'companyId': state.companyDetails.companyId.toString() ?? '',
+                      });
+                    }
+                  },
+                  builder: (context, state) {
+                    return Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 600,
+                            minHeight: 400,
+                          ),
+                          child: Card(
+                            elevation: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Company Code',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primary,
                                     ),
-                                    SizedBox(height: 16),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: 48,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            // Will Integrate an API here...
+                                  ),
+                                  SizedBox(height: 20),
+                                  Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                          onChanged: (value) {
+                                            _companyCode = value;
+                                          },
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Please enter company code';
+                                            }
+                                            return null;
+                                          },
+                                          textInputAction: TextInputAction.next,
+                                          decoration: InputDecoration(
+                                            hoverColor: Colors.transparent,
+                                            prefixIcon: Icon(Icons.business),
+                                            hint: Text('Enter Company Code'),
+                                            label: Text('Company Code'),
+                                          ),
+                                          autofillHints: null,
+                                        ),
+                                        SizedBox(height: 16),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 48,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                // Will Integrate an API here...
 
-                                            context.read<AuthBloc>().add(
-                                              ValidateCompanyCodeRequested(
-                                                companyCode: _companyCode ?? "",
-                                              ),
-                                            );
+                                                context.read<AuthBloc>().add(
+                                                  ValidateCompanyCodeRequested(
+                                                    companyCode:
+                                                        _companyCode ?? "",
+                                                  ),
+                                                );
 
-                                            // context.go(AppRoutes.login);
-                                          }
-                                        },
-                                        child: Text('Submit'),
-                                      ),
+                                                // context.go(AppRoutes.login);
+                                              }
+                                            },
+                                            child: Text('Submit'),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),
