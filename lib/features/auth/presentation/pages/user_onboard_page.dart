@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
+import 'package:my_worksphere_web/features/auth/presentation/widgets/company_logo_web_card.dart';
+
+import '../../../../core/routes/app_routes.dart';
 
 class UserOnboardPage extends StatefulWidget {
   const UserOnboardPage({super.key});
@@ -10,9 +14,7 @@ class UserOnboardPage extends StatefulWidget {
 
 class _UserOnboardPageState extends State<UserOnboardPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _username;
-  String? _password;
-  bool _obscurePassword = true;
+  String? _companyCode;
 
   @override
   Widget build(BuildContext context) {
@@ -26,41 +28,7 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (!isMobile)
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.local_mall,
-                          size: 48,
-                          color: AppColors.primary,
-                        ),
-                        Text(
-                          'Work Sphere',
-                          style: TextStyle(
-                            color: AppColors.primaryDark,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 36,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'Streamline mall operations \n— tasks, tickets, and checklists in one place',
-                            maxLines: 3,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                if (!isMobile) CompanyLogoWebCard(),
                 Expanded(
                   flex: 1,
                   child: Center(
@@ -78,20 +46,11 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Welcome back',
+                                'Company Code',
                                 style: TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primary,
-                                ),
-                              ),
-                              Text(
-                                'Sign in to your Account',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textSecondary,
                                 ),
                               ),
                               SizedBox(height: 20),
@@ -101,56 +60,22 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                                   children: [
                                     TextFormField(
                                       onChanged: (value) {
-                                        _username = value;
+                                        _companyCode = value;
                                       },
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Please enter username';
+                                          return 'Please enter company code';
                                         }
                                         return null;
                                       },
                                       textInputAction: TextInputAction.next,
                                       decoration: InputDecoration(
                                         hoverColor: Colors.transparent,
-                                        prefixIcon: Icon(Icons.person_outline),
-                                        hint: Text('Enter User name'),
-                                        label: Text('User name'),
+                                        prefixIcon: Icon(Icons.business),
+                                        hint: Text('Enter Company Code'),
+                                        label: Text('Company Code'),
                                       ),
                                       autofillHints: null,
-                                    ),
-                                    SizedBox(height: 10),
-                                    TextFormField(
-                                      autofillHints: null,
-                                      onChanged: (value) {
-                                        _password = value;
-                                      },
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please enter password';
-                                        }
-                                        return null;
-                                      },
-                                      textInputAction: TextInputAction.done,
-                                      decoration: InputDecoration(
-                                        hoverColor: Colors.transparent,
-                                        prefixIcon: Icon(Icons.lock_outline),
-                                        hint: Text('Enter Password'),
-                                        label: Text('Password'),
-                                        suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _obscurePassword =
-                                                  !_obscurePassword;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            _obscurePassword
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
-                                          ),
-                                        ),
-                                      ),
-                                      obscureText: _obscurePassword,
                                     ),
                                     SizedBox(height: 16),
                                     SizedBox(
@@ -160,18 +85,11 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                                         onPressed: () {
                                           if (_formKey.currentState!
                                               .validate()) {
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'Will Coming soon',
-                                                ),
-                                              ),
-                                            );
+                                            // Will Integrate an API here...
+                                            context.go(AppRoutes.login);
                                           }
                                         },
-                                        child: Text('Sign In'),
+                                        child: Text('Submit'),
                                       ),
                                     ),
                                   ],
