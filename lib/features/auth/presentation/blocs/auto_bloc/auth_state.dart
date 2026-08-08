@@ -12,6 +12,13 @@ final class AuthFailure extends AuthState {
   AuthFailure(this.errorMessage);
 }
 
-final class ValidatedCompanyCodeSuccess extends AuthState {}
+final class ValidatedCompanyCodeSuccess extends AuthState {
+  final Company companyDetails;
+
+  ValidatedCompanyCodeSuccess(this.companyDetails);
+
+  @override
+  List<Object> get props => [companyDetails];
+}
 
 final class UserLoginSuccess extends AuthState {}

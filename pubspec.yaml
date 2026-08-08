@@ -26,6 +26,7 @@ dependencies:
   cached_network_image: ^3.4.1
   logger: ^2.7.0
   google_fonts: ^8.2.1
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
