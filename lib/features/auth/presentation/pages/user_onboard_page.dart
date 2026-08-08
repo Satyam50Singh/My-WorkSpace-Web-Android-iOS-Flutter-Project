@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
+import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/auth_bloc.dart';
 import 'package:my_worksphere_web/features/auth/presentation/widgets/company_logo_web_card.dart';
-
-import '../../../../core/routes/app_routes.dart';
 
 class UserOnboardPage extends StatefulWidget {
   const UserOnboardPage({super.key});
@@ -86,7 +85,14 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             // Will Integrate an API here...
-                                            context.go(AppRoutes.login);
+
+                                            context.read<AuthBloc>().add(
+                                              ValidateCompanyCodeRequested(
+                                                companyCode: _companyCode ?? "",
+                                              ),
+                                            );
+
+                                            // context.go(AppRoutes.login);
                                           }
                                         },
                                         child: Text('Submit'),
