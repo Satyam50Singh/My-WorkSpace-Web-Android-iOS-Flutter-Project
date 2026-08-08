@@ -44,13 +44,22 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                     } else if (state is AuthFailure) {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.errorMessage)),
+                        SnackBar(
+                          content: Text(state.errorMessage),
+                          backgroundColor: AppColors.primary,
+                          showCloseIcon: true,
+                          closeIconColor: AppColors.background,
+                        ),
                       );
                     } else if (state is ValidatedCompanyCodeSuccess) {
                       Navigator.of(context).pop();
-                      context.goNamed(AppRoutes.login, pathParameters: {
-                        'companyId': state.companyDetails.companyId.toString() ?? '',
-                      });
+                      context.goNamed(
+                        AppRoutes.login,
+                        pathParameters: {
+                          'companyId':
+                              state.companyDetails.companyId.toString() ?? '',
+                        },
+                      );
                     }
                   },
                   builder: (context, state) {
