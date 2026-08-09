@@ -4,10 +4,16 @@ import 'package:my_worksphere_web/features/auth/data/models/validate_company_cod
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_endpoints.dart';
+import '../models/employee_login/employee_login_response_model.dart';
+import '../models/employee_login/employee_user_request.dart';
 
 abstract class AuthRemoteDataSource {
   Future<ValidateCompanyCodeResponseModel> validateCompanyCode({
     required String companyCode,
+  });
+
+  Future<EmployerLoginResponseModel> employeeLogin({
+    required EmployeeUserRequest employeeUserRequest,
   });
 }
 
@@ -26,6 +32,27 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
         queryParameters: {"CompanyCode": companyCode},
       );
       return ValidateCompanyCodeResponseModel.fromJson(json);
+    } on DioException catch (e) {
+      throw ServerException(message: e.message ?? "Something went wrong!");
+    }
+  }
+
+  @override
+  Future<EmployerLoginResponseModel> employeeLogin({
+    required EmployeeUserRequest employeeUserRequest,
+  }) async {
+    try {
+      final json = await apiClient.get(
+        ApiEndpoints.employeeLogin,
+        queryParameters: {
+          "UserName": employeeUserRequest.username,
+          "Password": employeeUserRequest.password,
+          "UserType": employeeUserRequest.userType,
+          "CompanyID": employeeUserRequest.companyId,
+        },
+      );
+
+      return EmployerLoginResponseModel.fromJson(json);
     } on DioException catch (e) {
       throw ServerException(message: e.message ?? "Something went wrong!");
     }

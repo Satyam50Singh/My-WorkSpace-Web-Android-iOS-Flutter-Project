@@ -17,8 +17,13 @@ final class ValidatedCompanyCodeSuccess extends AuthState {
 
   ValidatedCompanyCodeSuccess(this.companyDetails);
 
-  @override
   List<Object> get props => [companyDetails];
 }
 
-final class UserLoginSuccess extends AuthState {}
+final class EmployeeLoginSuccess extends AuthState {
+  final User userDetails;
+
+  EmployeeLoginSuccess(this.userDetails);
+
+  List<Object> get props => [userDetails];
+}

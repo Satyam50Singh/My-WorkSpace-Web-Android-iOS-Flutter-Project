@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:my_worksphere_web/core/network/api_endpoints.dart';
 import 'package:my_worksphere_web/core/network/logging_interceptor.dart';
 import 'package:my_worksphere_web/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:my_worksphere_web/features/auth/domain/usecases/employee_login_usecase.dart';
 import 'package:my_worksphere_web/features/auth/domain/usecases/validate_company_code_usecase.dart';
 import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/auth_bloc.dart';
 
@@ -41,7 +42,10 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<ValidateCompanyCodeUseCase>(
     () => ValidateCompanyCodeUseCase(sl()),
   );
+  sl.registerLazySingleton<EmployeeLoginUseCase>(
+    () => EmployeeLoginUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
-  sl.registerFactory(() => AuthBloc(sl()));
+  sl.registerFactory(() => AuthBloc(sl(), sl()));
 }

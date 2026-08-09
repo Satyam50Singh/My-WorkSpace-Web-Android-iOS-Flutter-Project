@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 
 import '../../features/auth/presentation/pages/user_login_page.dart';
 import '../../features/auth/presentation/pages/user_onboard_page.dart';
@@ -19,6 +20,13 @@ class AppRouter {
         builder: (context, state) {
           final companyId = state.pathParameters['companyId'];
           return UserLoginPage(companyId: companyId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.dashboardPath,
+        name: AppRoutes.dashboard,
+        builder: (context, state) {
+          return EmployeeDashboard();
         },
       ),
     ],

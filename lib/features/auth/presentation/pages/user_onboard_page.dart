@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
+import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/auth_bloc.dart';
 import 'package:my_worksphere_web/features/auth/presentation/widgets/company_logo_web_card.dart';
 
 import '../../../../core/routes/app_routes.dart';
+import '../../../../core/utils/loader_utils.dart';
 
 class UserOnboardPage extends StatefulWidget {
   const UserOnboardPage({super.key});
@@ -34,28 +36,12 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state is AuthLoading) {
-                      // show loading indicator
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Center(child: CircularProgressIndicator());
-                        },
-                      );
+                      LoaderUtils.showLoader(context);
                     } else if (state is AuthFailure) {
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.errorMessage),
-                          backgroundColor: AppColors.primary,
-                          showCloseIcon: true,
-                          closeIconColor: AppColors.background,
-                          behavior: SnackBarBehavior.floating,
-                          margin: const EdgeInsets.only(
-                            bottom: 20,
-                            left: 16,
-                            right: 16,
-                          ),
-                        ),
+                      SnackBarUtils.showErrorSnackBar(
+                        context,
+                        state.errorMessage,
                       );
                     } else if (state is ValidatedCompanyCodeSuccess) {
                       Navigator.of(context).pop();
