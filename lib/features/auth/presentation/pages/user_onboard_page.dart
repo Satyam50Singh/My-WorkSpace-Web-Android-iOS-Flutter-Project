@@ -49,6 +49,12 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                           backgroundColor: AppColors.primary,
                           showCloseIcon: true,
                           closeIconColor: AppColors.background,
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.only(
+                            bottom: 20,
+                            left: 16,
+                            right: 16,
+                          ),
                         ),
                       );
                     } else if (state is ValidatedCompanyCodeSuccess) {
