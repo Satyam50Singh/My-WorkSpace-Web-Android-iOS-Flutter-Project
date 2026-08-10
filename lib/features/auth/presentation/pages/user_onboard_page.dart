@@ -48,8 +48,8 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                       context.goNamed(
                         AppRoutes.login,
                         pathParameters: {
-                          'companyId':
-                              state.companyDetails.companyId.toString() ?? '',
+                          'companyId': state.companyDetails.companyId
+                              .toString(),
                         },
                       );
                     }

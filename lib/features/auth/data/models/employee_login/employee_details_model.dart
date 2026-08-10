@@ -41,6 +41,26 @@ class EmployeeDetailsModel extends EmployeeDetail {
     );
   }
 
+  factory EmployeeDetailsModel.fromEntity(EmployeeDetail employeeDetail) {
+    return EmployeeDetailsModel(
+      userID: employeeDetail.userID,
+      username: employeeDetail.username,
+      fullName: employeeDetail.fullName,
+      rollCd: employeeDetail.rollCd,
+      empCd: employeeDetail.empCd,
+      profilePic: employeeDetail.profilePic,
+      departmentID: employeeDetail.departmentID,
+      roleName: employeeDetail.roleName,
+      isFirstLogin: employeeDetail.isFirstLogin,
+      isRequestToDelete: employeeDetail.isRequestToDelete,
+      isHOD: employeeDetail.isHOD,
+      hODOfDepartment: employeeDetail.hODOfDepartment,
+      moduleAccess: employeeDetail.moduleAccess
+          ?.map((e) => ModuleAccessModel.fromEntity(e))
+          .toList(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'UserID': userID,
@@ -55,8 +75,8 @@ class EmployeeDetailsModel extends EmployeeDetail {
       'Is_Request_To_Delete': isRequestToDelete,
       'Is_HOD': isHOD,
       'HOD_Of_Department': hODOfDepartment,
-      'Module_Access': (moduleAccess as List<ModuleAccessModel>?)
-          ?.map((e) => e.toJson())
+      'Module_Access': moduleAccess
+          ?.map((e) => (e as ModuleAccessModel).toJson())
           .toList(),
     };
   }
@@ -64,6 +84,16 @@ class EmployeeDetailsModel extends EmployeeDetail {
 
 class ModuleAccessModel extends ModuleAccess {
   ModuleAccessModel({super.moduleID, super.moduleName, super.subModules});
+
+  factory ModuleAccessModel.fromEntity(ModuleAccess moduleAccess) {
+    return ModuleAccessModel(
+      moduleID: moduleAccess.moduleID,
+      moduleName: moduleAccess.moduleName,
+      subModules: moduleAccess.subModules
+          ?.map((e) => SubModulesModel.fromEntity(e))
+          .toList(),
+    );
+  }
 
   factory ModuleAccessModel.fromJson(Map<String, dynamic> json) {
     return ModuleAccessModel(
@@ -81,8 +111,8 @@ class ModuleAccessModel extends ModuleAccess {
     return {
       'ModuleID': moduleID,
       'ModuleName': moduleName,
-      'Sub_Modules': (subModules as List<SubModulesModel>?)
-          ?.map((e) => e.toJson())
+      'Sub_Modules': subModules
+          ?.map((e) => (e as SubModulesModel).toJson())
           .toList(),
     };
   }
@@ -90,6 +120,15 @@ class ModuleAccessModel extends ModuleAccess {
 
 class SubModulesModel extends SubModules {
   SubModulesModel({super.menuID, super.menu, super.menuKey, super.route});
+
+  factory SubModulesModel.fromEntity(SubModules subModules) {
+    return SubModulesModel(
+      menuID: subModules.menuID,
+      menu: subModules.menu,
+      menuKey: subModules.menuKey,
+      route: subModules.route,
+    );
+  }
 
   factory SubModulesModel.fromJson(Map<String, dynamic> json) {
     return SubModulesModel(

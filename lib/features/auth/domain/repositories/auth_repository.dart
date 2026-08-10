@@ -13,4 +13,10 @@ abstract class AuthRepository {
   Future<Either<Failure, EmployeeDetail>> employeeLogin({
     required EmployeeUserRequest employeeUserRequest,
   });
+
+  Future<EmployeeDetail?> getCachedEmployeeDetails();
+
+  Future<void> saveEmployeeDetails(EmployeeDetail employeeDetail);
+
+  Future<void> clearEmployeeDetails();
 }

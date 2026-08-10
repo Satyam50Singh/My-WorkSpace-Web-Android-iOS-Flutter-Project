@@ -21,9 +21,9 @@ final class ValidatedCompanyCodeSuccess extends AuthState {
 }
 
 final class EmployeeLoginSuccess extends AuthState {
-  final EmployeeDetail userDetails;
+  final EmployeeDetail employeeDetails;
 
-  EmployeeLoginSuccess(this.userDetails);
+  EmployeeLoginSuccess(this.employeeDetails);
 
-  List<Object> get props => [userDetails];
+  List<Object> get props => [employeeDetails];
 }

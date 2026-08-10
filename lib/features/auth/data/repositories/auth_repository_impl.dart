@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
+import 'package:my_worksphere_web/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:my_worksphere_web/features/auth/data/models/employee_login/employee_details_model.dart';
 import 'package:my_worksphere_web/features/auth/data/models/employee_login/employee_user_request.dart';
-import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/company.dart';
+import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 import 'package:my_worksphere_web/features/auth/domain/repositories/auth_repository.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -10,8 +12,9 @@ import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl(this.remoteDataSource);
+  AuthRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
   @override
   Future<Either<Failure, Company>> validateCompanyCode({
@@ -61,5 +64,22 @@ class AuthRepositoryImpl implements AuthRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     }
+  }
+
+  @override
+  Future<void> clearEmployeeDetails() {
+    return localDataSource.clearEmployeeDetails();
+  }
+
+  @override
+  Future<EmployeeDetail?> getCachedEmployeeDetails() {
+    return localDataSource.getCachedEmployeeDetails();
+  }
+
+  @override
+  Future<void> saveEmployeeDetails(EmployeeDetail employeeDetail) {
+    return localDataSource.saveEmployeeDetails(
+      EmployeeDetailsModel.fromEntity(employeeDetail),
+    );
   }
 }

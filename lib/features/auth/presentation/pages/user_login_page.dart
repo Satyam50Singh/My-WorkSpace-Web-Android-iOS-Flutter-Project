@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../blocs/auto_bloc/auth_bloc.dart';
+import '../cubit/employee_detail_cubit.dart';
 
 class UserLoginPage extends StatefulWidget {
   final String? companyId;
@@ -57,6 +58,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       );
                     } else if (state is EmployeeLoginSuccess) {
                       Navigator.of(context).pop();
+                      context.read<EmployeeDetailCubit>().saveEmployeeDetails(
+                        state.employeeDetails,
+                      );
                       context.goNamed(AppRoutes.dashboard);
                     }
                   },
