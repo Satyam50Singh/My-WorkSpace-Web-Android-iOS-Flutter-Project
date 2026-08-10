@@ -1,6 +1,6 @@
-import '../../../domain/entities/user.dart';
+import '../../../domain/entities/employee_detail.dart';
 
-class EmployeeDetailsModel extends User {
+class EmployeeDetailsModel extends EmployeeDetail {
   EmployeeDetailsModel({
     super.userID,
     super.username,

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/auth/data/models/employee_login/employee_user_request.dart';
-import 'package:my_worksphere_web/features/auth/domain/entities/user.dart';
+import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/company.dart';
 import 'package:my_worksphere_web/features/auth/domain/repositories/auth_repository.dart';
 
@@ -39,7 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> employeeLogin({
+  Future<Either<Failure, EmployeeDetail>> employeeLogin({
     required EmployeeUserRequest employeeUserRequest,
   }) async {
     try {

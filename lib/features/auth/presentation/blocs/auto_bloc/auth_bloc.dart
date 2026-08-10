@@ -5,7 +5,7 @@ import 'package:my_worksphere_web/features/auth/domain/entities/company.dart';
 import 'package:my_worksphere_web/features/auth/domain/usecases/validate_company_code_usecase.dart';
 
 import '../../../data/models/employee_login/employee_user_request.dart';
-import '../../../domain/entities/user.dart';
+import '../../../domain/entities/employee_detail.dart';
 import '../../../domain/usecases/employee_login_usecase.dart';
 
 part 'auth_event.dart';

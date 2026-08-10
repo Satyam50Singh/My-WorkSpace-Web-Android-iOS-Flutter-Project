@@ -1,4 +1,4 @@
-class User {
+class EmployeeDetail {
   final int? userID;
   final String? username;
   final String? fullName;
@@ -13,7 +13,7 @@ class User {
   final String? hODOfDepartment;
   final List<ModuleAccess>? moduleAccess;
 
-  const User({
+  const EmployeeDetail({
     this.userID,
     this.username,
     this.fullName,

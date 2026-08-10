@@ -21,7 +21,7 @@ final class ValidatedCompanyCodeSuccess extends AuthState {
 }
 
 final class EmployeeLoginSuccess extends AuthState {
-  final User userDetails;
+  final EmployeeDetail userDetails;
 
   EmployeeLoginSuccess(this.userDetails);
 

@@ -3,14 +3,14 @@ import 'package:my_worksphere_web/features/auth/domain/repositories/auth_reposit
 
 import '../../../../core/error/failures.dart';
 import '../../data/models/employee_login/employee_user_request.dart';
-import '../entities/user.dart';
+import '../entities/employee_detail.dart';
 
 class EmployeeLoginUseCase {
   final AuthRepository _repository;
 
   EmployeeLoginUseCase(this._repository);
 
-  Future<Either<Failure, User>> call({
+  Future<Either<Failure, EmployeeDetail>> call({
     required EmployeeUserRequest employeeUserRequest,
   }) {
     return _repository.employeeLogin(employeeUserRequest: employeeUserRequest);
