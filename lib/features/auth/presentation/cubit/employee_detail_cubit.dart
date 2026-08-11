@@ -17,7 +17,7 @@ class EmployeeDetailCubit extends Cubit<EmployeeDetailState> {
     emit(
       cached != null
           ? EmployeeDetailFetched(employeeDetail: cached)
-          : EmployeeDetailInitial(),
+          : EmployeeDetailCleared(),
     );
   }
 

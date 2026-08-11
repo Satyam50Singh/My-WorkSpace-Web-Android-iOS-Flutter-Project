@@ -5,7 +5,7 @@ import '../theme/app_colors.dart';
 class SnackBarUtils {
   SnackBarUtils._();
 
-  static void showErrorSnackBar(BuildContext context, String message) {
+  static void showFloatingSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),

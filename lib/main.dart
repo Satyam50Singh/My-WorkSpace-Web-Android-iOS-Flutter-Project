@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: AppBlocProviders.providers,
       child: MaterialApp.router(
         title: 'WorkSphere',
+        debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,

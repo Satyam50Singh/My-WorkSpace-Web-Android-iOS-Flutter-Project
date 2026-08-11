@@ -39,7 +39,7 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                       LoaderUtils.showLoader(context);
                     } else if (state is AuthFailure) {
                       Navigator.of(context).pop();
-                      SnackBarUtils.showErrorSnackBar(
+                      SnackBarUtils.showFloatingSnackBar(
                         context,
                         state.errorMessage,
                       );

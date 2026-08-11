@@ -52,7 +52,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       LoaderUtils.showLoader(context);
                     } else if (state is AuthFailure) {
                       Navigator.of(context).pop();
-                      SnackBarUtils.showErrorSnackBar(
+                      SnackBarUtils.showFloatingSnackBar(
                         context,
                         state.errorMessage,
                       );
