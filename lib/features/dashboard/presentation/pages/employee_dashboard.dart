@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
+import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -17,8 +18,13 @@ class EmployeeDashboard extends StatefulWidget {
 class _EmployeeDashboardState extends State<EmployeeDashboard> {
   @override
   Widget build(BuildContext buildContext) {
-    final isMobile = MediaQuery.sizeOf(buildContext).width < 600;
-    final isMini = MediaQuery.sizeOf(buildContext).width < 300;
+    final width = MediaQuery.sizeOf(context).width;
+
+    final isMini = width < 360;
+    final isMobile = width < 600;
+    final isTablet = width >= 600 && width < 1024;
+    final isDesktop = width >= 1024;
+    final isWeb = isDesktop || isTablet;
 
     return BlocConsumer<EmployeeDetailCubit, EmployeeDetailState>(
       listener: (context, state) {
@@ -33,61 +39,22 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           );
         }
         if (state is EmployeeDetailFetched) {
+          final EmployeeDetail employeeDetail = state.employeeDetail;
+
           return Scaffold(
-            appBar: isMobile || isMini
-                ? AppBar(
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            InkWell(
-                              child: Icon(Icons.notifications),
-                              onTap: () {
-                                SnackBarUtils.showFloatingSnackBar(
-                                  context,
-                                  "Will soon",
-                                );
-                              },
-                            ),
-                            SizedBox(width: 10),
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              child: CircleAvatar(
-                                radius: 16,
-                                child: Icon(Icons.person, size: 16),
-                              ),
-                              onTap: () {
-                                // will go to profile screen
-                                SnackBarUtils.showFloatingSnackBar(
-                                  context,
-                                  "Will soon",
-                                );
-                              },
-                            ),
-                            SizedBox(width: 10),
-                            InkWell(
-                              child: Icon(Icons.more_vert),
-                              onTap: () {
-                                // will go to profile screen
-                                SnackBarUtils.showFloatingSnackBar(
-                                  context,
-                                  "Will soon",
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
+            appBar: isMobile || isMini ? _buildAppBar() : null,
+            drawer: isMobile || isMini
+                ? Drawer(child: _buildDrawer(employeeDetail: employeeDetail))
                 : null,
-            drawer: isMobile || isMini ? Drawer(child: _buildDrawer()) : null,
             body: SafeArea(
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  if (!isMobile) SizedBox(width: 280, child: _buildDrawer()),
+                  if (isWeb)
+                    SizedBox(
+                      width: 280,
+                      child: _buildDrawer(employeeDetail: employeeDetail),
+                    ),
                   Expanded(
                     child: Column(
                       children: [
@@ -118,70 +85,206 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     );
   }
 
-  Widget _buildDrawer() {
+  Widget _buildDrawer({EmployeeDetail? employeeDetail}) {
+    if (employeeDetail == null) {
+      return const SizedBox();
+    }
+
+    final List<ModuleAccess> moduleAccess = employeeDetail.moduleAccess ?? [];
+
+    final List<DrawerMenuItems> menuItems = [];
+
+    for (final module in moduleAccess) {
+      final List<SubMenuItems> subItems = [];
+
+      for (final subModule in module.subModules ?? []) {
+        subItems.add(
+          SubMenuItems(
+            title: subModule.menu ?? '',
+            icon: Icons.arrow_right,
+            route: subModule.route ?? '',
+            isDivider: false,
+          ),
+        );
+      }
+
+      menuItems.add(
+        DrawerMenuItems(
+          title: module.moduleName ?? '',
+          icon: _getModuleIcon(module.moduleName),
+          route: '',
+          isDivider: false,
+          subItems: subItems,
+        ),
+      );
+    }
+
     return Column(
       children: [
-        Column(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                border: Border(
-                  bottom: BorderSide(color: AppColors.white, width: 0),
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            border: Border(
+              bottom: BorderSide(color: AppColors.white, width: 0),
+            ),
+          ),
+          child: Column(
+            children: [
+              Center(
+                child: Icon(Icons.local_mall, size: 48, color: AppColors.white),
+              ),
+              Text(
+                'Work Sphere',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 36,
                 ),
               ),
-              child: Column(
-                children: [
-                  Center(
-                    child: Icon(
-                      Icons.local_mall,
-                      size: 48,
-                      color: AppColors.white,
+              Text(
+                'Streamline mall operations',
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.white, fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+
+        if (moduleAccess.isNotEmpty)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ListView.builder(
+                itemCount: menuItems.length,
+                itemBuilder: (context, index) {
+                  final item = menuItems[index];
+
+                  if (menuItems[index].subItems.isNotEmpty) {
+                    return ExpansionTile(
+                      title: Text(
+                        menuItems[index].title ?? "",
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      leading: Icon(
+                        menuItems[index].icon,
+                        color: AppColors.primaryDark,
+                      ),
+                      trailing: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: AppColors.primaryDark,
+                      ),
+                      children: item.subItems.map((subItem) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            left: 28.0,
+                            top: 0,
+                            bottom: 0,
+                          ),
+                          child: ListTile(
+                            horizontalTitleGap: 4,
+                            title: Text(
+                              subItem.title ?? "",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }
+
+                  return ListTile(
+                    leading: Icon(
+                      menuItems[index].icon,
+                      color: AppColors.primaryDark,
                     ),
-                  ),
-                  Text(
-                    'Work Sphere',
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 36,
+                    title: Text(
+                      menuItems[index].title ?? "",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Streamline mall operations',
-                    maxLines: 3,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.white, fontSize: 14),
-                  ),
-                ],
+                    trailing: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.primaryDark,
+                    ),
+                    onTap: () {},
+                  );
+                },
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
+          ),
+
+        Divider(color: AppColors.border, thickness: 1),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ListTile(
+            leading: Icon(Icons.logout, color: AppColors.primaryDark),
+            title: Text(
+              'LogOut',
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            Divider(color: AppColors.border, thickness: 1),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('LogOut'),
-              onTap: () {
-                context.read<EmployeeDetailCubit>().clearEmployeeDetails();
-              },
-            ),
-          ],
+            onTap: () {
+              context.read<EmployeeDetailCubit>().clearEmployeeDetails();
+              context.goNamed(AppRoutes.dashboard);
+            },
+          ),
         ),
       ],
     );
+  }
+
+  IconData _getModuleIcon(String? moduleName) {
+    switch (moduleName?.toLowerCase()) {
+      case 'ticketing':
+        return Icons.confirmation_number_outlined;
+
+      case 'checklist':
+        return Icons.checklist_outlined;
+
+      case 'workpermit':
+        return Icons.assignment_outlined;
+
+      case 'gatepass':
+        return Icons.badge_outlined;
+
+      case 'feedback':
+        return Icons.feedback_outlined;
+
+      case 'visitor system':
+        return Icons.groups_outlined;
+
+      case 'can':
+        return Icons.apartment_outlined;
+
+      case 'fitout':
+        return Icons.construction_outlined;
+
+      case 'asset management':
+        return Icons.inventory_2_outlined;
+
+      case 'license management':
+        return Icons.description_outlined;
+
+      case 'incident management':
+        return Icons.warning_amber_outlined;
+
+      default:
+        return Icons.home;
+    }
   }
 
   Widget _buildWebAppBar() {
@@ -302,4 +405,74 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       ),
     );
   }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              InkWell(
+                child: Icon(Icons.notifications),
+                onTap: () {
+                  SnackBarUtils.showFloatingSnackBar(context, "Will soon");
+                },
+              ),
+              SizedBox(width: 10),
+              InkWell(
+                splashColor: Colors.transparent,
+                child: CircleAvatar(
+                  radius: 16,
+                  child: Icon(Icons.person, size: 16),
+                ),
+                onTap: () {
+                  // will go to profile screen
+                  SnackBarUtils.showFloatingSnackBar(context, "Will soon");
+                },
+              ),
+              SizedBox(width: 10),
+              InkWell(
+                child: Icon(Icons.more_vert),
+                onTap: () {
+                  // will go to profile screen
+                  SnackBarUtils.showFloatingSnackBar(context, "Will soon");
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DrawerMenuItems {
+  final String title;
+  final IconData icon;
+  final String route;
+  final bool isDivider;
+  final List<SubMenuItems> subItems;
+
+  DrawerMenuItems({
+    required this.title,
+    required this.icon,
+    required this.route,
+    required this.isDivider,
+    required this.subItems,
+  });
+}
+
+class SubMenuItems {
+  final String title;
+  final IconData icon;
+  final String route;
+  final bool isDivider;
+
+  SubMenuItems({
+    required this.title,
+    required this.icon,
+    required this.route,
+    required this.isDivider,
+  });
 }

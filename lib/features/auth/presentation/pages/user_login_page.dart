@@ -172,8 +172,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                                   .validate()) {
                                                 context.read<AuthBloc>().add(
                                                   LoginRequested(
-                                                    userName: _username ?? "",
-                                                    password: _password ?? "",
+                                                    userName: _username?.trim().toLowerCase() ?? "",
+                                                    password: _password?.trim().toLowerCase() ?? "",
                                                     companyId: int.parse(
                                                       widget.companyId ?? "0",
                                                     ),

@@ -112,16 +112,12 @@ class _UserOnboardPageState extends State<UserOnboardPage> {
                                             onPressed: () {
                                               if (_formKey.currentState!
                                                   .validate()) {
-                                                // Will Integrate an API here...
-
                                                 context.read<AuthBloc>().add(
                                                   ValidateCompanyCodeRequested(
                                                     companyCode:
-                                                        _companyCode ?? "",
+                                                        _companyCode?.trim().toLowerCase() ?? "",
                                                   ),
                                                 );
-
-                                                // context.go(AppRoutes.login);
                                               }
                                             },
                                             child: Text('Submit'),
