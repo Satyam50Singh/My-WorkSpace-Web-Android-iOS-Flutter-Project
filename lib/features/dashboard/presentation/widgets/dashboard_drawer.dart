@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
-import 'package:my_worksphere_web/features/auth/data/models/employee_login/employee_details_model.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
+
 import 'drawer_menu_item.dart';
 
 class DashboardDrawer extends StatelessWidget {
@@ -21,19 +21,6 @@ class DashboardDrawer extends StatelessWidget {
 
     for (final module in moduleAccess) {
       final List<SubMenuItems> subItems = [];
-
-      // Special case: Merge 'ticketing' sub-modules into 'checklist'
-      if (module.moduleName?.toLowerCase() == 'checklist') {
-        final ticketingModule = moduleAccess.firstWhere(
-          (m) => m.moduleName?.toLowerCase() == 'ticketing',
-          //orElse: () => ModuleAccessModel(moduleName: '', subModules: []),
-        );
-
-        if (ticketingModule.subModules != null) {
-           module.subModules?.addAll(ticketingModule.subModules!);
-        }
-      }
-
       for (final subModule in module.subModules ?? []) {
         subItems.add(
           SubMenuItems(

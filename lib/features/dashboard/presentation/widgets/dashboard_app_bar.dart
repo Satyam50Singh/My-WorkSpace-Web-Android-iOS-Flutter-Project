@@ -53,120 +53,153 @@ class WebDashboardAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      decoration: const BoxDecoration(
-        color: AppColors.background,
-        border: Border(bottom: BorderSide(color: AppColors.white, width: 0)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              "My Request",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double maxWidth = constraints.maxWidth;
+        final bool isCompact = maxWidth < 850;
+        final bool isVeryCompact = maxWidth < 550;
+
+        return Container(
+          height: 60,
+          decoration: const BoxDecoration(
+            color: AppColors.background,
+            border: Border(bottom: BorderSide(color: AppColors.white, width: 0)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 240,
-                    maxHeight: 36,
-                  ),
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: 'Search...',
-                      suffixIcon: const Icon(Icons.search),
-                      suffixIconColor: AppColors.primaryDark,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
+                if (!isVeryCompact)
+                  Text(
+                    "My Request",
+                    style: TextStyle(
+                      fontSize: maxWidth < 1000 ? 18 : 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryDark,
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                IconButton.filled(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.filter_alt_outlined,
-                    color: AppColors.white,
-                    size: 18,
-                  ),
-                  style: IconButton.styleFrom(
-                    minimumSize: const Size(24, 36),
-                    backgroundColor: AppColors.primaryDark,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  label: const Text("New Request"),
-                  icon: const Icon(Icons.add),
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: AppColors.primaryDark,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 16,
-                    ),
-                    foregroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 16,
-                    ),
-                    foregroundColor: AppColors.primaryDark,
-                    backgroundColor: AppColors.white,
-                    elevation: 4,
-                    side: const BorderSide(color: AppColors.primaryDark, width: 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  child: const Row(
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        "Export",
-                        style: TextStyle(
-                          color: AppColors.primaryDark,
-                          fontWeight: FontWeight.bold,
+                      Flexible(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 240,
+                            maxHeight: 36,
+                          ),
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              hintText: 'Search...',
+                              suffixIcon: const Icon(Icons.search),
+                              suffixIconColor: AppColors.primaryDark,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      SizedBox(width: 4),
-                      Icon(Icons.download_sharp),
+                      const SizedBox(width: 8),
+                      IconButton.filled(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.filter_alt_outlined,
+                          color: AppColors.white,
+                          size: 18,
+                        ),
+                        style: IconButton.styleFrom(
+                          minimumSize: const Size(36, 36),
+                          backgroundColor: AppColors.primaryDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (isCompact)
+                        IconButton.filled(
+                          onPressed: () {},
+                          icon: const Icon(Icons.add, color: AppColors.white),
+                          style: IconButton.styleFrom(
+                            minimumSize: const Size(36, 36),
+                            backgroundColor: AppColors.primaryDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        )
+                      else
+                        ElevatedButton.icon(
+                          onPressed: () {},
+                          label: const Text("New Request"),
+                          icon: const Icon(Icons.add),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryDark,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 16,
+                            ),
+                            foregroundColor: AppColors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      const SizedBox(width: 8),
+                      if (isCompact)
+                        IconButton.outlined(
+                          onPressed: () {},
+                          icon: const Icon(Icons.download_sharp,
+                              color: AppColors.primaryDark),
+                          style: IconButton.styleFrom(
+                            minimumSize: const Size(24, 24),
+                            backgroundColor: AppColors.white,
+                            side: const BorderSide(
+                                color: AppColors.primaryDark, width: 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        )
+                      else
+                        OutlinedButton.icon(
+                          onPressed: () {},
+                          label: const Text(
+                            "Export",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          icon: const Icon(Icons.download_sharp),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 16,
+                            ),
+                            foregroundColor: AppColors.primaryDark,
+                            backgroundColor: AppColors.white,
+                            elevation: 4,
+                            side: const BorderSide(
+                                color: AppColors.primaryDark, width: 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
