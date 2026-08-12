@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
+import 'package:my_worksphere_web/features/auth/data/models/employee_login/employee_details_model.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 
 import '../../../../core/routes/app_routes.dart';
@@ -97,6 +98,16 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     for (final module in moduleAccess) {
       final List<SubMenuItems> subItems = [];
 
+      // Special case: Merge 'ticketing' sub-modules into 'checklist'
+      if (module.moduleName?.toLowerCase() == 'checklist') {
+        final ticketingModule = moduleAccess.firstWhere(
+          (m) => m.moduleName?.toLowerCase() == 'ticketing',
+          orElse: () => ModuleAccessModel(moduleName: '', subModules: []),
+        );
+
+        module.subModules?.addAll(ticketingModule.subModules!);
+      }
+
       for (final subModule in module.subModules ?? []) {
         subItems.add(
           SubMenuItems(
@@ -112,7 +123,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
         DrawerMenuItems(
           title: module.moduleName ?? '',
           icon: _getModuleIcon(module.moduleName),
-          route: '',
+          route: getModuleRoute(module.moduleName),
           isDivider: false,
           subItems: subItems,
         ),
@@ -150,7 +161,6 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
             ],
           ),
         ),
-
         if (moduleAccess.isNotEmpty)
           Expanded(
             child: Padding(
@@ -160,65 +170,67 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                 itemBuilder: (context, index) {
                   final item = menuItems[index];
 
-                  if (menuItems[index].subItems.isNotEmpty) {
-                    return ExpansionTile(
-                      title: Text(
-                        menuItems[index].title ?? "",
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
+                  if (item.subItems.isNotEmpty) {
+                    return Theme(
+                      data: Theme.of(
+                        context,
+                      ).copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        backgroundColor: Colors.grey.withOpacity(0.05),
+                        leading: Icon(item.icon, color: AppColors.primaryDark),
+                        title: Text(
+                          item.title,
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      leading: Icon(
-                        menuItems[index].icon,
-                        color: AppColors.primaryDark,
-                      ),
-                      trailing: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: AppColors.primaryDark,
-                      ),
-                      children: item.subItems.map((subItem) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            left: 28.0,
-                            top: 0,
-                            bottom: 0,
-                          ),
-                          child: ListTile(
-                            horizontalTitleGap: 4,
-                            title: Text(
-                              subItem.title ?? "",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
+                        trailing: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: AppColors.primary,
+                        ),
+                        children: item.subItems.map((subItem) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 48.0),
+                            child: ListTile(
+                              title: Text(
+                                subItem.title,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
+                              onTap: () {
+                                handleNavigation(
+                                  moduleName: subItem.title,
+                                  route: subItem.route,
+                                );
+                              },
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     );
                   }
 
                   return ListTile(
-                    leading: Icon(
-                      menuItems[index].icon,
-                      color: AppColors.primaryDark,
-                    ),
+                    leading: Icon(item.icon, color: AppColors.primary),
                     title: Text(
-                      menuItems[index].title ?? "",
+                      item.title,
                       style: TextStyle(
                         fontSize: 12.0,
                         color: AppColors.textPrimary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    trailing: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: AppColors.primaryDark,
-                    ),
-                    onTap: () {},
+                    onTap: () {
+                      handleNavigation(
+                        moduleName: item.title,
+                        route: item.route,
+                      );
+                    },
                   );
                 },
               ),
@@ -444,6 +456,42 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
         ),
       ],
     );
+  }
+
+  void handleNavigation({String? moduleName, String? route}) {
+    SnackBarUtils.showFloatingSnackBar(
+      context,
+      'Will redirect to $moduleName via $route',
+    );
+  }
+
+  String getModuleRoute(String? moduleName) {
+    switch (moduleName?.toLowerCase()) {
+      case 'ticketing':
+        return AppRoutes.ticketing;
+      case 'checklist':
+        return AppRoutes.checklist;
+      case 'workpermit':
+        return AppRoutes.workpermit;
+      case 'gatepass':
+        return AppRoutes.gatepass;
+      case 'feedback':
+        return AppRoutes.feedback;
+      case 'visitor system':
+        return AppRoutes.visitorSystem;
+      case 'can':
+        return AppRoutes.can;
+      case 'fitout':
+        return AppRoutes.fitout;
+      case 'asset management':
+        return AppRoutes.assetManagement;
+      case 'license management':
+        return AppRoutes.licenseManagement;
+      case 'incident management':
+        return AppRoutes.incidentManagement;
+      default:
+        return AppRoutes.dashboardPath;
+    }
   }
 }
 
