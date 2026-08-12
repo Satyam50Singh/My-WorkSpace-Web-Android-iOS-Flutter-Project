@@ -26,7 +26,7 @@ class DashboardDrawer extends StatelessWidget {
           SubMenuItems(
             title: subModule.menu ?? '',
             icon: Icons.arrow_right,
-            route: subModule.route ?? '',
+            route: _getModuleRoute(subModule.menu),
             isDivider: false,
           ),
         );
@@ -207,6 +207,8 @@ class DashboardDrawer extends StatelessWidget {
     switch (moduleName?.toLowerCase()) {
       case 'ticketing':
         return AppRoutes.ticketing;
+      case 'my tickets':
+        return AppRoutes.myTickets;
       case 'checklist':
         return AppRoutes.checklist;
       case 'workpermit':
@@ -237,6 +239,13 @@ class DashboardDrawer extends StatelessWidget {
     String? moduleName,
     String? route,
   }) {
+    if (route == null) return;
+
+    if (route.startsWith('/')) {
+      context.go(route);
+      return;
+    }
+
     SnackBarUtils.showFloatingSnackBar(
       context,
       'Will redirect to $moduleName via $route',

@@ -9,7 +9,9 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 
 class EmployeeDashboard extends StatefulWidget {
-  const EmployeeDashboard({super.key});
+  final Widget? child;
+
+  const EmployeeDashboard({super.key, required this.child});
 
   @override
   State<EmployeeDashboard> createState() => _EmployeeDashboardState();
@@ -59,18 +61,8 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                     child: Column(
                       children: [
                         if (!isMobile && !isMini) const WebDashboardAppBar(),
-                        Center(
-                          child: Text(
-                            "Welcome ${state.employeeDetail.fullName}",
-                            style: TextStyle(
-                              fontSize: isMobile
-                                  ? 24
-                                  : isMini
-                                  ? 16
-                                  : 48,
-                            ),
-                          ),
-                        ),
+                        if (widget.child != null)
+                          Expanded(child: widget.child!),
                       ],
                     ),
                   ),

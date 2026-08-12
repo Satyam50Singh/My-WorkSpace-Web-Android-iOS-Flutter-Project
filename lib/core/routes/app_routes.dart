@@ -6,6 +6,7 @@ class AppRoutes {
   static const dashboardPath = '/employee-dashboard';
 
   static const ticketing = '/ticketing';
+  static const myTickets = '/my-tickets';
   static const checklist = '/checklist';
   static const workpermit = '/workpermit';
   static const gatepass = '/gatepass';
