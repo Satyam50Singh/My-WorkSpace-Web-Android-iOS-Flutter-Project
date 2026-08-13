@@ -7,6 +7,7 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
+import '../../domain/entities/employee_detail.dart';
 import '../blocs/auto_bloc/auth_bloc.dart';
 import '../cubit/employee_detail_cubit.dart';
 
@@ -58,9 +59,27 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       );
                     } else if (state is EmployeeLoginSuccess) {
                       Navigator.of(context).pop();
+                      final employeeDetails = state.employeeDetails;
+                      final companyId = int.tryParse(widget.companyId ?? "0") ?? 0;
+
                       context.read<EmployeeDetailCubit>().saveEmployeeDetails(
-                        state.employeeDetails,
-                      );
+                            EmployeeDetail(
+                              userID: employeeDetails.userID,
+                              companyId: companyId,
+                              username: employeeDetails.username,
+                              fullName: employeeDetails.fullName,
+                              rollCd: employeeDetails.rollCd,
+                              empCd: employeeDetails.empCd,
+                              profilePic: employeeDetails.profilePic,
+                              departmentID: employeeDetails.departmentID,
+                              roleName: employeeDetails.roleName,
+                              isFirstLogin: employeeDetails.isFirstLogin,
+                              isRequestToDelete: employeeDetails.isRequestToDelete,
+                              isHOD: employeeDetails.isHOD,
+                              hODOfDepartment: employeeDetails.hODOfDepartment,
+                              moduleAccess: employeeDetails.moduleAccess,
+                            ),
+                          );
                       context.goNamed(AppRoutes.dashboard);
                     }
                   },

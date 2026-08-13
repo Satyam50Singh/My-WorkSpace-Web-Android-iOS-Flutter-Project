@@ -1,5 +1,6 @@
 class EmployeeDetail {
   final int? userID;
+  final int? companyId;
   final String? username;
   final String? fullName;
   final String? rollCd;
@@ -15,6 +16,7 @@ class EmployeeDetail {
 
   const EmployeeDetail({
     this.userID,
+    this.companyId,
     this.username,
     this.fullName,
     this.rollCd,

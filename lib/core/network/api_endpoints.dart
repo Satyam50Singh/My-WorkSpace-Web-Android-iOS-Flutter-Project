@@ -7,6 +7,6 @@ class ApiEndpoints {
   static const employeeLogin = "/Master/Validate_Login_V6_Web";
 
   // -- Ticketing Module APIs -- //
-  static const fetchTicketingDetails = "/Ticketing/Fetch_Ticket_MyRequest_Web_API";
+  static const fetchTicketMyRequestDetails = "/Ticketing/Fetch_Ticket_MyRequest_Web_API";
 
 }

@@ -3,6 +3,7 @@ import '../../../domain/entities/employee_detail.dart';
 class EmployeeDetailsModel extends EmployeeDetail {
   EmployeeDetailsModel({
     super.userID,
+    super.companyId,
     super.username,
     super.fullName,
     super.rollCd,
@@ -20,6 +21,7 @@ class EmployeeDetailsModel extends EmployeeDetail {
   factory EmployeeDetailsModel.fromJson(Map<String, dynamic> json) {
     return EmployeeDetailsModel(
       userID: json['UserID'] as int?,
+      companyId: json['CompanyID'] as int?,
       username: json['Username'] as String?,
       fullName: json['FullName'] as String?,
       rollCd: json['RollCd'] as String?,
@@ -44,6 +46,7 @@ class EmployeeDetailsModel extends EmployeeDetail {
   factory EmployeeDetailsModel.fromEntity(EmployeeDetail employeeDetail) {
     return EmployeeDetailsModel(
       userID: employeeDetail.userID,
+      companyId: employeeDetail.companyId,
       username: employeeDetail.username,
       fullName: employeeDetail.fullName,
       rollCd: employeeDetail.rollCd,
@@ -64,6 +67,7 @@ class EmployeeDetailsModel extends EmployeeDetail {
   Map<String, dynamic> toJson() {
     return {
       'UserID': userID,
+      'CompanyID': companyId,
       'Username': username,
       'FullName': fullName,
       'RollCd': rollCd,
