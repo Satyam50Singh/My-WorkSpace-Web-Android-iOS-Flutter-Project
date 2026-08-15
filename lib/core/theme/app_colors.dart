@@ -21,4 +21,17 @@ class AppColors {
 
   static const Color error = Color(0xFFDC2626);
   static const Color success = Color(0xFF16A34A);
+
+  static const Color rose = Color(0xFFF43F5E);
+  static const Color orange = Color(0xFFF97316);
+  static const Color amber = Color(0xFFFBBF24);
+  static const Color lime = Color(0xFF84CC16);
+  static const Color emerald = Color(0xFF10B981);
+  static const Color cyan = Color(0xFF06B6D4);
+  static const Color blue = Color(0xFF3B82F6);
+  static const Color indigo = Color(0xFF6366F1);
+  static const Color violet = Color(0xFF8B5CF6);
+  static const Color fuchsia = Color(0xFFD946EF);
+  static const Color pink = Color(0xFFEC4899);
+  static const Color slate = Color(0xFF64748B);
 }

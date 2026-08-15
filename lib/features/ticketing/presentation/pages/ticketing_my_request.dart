@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketing_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_count_horizontal_list.dart';
 
 import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 
@@ -19,7 +19,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
   @override
   void initState() {
     super.initState();
+    _fetchTicketDetails();
+  }
 
+  void _fetchTicketDetails() {
     final employeeState = context.read<EmployeeDetailCubit>().state;
 
     if (employeeState is EmployeeDetailFetched) {
@@ -35,6 +38,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         departmentId: 0,
         categoryId: 0,
       );
+
       context.read<TicketingBloc>().add(
         TicketingMyRequestDetailRequested(payload: payload),
       );
@@ -57,29 +61,21 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       builder: (context, state) {
         if (state is TicketingMyRequestDetailSuccess) {
           final ticketingDetailList = state.ticketDetail.ticketDetailList;
-          final ticketRequestCount = state.ticketDetail.ticketRequestCount;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: ticketRequestCount?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: AppColors.background,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(ticketRequestCount![index].total.toString()),
-                        Text(ticketRequestCount[index].open.toString()),
-                        Text(ticketRequestCount[index].assigned.toString()),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
+          final ticketRequestCount =
+              state.ticketDetail.ticketRequestCount?.isNotEmpty == true
+              ? state.ticketDetail.ticketRequestCount![0]
+              : null;
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (ticketRequestCount != null)
+                  TicketCountHorizontalList(
+                    ticketRequestCount: ticketRequestCount,
+                  ),
+              ],
+            ),
           );
         }
 
