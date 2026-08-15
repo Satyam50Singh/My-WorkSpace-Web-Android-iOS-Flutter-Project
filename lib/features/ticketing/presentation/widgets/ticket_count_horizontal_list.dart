@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/utils/snackbar_utils.dart';
+
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 import '../../domain/entities/ticket_detail.dart';
@@ -61,8 +61,10 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
   void _scrollLeft() {
     if (!_ticketCountScrollController.hasClients) return;
     final position = _ticketCountScrollController.position;
-    final target = (_ticketCountScrollController.offset - 142)
-        .clamp(0.0, position.maxScrollExtent);
+    final target = (_ticketCountScrollController.offset - 152).clamp(
+      0.0,
+      position.maxScrollExtent,
+    );
     _ticketCountScrollController.animateTo(
       target,
       duration: const Duration(milliseconds: 300),
@@ -73,8 +75,10 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
   void _scrollRight() {
     if (!_ticketCountScrollController.hasClients) return;
     final position = _ticketCountScrollController.position;
-    final target = (_ticketCountScrollController.offset + 142)
-        .clamp(0.0, position.maxScrollExtent);
+    final target = (_ticketCountScrollController.offset + 152).clamp(
+      0.0,
+      position.maxScrollExtent,
+    );
     _ticketCountScrollController.animateTo(
       target,
       duration: const Duration(milliseconds: 300),
@@ -104,7 +108,7 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
         pageSize: 10,
         departmentId: 0,
         categoryId: 0,
-        actionStatus: actionStatus
+        actionStatus: actionStatus,
       );
 
       context.read<TicketingBloc>().add(
@@ -136,46 +140,39 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              _updateScrollButtons();
-              return false;
+          ListView.separated(
+            controller: _ticketCountScrollController,
+            scrollDirection: Axis.horizontal,
+            itemCount: counts.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final item = counts[index];
+              return InkWell(
+                onTap: () {
+                  _fetchTicketDetails(actionStatus: item.$1);
+                },
+                child: TicketCountCard(title: item.$1, count: item.$2 ?? 0),
+              );
             },
-            child: ListView.separated(
-              controller: _ticketCountScrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: counts.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
-              itemBuilder: (context, index) {
-                final item = counts[index];
-                return InkWell(
-                  onTap: () {
-                    _fetchTicketDetails(actionStatus: item.$1);
-                  },
-                  child: TicketCountCard(
-                    title: item.$1,
-                    count: item.$2 ?? 0,
-                  ),
-                );
-              },
-            ),
           ),
-          Positioned(
-            left: 0,
-            child: ScrollButton(
-              icon: Icons.chevron_left,
-              enabled: _canScrollLeft,
-              onPressed: _scrollLeft,
+          if (_canScrollLeft)
+            Positioned(
+              left: 0,
+              child: ScrollButton(
+                icon: Icons.chevron_left,
+                enabled: _canScrollLeft,
+                onPressed: _scrollLeft,
+              ),
             ),
-          ),
-          Positioned(
-            right: 0,
-            child: ScrollButton(
-              icon: Icons.chevron_right,
-              enabled: _canScrollRight,
-              onPressed: _scrollRight,
+          if (_canScrollRight)
+            Positioned(
+              right: 0,
+              child: ScrollButton(
+                icon: Icons.chevron_right,
+                enabled: _canScrollRight,
+                onPressed: _scrollRight,
+              ),
             ),
-          ),
         ],
       ),
     );
