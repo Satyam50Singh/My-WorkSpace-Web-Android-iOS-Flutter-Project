@@ -60,7 +60,6 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                   Expanded(
                     child: Column(
                       children: [
-                        if (!isMobile && !isMini) const WebDashboardAppBar(),
                         if (widget.child != null)
                           Expanded(child: widget.child!),
                       ],
