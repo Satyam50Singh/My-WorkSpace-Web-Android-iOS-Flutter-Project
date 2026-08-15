@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/snackbar_utils.dart';
+import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
+import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 import '../../domain/entities/ticket_detail.dart';
+import '../blocs/ticketing_bloc.dart';
 import 'scroll_button.dart';
 import 'ticket_count_card.dart';
 
@@ -85,6 +89,30 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
     super.dispose();
   }
 
+  void _fetchTicketDetails({required String actionStatus}) {
+    final employeeState = context.read<EmployeeDetailCubit>().state;
+
+    if (employeeState is EmployeeDetailFetched) {
+      final employee = employeeState.employeeDetail;
+
+      final payload = TicketMyRequestRequest(
+        companyId: employee.companyId,
+        empCd: employee.empCd,
+        fromDate: "06/08/2026",
+        toDate: "12/08/2026",
+        pageCount: 1,
+        pageSize: 10,
+        departmentId: 0,
+        categoryId: 0,
+        actionStatus: actionStatus
+      );
+
+      context.read<TicketingBloc>().add(
+        TicketingMyRequestDetailRequested(payload: payload),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.ticketRequestCount == null) return const SizedBox.shrink();
@@ -103,7 +131,7 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
     ];
 
     return SizedBox(
-      height: 100,
+      height: 120,
       width: double.infinity,
       child: Stack(
         alignment: Alignment.center,
@@ -122,10 +150,7 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
                 final item = counts[index];
                 return InkWell(
                   onTap: () {
-                    SnackBarUtils.showFloatingSnackBar(
-                      context,
-                      'Will coming soon',
-                    );
+                    _fetchTicketDetails(actionStatus: item.$1);
                   },
                   child: TicketCountCard(
                     title: item.$1,

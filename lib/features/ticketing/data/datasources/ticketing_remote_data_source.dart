@@ -40,7 +40,6 @@ class TicketingRemoteDataSourceImpl extends TicketingRemoteDataSource {
           'TicketType': payload.ticketType,
         },
       );
-      debugPrint('Response: $json');
       return TicketMyRequestResponseModel.fromJson(json);
     } on ApiException catch (e) {
       debugPrint('ApiException: ${e.message}');
