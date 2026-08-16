@@ -8,14 +8,18 @@ class TicketListTableView extends StatefulWidget {
   final List<TicketDetailList>? ticketingDetailList;
   final void Function(int) updatePageSize;
   final void Function(int) updatePageCount;
+  final int rowsPerPage;
   final int totalRecordsCount;
+  final int currentPage;
 
   const TicketListTableView({
     super.key,
     this.ticketingDetailList,
     required this.updatePageSize,
     required this.updatePageCount,
+    required this.rowsPerPage,
     required this.totalRecordsCount,
+    required this.currentPage,
   });
 
   @override
@@ -37,12 +41,20 @@ class _TicketListTableViewState extends State<TicketListTableView> {
     "Last Action By",
     "Location",
   ];
-  int rowsPerPage = 10;
 
   @override
   Widget build(BuildContext context) {
     final tickets = widget.ticketingDetailList ?? [];
+    final effectiveRowsPerPage = widget.rowsPerPage > 0 ? widget.rowsPerPage : 10;
+    
     debugPrint('tickets: ${tickets.length}');
+    debugPrint('rowsPerPage: $effectiveRowsPerPage');
+
+    final availableRows = [10, 25, 50, 100];
+    if (effectiveRowsPerPage > 0 && !availableRows.contains(effectiveRowsPerPage)) {
+      availableRows.add(effectiveRowsPerPage);
+      availableRows.sort();
+    }
 
     return PaginatedDataTable2(
       minWidth: 1800,
@@ -70,25 +82,25 @@ class _TicketListTableViewState extends State<TicketListTableView> {
           ),
         );
       }).toList(),
-      source: TicketDataSource(tickets, widget.totalRecordsCount),
+      source: TicketDataSource(
+        tickets,
+        widget.totalRecordsCount,
+        (widget.currentPage - 1) * effectiveRowsPerPage,
+      ),
+      initialFirstRowIndex: (widget.currentPage - 1) * effectiveRowsPerPage,
       onRowsPerPageChanged: (value) {
         if (value == null) return;
-
-        setState(() {
-          rowsPerPage = value;
-        });
-
         widget.updatePageSize(value);
       },
       horizontalMargin: 16,
       columnSpacing: 16,
       headingRowHeight: 48,
       dataRowHeight: 56,
-      rowsPerPage: rowsPerPage,
-      availableRowsPerPage: const [10, 25, 50, 100],
+      rowsPerPage: effectiveRowsPerPage,
+      availableRowsPerPage: availableRows,
       onPageChanged: (value) {
-        debugPrint('onPageChanged: $value');
-        widget.updatePageCount(value);
+        final pageIndex = (value / effectiveRowsPerPage).floor() + 1;
+        widget.updatePageCount(pageIndex);
       },
       empty: Padding(
         padding: const EdgeInsets.symmetric(vertical: 32),
@@ -124,16 +136,18 @@ class _TicketListTableViewState extends State<TicketListTableView> {
 class TicketDataSource extends DataTableSource {
   final List<TicketDetailList> tickets;
   final int totalRecordsCount;
+  final int firstRowIndex;
 
-  TicketDataSource(this.tickets, this.totalRecordsCount);
+  TicketDataSource(this.tickets, this.totalRecordsCount, this.firstRowIndex);
 
   @override
   DataRow? getRow(int index) {
-    if (index >= tickets.length) {
+    final relativeIndex = index - firstRowIndex;
+    if (relativeIndex < 0 || relativeIndex >= tickets.length) {
       return null;
     }
 
-    final ticket = tickets[index];
+    final ticket = tickets[relativeIndex];
 
     return DataRow2(
       cells: [

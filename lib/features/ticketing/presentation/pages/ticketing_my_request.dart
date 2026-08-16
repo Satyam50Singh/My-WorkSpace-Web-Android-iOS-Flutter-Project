@@ -18,6 +18,9 @@ class TicketingMyRequest extends StatefulWidget {
 }
 
 class _TicketingMyRequestState extends State<TicketingMyRequest> {
+  int? _currentPageSize;
+  int _currentPageCount = 1;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     int? pageCount = 1,
     int? pageSize = 10,
   }) {
+    _currentPageCount = pageCount ?? 1;
     final employeeState = context.read<EmployeeDetailCubit>().state;
 
     if (employeeState is EmployeeDetailFetched) {
@@ -40,7 +44,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         fromDate: "06/07/2026",
         toDate: "12/08/2026",
         pageCount: pageCount,
-        pageSize: pageSize,
+        pageSize: _currentPageSize ?? pageSize,
         departmentId: 0,
         categoryId: 0,
         actionStatus: actionStatus,
@@ -82,7 +86,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                     state.ticketDetail.ticketRequestCount?.isNotEmpty == true
                     ? state.ticketDetail.ticketRequestCount![0]
                     : null;
-                final totalRecords = state.ticketDetail.totalRecords;
+                final totalRecords = state.ticketDetail.totalRecords ?? 0;
                 return Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -108,9 +112,14 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                       Expanded(
                         child: TicketListTableView(
                           ticketingDetailList: ticketingDetailList,
-                          totalRecordsCount:
-                              totalRecords ?? ticketingDetailList?.length ?? 0,
+                          rowsPerPage: (totalRecords > 0 &&
+                                  totalRecords < (_currentPageSize ?? 10))
+                              ? totalRecords
+                              : (_currentPageSize ?? 10),
+                          currentPage: _currentPageCount,
+                          totalRecordsCount: totalRecords,
                           updatePageSize: (pageSize) {
+                            _currentPageSize = pageSize;
                             _fetchTicketDetails(pageSize: pageSize);
                           },
                           updatePageCount: (pageCount) {
