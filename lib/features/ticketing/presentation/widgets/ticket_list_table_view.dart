@@ -66,6 +66,7 @@ class _TicketListTableViewState extends State<TicketListTableView> {
       fixedCornerColor: AppColors.primaryDark,
       columns: _buildColumns(context),
       source: TicketDataSource(
+        context,
         tickets,
         widget.totalRecordsCount,
         (widget.currentPage - 1) * effectiveRowsPerPage,

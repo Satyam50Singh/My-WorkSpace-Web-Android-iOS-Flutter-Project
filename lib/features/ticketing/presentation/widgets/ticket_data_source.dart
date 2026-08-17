@@ -1,14 +1,22 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/ticket_detail.dart';
 import 'status_cell.dart';
 
 class TicketDataSource extends DataTableSource {
+  final BuildContext context;
   final List<TicketDetailList> tickets;
   final int totalRecordsCount;
   final int firstRowIndex;
 
-  TicketDataSource(this.tickets, this.totalRecordsCount, this.firstRowIndex);
+  TicketDataSource(
+    this.context,
+    this.tickets,
+    this.totalRecordsCount,
+    this.firstRowIndex,
+  );
 
   @override
   DataRow? getRow(int index) {
@@ -22,11 +30,19 @@ class TicketDataSource extends DataTableSource {
     return DataRow2(
       cells: [
         DataCell(
-          Text(
-            ticket.ticketCode ?? '-',
-            style: const TextStyle(overflow: TextOverflow.ellipsis),
-            softWrap: false,
-            maxLines: 1,
+          InkWell(
+            onTap: () {
+              debugPrint('Ticket #:: ${ticket.ticketCode}');
+            },
+            child: Text(
+              ticket.ticketCode ?? '-',
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                fontSize: 14,
+                color: AppColors.primary,
+              ),
+              softWrap: false,
+              maxLines: 1,
+            ),
           ),
         ),
         DataCell(Text(ticket.level ?? '-')),
