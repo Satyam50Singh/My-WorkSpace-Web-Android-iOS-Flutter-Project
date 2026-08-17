@@ -28,36 +28,37 @@ class TicketListTableView extends StatefulWidget {
 
 class _TicketListTableViewState extends State<TicketListTableView> {
   final List<String> headers = [
-    "Ticket Code",
+    "Ticket Number",
     "Level",
-    "Ticket Date",
-    "Ticket Status",
+    "Ticket Date & Time",
+    "Request Status",
     "Action Status",
-    "Raised By User",
+    "Raised By",
     "Ticket Type",
-    "Is Review Done",
-    "Category",
     "Sub Category",
-    "Last Action By",
+    "Lastest Action By",
     "Location",
   ];
 
   @override
   Widget build(BuildContext context) {
     final tickets = widget.ticketingDetailList ?? [];
-    final effectiveRowsPerPage = widget.rowsPerPage > 0 ? widget.rowsPerPage : 10;
-    
+    final effectiveRowsPerPage = widget.rowsPerPage > 0
+        ? widget.rowsPerPage
+        : 10;
+
     debugPrint('tickets: ${tickets.length}');
     debugPrint('rowsPerPage: $effectiveRowsPerPage');
 
     final availableRows = [10, 25, 50, 100];
-    if (effectiveRowsPerPage > 0 && !availableRows.contains(effectiveRowsPerPage)) {
+    if (effectiveRowsPerPage > 0 &&
+        !availableRows.contains(effectiveRowsPerPage)) {
       availableRows.add(effectiveRowsPerPage);
       availableRows.sort();
     }
 
     return PaginatedDataTable2(
-      minWidth: 1800,
+      minWidth: 1600,
       headingRowColor: WidgetStateColor.resolveWith(
         (states) => AppColors.primaryDark,
       ),
@@ -80,6 +81,15 @@ class _TicketListTableViewState extends State<TicketListTableView> {
               fontWeight: FontWeight.w400,
             ),
           ),
+          fixedWidth: header == "Ticket Number"
+              ? 120
+              : header == "Ticket Date & Time"
+              ? 200
+              : header == "Level"
+              ? 80
+              : header == "Location"
+              ? 300
+              : null,
         );
       }).toList(),
       source: TicketDataSource(
@@ -172,8 +182,6 @@ class TicketDataSource extends DataTableSource {
         DataCell(StatusCell(text: ticket.ticketActionStatus ?? '-')),
         DataCell(Text(ticket.raisedByUser ?? '-')),
         DataCell(Text(ticket.ticketType ?? '-')),
-        DataCell(Text(ticket.isReviewDone == true ? 'Yes' : 'No')),
-        DataCell(Text(ticket.category ?? '-')),
         DataCell(
           Text(
             ticket.subCategory ?? '-',
