@@ -2,7 +2,8 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/status_cell.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_data_source.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_list_empty_view.dart';
 
 class TicketListTableView extends StatefulWidget {
   final List<TicketDetailList>? ticketingDetailList;
@@ -27,7 +28,7 @@ class TicketListTableView extends StatefulWidget {
 }
 
 class _TicketListTableViewState extends State<TicketListTableView> {
-  final List<String> headers = [
+  static const List<String> _headers = [
     "Ticket Number",
     "Level",
     "Ticket Date & Time",
@@ -47,22 +48,14 @@ class _TicketListTableViewState extends State<TicketListTableView> {
         ? widget.rowsPerPage
         : 10;
 
-    debugPrint('tickets: ${tickets.length}');
-    debugPrint('rowsPerPage: $effectiveRowsPerPage');
-
-    final availableRows = [10, 25, 50, 100];
-    if (effectiveRowsPerPage > 0 &&
-        !availableRows.contains(effectiveRowsPerPage)) {
-      availableRows.add(effectiveRowsPerPage);
-      availableRows.sort();
-    }
+    final availableRows = _getAvailableRows(effectiveRowsPerPage);
 
     return PaginatedDataTable2(
       minWidth: 1600,
       headingRowColor: WidgetStateColor.resolveWith(
         (states) => AppColors.primaryDark,
       ),
-      headingRowDecoration: BoxDecoration(
+      headingRowDecoration: const BoxDecoration(
         color: AppColors.primaryDark,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(8),
@@ -71,27 +64,7 @@ class _TicketListTableViewState extends State<TicketListTableView> {
       ),
       fixedLeftColumns: 1,
       fixedCornerColor: AppColors.primaryDark,
-      columns: headers.map((header) {
-        return DataColumn2(
-          label: Text(
-            header,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontSize: 16,
-              color: AppColors.white,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          fixedWidth: header == "Ticket Number"
-              ? 120
-              : header == "Ticket Date & Time"
-              ? 200
-              : header == "Level"
-              ? 80
-              : header == "Location"
-              ? 300
-              : null,
-        );
-      }).toList(),
+      columns: _buildColumns(context),
       source: TicketDataSource(
         tickets,
         widget.totalRecordsCount,
@@ -112,109 +85,48 @@ class _TicketListTableViewState extends State<TicketListTableView> {
         final pageIndex = (value / effectiveRowsPerPage).floor() + 1;
         widget.updatePageCount(pageIndex);
       },
-      empty: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.info, color: AppColors.slate, size: 48),
-              Text(
-                'No tickets found matching current filters',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.primaryDark,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
-              ),
-              Text(
-                'Try resetting filters or changing tabs',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.slate,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 11,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      empty: const TicketListEmptyView(),
     );
   }
-}
 
-class TicketDataSource extends DataTableSource {
-  final List<TicketDetailList> tickets;
-  final int totalRecordsCount;
-  final int firstRowIndex;
-
-  TicketDataSource(this.tickets, this.totalRecordsCount, this.firstRowIndex);
-
-  @override
-  DataRow? getRow(int index) {
-    final relativeIndex = index - firstRowIndex;
-    if (relativeIndex < 0 || relativeIndex >= tickets.length) {
-      return null;
+  List<int> _getAvailableRows(int effectiveRowsPerPage) {
+    final availableRows = [10, 25, 50, 100];
+    if (effectiveRowsPerPage > 0 &&
+        !availableRows.contains(effectiveRowsPerPage)) {
+      availableRows.add(effectiveRowsPerPage);
+      availableRows.sort();
     }
-
-    final ticket = tickets[relativeIndex];
-
-    return DataRow2(
-      cells: [
-        DataCell(
-          Text(
-            ticket.ticketCode ?? '-',
-            style: TextStyle(overflow: TextOverflow.ellipsis),
-            softWrap: false,
-            maxLines: 1,
-          ),
-        ),
-        DataCell(Text(ticket.level ?? '-')),
-        DataCell(
-          Text(
-            ticket.ticketDate ?? '-',
-            style: TextStyle(overflow: TextOverflow.ellipsis),
-            softWrap: false,
-            maxLines: 1,
-          ),
-        ),
-        DataCell(StatusCell(text: ticket.ticketStatus ?? '-')),
-        DataCell(StatusCell(text: ticket.ticketActionStatus ?? '-')),
-        DataCell(Text(ticket.raisedByUser ?? '-')),
-        DataCell(Text(ticket.ticketType ?? '-')),
-        DataCell(
-          Text(
-            ticket.subCategory ?? '-',
-            style: TextStyle(overflow: TextOverflow.ellipsis),
-            softWrap: false,
-            maxLines: 1,
-          ),
-        ),
-        DataCell(
-          Text(
-            (ticket.lastActionBy?.isNotEmpty ?? false)
-                ? ticket.lastActionBy!
-                : '-',
-          ),
-        ),
-        DataCell(
-          Text(
-            ticket.location ?? '-',
-            style: TextStyle(overflow: TextOverflow.ellipsis),
-            softWrap: false,
-            maxLines: 1,
-          ),
-        ),
-      ],
-    );
+    return availableRows;
   }
 
-  @override
-  bool get isRowCountApproximate => false;
+  List<DataColumn2> _buildColumns(BuildContext context) {
+    return _headers.map((header) {
+      return DataColumn2(
+        label: Text(
+          header,
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontSize: 16,
+            color: AppColors.white,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        fixedWidth: _getColumnWidth(header),
+      );
+    }).toList();
+  }
 
-  @override
-  int get rowCount => totalRecordsCount;
-
-  @override
-  int get selectedRowCount => 0;
+  double? _getColumnWidth(String header) {
+    switch (header) {
+      case "Ticket Number":
+        return 120;
+      case "Ticket Date & Time":
+        return 200;
+      case "Level":
+        return 80;
+      case "Location":
+        return 300;
+      default:
+        return null;
+    }
+  }
 }
