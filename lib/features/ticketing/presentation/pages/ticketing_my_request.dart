@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:my_worksphere_web/core/common/widgets/custom_date_range_picker.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
@@ -31,6 +33,8 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     String? actionStatus = "",
     int? pageCount = 1,
     int? pageSize = 10,
+    String? fromDate,
+    String? toDate,
   }) {
     _currentPageCount = pageCount ?? 1;
     final employeeState = context.read<EmployeeDetailCubit>().state;
@@ -41,8 +45,8 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       final payload = TicketMyRequestRequest(
         companyId: employee.companyId,
         empCd: employee.empCd,
-        fromDate: "06/07/2026",
-        toDate: "12/08/2026",
+        fromDate: fromDate ?? DateFormat("dd/MM/yyyy").format(DateTime.now()),
+        toDate: toDate ?? DateFormat("dd/MM/yyyy").format(DateTime.now()),
         pageCount: pageCount,
         pageSize: _currentPageSize ?? pageSize,
         departmentId: 0,
@@ -92,12 +96,19 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        color: Colors.grey.shade100,
-                        height: 60,
-                        width: double.infinity,
-                        child: Center(child: Text('Space for Calender')),
+                      CustomDateRangePicker(
+                        onDateRangeChanged: (fromDate, toDate) {
+                          _fetchTicketDetails(
+                            actionStatus: '',
+                            pageCount: 1,
+                            pageSize: 10,
+                            fromDate: fromDate,
+                            toDate: toDate,
+                          );
+                        },
                       ),
+
+                      SizedBox(height: 16),
 
                       if (ticketRequestCount != null)
                         TicketCountHorizontalList(
@@ -112,7 +123,8 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                       Expanded(
                         child: TicketListTableView(
                           ticketingDetailList: ticketingDetailList,
-                          rowsPerPage: (totalRecords > 0 &&
+                          rowsPerPage:
+                              (totalRecords > 0 &&
                                   totalRecords < (_currentPageSize ?? 10))
                               ? totalRecords
                               : (_currentPageSize ?? 10),
