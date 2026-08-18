@@ -14,6 +14,9 @@ class CustomDateRangePicker extends StatefulWidget {
 }
 
 class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
+  static const String _dateFormatStr = "dd/MM/yyyy";
+  final DateFormat _dateFormat = DateFormat(_dateFormatStr);
+
   DateTimeRange selectedRange = DateTimeRange(
     start: DateTime.now(),
     end: DateTime.now(),
@@ -30,8 +33,8 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
       showCalendar = false;
     });
     widget.onDateRangeChanged(
-      DateFormat("dd/MM/yyyy").format(fromDate),
-      DateFormat("dd/MM/yyyy").format(toDate),
+      _dateFormat.format(fromDate),
+      _dateFormat.format(toDate),
     );
     if (_menuController.isOpen) {
       _menuController.close();
@@ -48,12 +51,8 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 600;
-    final dateFormat = "dd/MM/yyyy";
-
     final rangeText =
-        "${DateFormat(dateFormat).format(selectedRange.start)} - ${DateFormat(dateFormat).format(selectedRange.end)}";
-
-    debugPrint('Range Text: $rangeText');
+        "${_dateFormat.format(selectedRange.start)} - ${_dateFormat.format(selectedRange.end)}";
 
     return MenuAnchor(
       controller: _menuController,
@@ -63,89 +62,82 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         elevation: WidgetStateProperty.all(12),
-        backgroundColor: WidgetStateProperty.all(Colors.white),
+        backgroundColor: WidgetStateProperty.all(AppColors.white),
       ),
-      menuChildren: [
-        if (!showCalendar) ...[
-          _buildMenuItem("Today", () {
-            final today = DateTime.now();
-            _setUpdatedSelectedRange(today, today);
-          }),
-          _buildMenuItem("Yesterday", () {
-            final yesterday = DateTime.now().subtract(const Duration(days: 1));
-            _setUpdatedSelectedRange(yesterday, yesterday);
-          }),
-          _buildMenuItem("Last 7 days", () {
-            final sevenDays = DateTime.now().subtract(const Duration(days: 7));
-            _setUpdatedSelectedRange(sevenDays, DateTime.now());
-          }),
-          _buildMenuItem("Last 30 days", () {
-            final thirtyDays = DateTime.now().subtract(
-              const Duration(days: 30),
-            );
-            _setUpdatedSelectedRange(thirtyDays, DateTime.now());
-          }),
-          _buildMenuItem("This Month", () {
-            final firstDayOfMonth = DateTime(
-              DateTime.now().year,
-              DateTime.now().month,
-              1,
-            );
-            final lastDayOfMonth = DateTime(
-              DateTime.now().year,
-              DateTime.now().month + 1,
-              0,
-            );
-            _setUpdatedSelectedRange(firstDayOfMonth, lastDayOfMonth);
-          }),
-          _buildMenuItem("Custom Range", () {
-            setState(() {
-              showCalendar = true;
-            });
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!_menuController.isOpen) {
-                _menuController.open();
-              }
-            });
-          }, icon: Icons.calendar_month),
-        ] else
-          _buildCustomCalendar(isMobile),
-      ],
-
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 260),
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.primaryDark, width: 2),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: InkWell(
-          onTapUp: (details) {
-            if (_menuController.isOpen) {
-              _menuController.close();
-            } else {
-              _menuController.open();
-            }
-          },
-          hoverColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
+      menuChildren: showCalendar
+          ? [_buildCustomCalendar(isMobile)]
+          : _buildPresets(),
+      child: InkWell(
+        onTap: () {
+          if (_menuController.isOpen) {
+            _menuController.close();
+          } else {
+            _menuController.open();
+          }
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 260),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.primaryDark, width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.calendar_month),
-              SizedBox(width: 8),
-              Text(
-                rangeText,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+              const Icon(Icons.calendar_month, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  rangeText,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_drop_down),
+              const SizedBox(width: 4),
+              const Icon(Icons.arrow_drop_down),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildPresets() {
+    return [
+      _buildMenuItem("Today", () {
+        final today = DateTime.now();
+        _setUpdatedSelectedRange(today, today);
+      }),
+      _buildMenuItem("Yesterday", () {
+        final yesterday = DateTime.now().subtract(const Duration(days: 1));
+        _setUpdatedSelectedRange(yesterday, yesterday);
+      }),
+      _buildMenuItem("Last 7 days", () {
+        final sevenDays = DateTime.now().subtract(const Duration(days: 7));
+        _setUpdatedSelectedRange(sevenDays, DateTime.now());
+      }),
+      _buildMenuItem("Last 30 days", () {
+        final thirtyDays = DateTime.now().subtract(const Duration(days: 30));
+        _setUpdatedSelectedRange(thirtyDays, DateTime.now());
+      }),
+      _buildMenuItem("This Month", () {
+        final now = DateTime.now();
+        final firstDay = DateTime(now.year, now.month, 1);
+        final lastDay = DateTime(now.year, now.month + 1, 0);
+        _setUpdatedSelectedRange(firstDay, lastDay);
+      }),
+      _buildMenuItem("Custom Range", () {
+        setState(() => showCalendar = true);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!_menuController.isOpen) _menuController.open();
+        });
+      }, icon: Icons.calendar_month),
+    ];
   }
 
   Widget _buildMenuItem(
@@ -157,34 +149,33 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
       onPressed: onPressed,
       style: ButtonStyle(
         padding: WidgetStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         ),
-        minimumSize: WidgetStateProperty.all(const Size(240, 52)),
+        minimumSize: WidgetStateProperty.all(const Size(240, 48)),
       ),
       leadingIcon: icon != null
           ? Icon(icon, size: 20, color: AppColors.slate)
           : null,
       child: Text(
         label,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
       ),
     );
   }
 
   Widget _buildCustomCalendar(bool isMobile) {
-    debugPrint('IsMobile: $isMobile');
     if (isMobile) {
       return Container(
         width: 320,
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: PrimaryScrollController(
           controller: _calendarScrollController,
           child: CalendarDatePicker2WithActionButtons(
             config: _buildCalendarConfig(),
             value: [selectedRange.start, selectedRange.end],
-            onValueChanged: (values) => _handleDateRangeChanged(values),
+            onValueChanged: _handleDateRangeChanged,
             onOkTapped: () {},
-            onCancelTapped: () => _resetToPreset(),
+            onCancelTapped: _resetToPreset,
           ),
         ),
       );
@@ -193,23 +184,15 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   }
 
   void _handleDateRangeChanged(List<DateTime?> values) {
-    if (values.isNotEmpty &&
-        values.first != null &&
-        values.length > 1 &&
-        values[1] != null) {
+    if (values.length >= 2 && values[0] != null && values[1] != null) {
       _setUpdatedSelectedRange(values[0]!, values[1]!);
     }
-    debugPrint('Values: $values');
   }
 
   void _resetToPreset() {
-    setState(() {
-      showCalendar = false;
-    });
+    setState(() => showCalendar = false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_menuController.isOpen) {
-        _menuController.open();
-      }
+      if (!_menuController.isOpen) _menuController.open();
     });
   }
 
@@ -219,33 +202,33 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
       dayMaxWidth: 32,
       useAbbrLabelForMonthModePicker: true,
       centerAlignModePicker: true,
-      selectedDayHighlightColor: Colors.blue[700],
+      selectedDayHighlightColor: AppColors.primary,
       weekdayLabelTextStyle: const TextStyle(
-        color: Colors.black54,
+        color: AppColors.textSecondary,
         fontWeight: FontWeight.bold,
         fontSize: 12,
       ),
       controlsTextStyle: const TextStyle(
-        color: Colors.black,
+        color: AppColors.textPrimary,
         fontWeight: FontWeight.bold,
         fontSize: 13,
       ),
-      selectedRangeHighlightColor: Colors.blue[50],
+      selectedRangeHighlightColor: AppColors.primaryLight.withOpacity(0.1),
       closeDialogOnCancelTapped: false,
       closeDialogOnOkTapped: false,
-      cancelButton: Text(
+      cancelButton: const Text(
         'Cancel',
-        style: TextStyle(color: Colors.blue[700], fontWeight: FontWeight.bold),
+        style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
       ),
       okButton: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.blue[700],
+          color: AppColors.primary,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Text(
           'Apply',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
