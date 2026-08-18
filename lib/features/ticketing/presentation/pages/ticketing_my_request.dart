@@ -70,6 +70,26 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     return Column(
       children: [
         if (!isMobile && !isMini) const TicketingMyRequestWebAppBar(),
+        SizedBox(height: 16),
+
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CustomDateRangePicker(
+              onDateRangeChanged: (fromDate, toDate) {
+                _fetchTicketDetails(
+                  actionStatus: '',
+                  pageCount: 1,
+                  pageSize: 10,
+                  fromDate: fromDate,
+                  toDate: toDate,
+                );
+              },
+            ),
+          ),
+        ),
+
 
         Expanded(
           child: BlocConsumer<TicketingBloc, TicketingState>(
@@ -96,20 +116,6 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomDateRangePicker(
-                        onDateRangeChanged: (fromDate, toDate) {
-                          _fetchTicketDetails(
-                            actionStatus: '',
-                            pageCount: 1,
-                            pageSize: 10,
-                            fromDate: fromDate,
-                            toDate: toDate,
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 16),
-
                       if (ticketRequestCount != null)
                         TicketCountHorizontalList(
                           ticketRequestCount: ticketRequestCount,

@@ -29,6 +29,7 @@ dependencies:
   dartz: ^0.10.1
   data_table_2: ^2.7.2
   intl: ^0.20.3
+  calendar_date_picker2: ^3.0.0
 
 dev_dependencies:
   flutter_test:
