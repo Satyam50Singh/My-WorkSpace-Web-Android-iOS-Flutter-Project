@@ -80,6 +80,7 @@ class DashboardDrawer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: ListView.builder(
                 itemCount: menuItems.length,
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 itemBuilder: (context, index) {
                   final item = menuItems[index];
 
@@ -89,7 +90,6 @@ class DashboardDrawer extends StatelessWidget {
                         context,
                       ).copyWith(dividerColor: Colors.transparent),
                       child: ExpansionTile(
-                        backgroundColor: Colors.grey.withOpacity(0.05),
                         leading: Icon(item.icon, color: AppColors.primaryDark),
                         title: Text(
                           item.title,
