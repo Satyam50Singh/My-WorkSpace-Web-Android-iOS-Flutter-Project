@@ -11,8 +11,13 @@ import 'drawer_menu_item.dart';
 
 class DashboardDrawer extends StatelessWidget {
   final EmployeeDetail employeeDetail;
+  final bool? isMobileView;
 
-  const DashboardDrawer({super.key, required this.employeeDetail});
+  const DashboardDrawer({
+    super.key,
+    required this.employeeDetail,
+    this.isMobileView,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -240,6 +245,10 @@ class DashboardDrawer extends StatelessWidget {
     String? route,
   }) {
     if (route == null) return;
+
+    if (isMobileView == true) {
+      Navigator.pop(context);
+    }
 
     if (route.startsWith('/')) {
       context.go(route);

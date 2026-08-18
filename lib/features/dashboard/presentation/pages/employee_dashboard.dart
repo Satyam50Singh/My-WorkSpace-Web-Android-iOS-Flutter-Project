@@ -46,7 +46,12 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           return Scaffold(
             appBar: isMobile || isMini ? const MobileDashboardAppBar() : null,
             drawer: isMobile || isMini
-                ? Drawer(child: DashboardDrawer(employeeDetail: employeeDetail))
+                ? Drawer(
+                    child: DashboardDrawer(
+                      employeeDetail: employeeDetail,
+                      isMobileView: true,
+                    ),
+                  )
                 : null,
             body: SafeArea(
               child: Row(
