@@ -30,7 +30,6 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   DateTime _displayedMonth = DateTime.now();
   List<DateTime?> _tempValues = [];
 
-
   void _setUpdatedSelectedRange(DateTime fromDate, DateTime toDate) {
     if (_menuController.isOpen) {
       _menuController.close();
@@ -173,129 +172,108 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   }
 
   Widget _buildCustomCalendar(bool isMobile) {
+    final config = _buildCalendarConfig();
+
     if (isMobile) {
       return Container(
         width: 320,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.all(8),
         child: PrimaryScrollController(
           controller: _calendarScrollController,
           child: CalendarDatePicker2WithActionButtons(
-            config: _buildCalendarConfig(),
-            value: [selectedRange.start, selectedRange.end],
-            onValueChanged: _handleDateRangeChanged,
-            onOkTapped: () {},
+            config: config,
+            value: _tempValues,
+            onValueChanged: (values) => setState(() => _tempValues = values),
+            onOkTapped: _applySelectedRange,
             onCancelTapped: _resetToPreset,
           ),
         ),
       );
     }
-    return Container(
-      width: 600,
+
+    return SizedBox(
+      width:540,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 330,
+            height: 240,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: CalendarDatePicker2(
-                    config: _buildCalendarConfig().copyWith(
-                      hideNextMonthIcon: true,
-                    ),
-                    value: _tempValues,
-                    displayedMonthDate: _displayedMonth,
-                    onDisplayedMonthChanged: (date) {
-                      setState(() {
-                        _displayedMonth = date;
-                      });
-                    },
-                    onValueChanged: (values) {
-                      setState(() {
-                        _tempValues = values;
-                      });
-                    },
-                  ),
-                ),
+                Expanded(child: _buildCalendar(config, isLeft: true)),
                 VerticalDivider(
-                  width: 20,
-                  thickness: 1,
-                  color: AppColors.slate.withOpacity(0.2),
-                  indent: 20,
-                  endIndent: 20,
+                  width: 1,
+                  color: AppColors.slate.withOpacity(0.1),
+                  indent: 16,
+                  endIndent: 16,
                 ),
-                Expanded(
-                  child: CalendarDatePicker2(
-                    config: _buildCalendarConfig().copyWith(
-                      hideLastMonthIcon: true,
-                    ),
-                    value: _tempValues,
-                    displayedMonthDate: DateTime(
-                      _displayedMonth.year,
-                      _displayedMonth.month + 1,
-                    ),
-                    onDisplayedMonthChanged: (date) {
-                      setState(() {
-                        _displayedMonth = DateTime(date.year, date.month - 1);
-                      });
-                    },
-                    onValueChanged: (values) {
-                      setState(() {
-                        _tempValues = values;
-                      });
-                    },
-                  ),
-                ),
+                Expanded(child: _buildCalendar(config, isLeft: false)),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: _resetToPreset,
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 16),
-
-                ElevatedButton(
-                  onPressed: () {
-                    if (_tempValues.isNotEmpty && _tempValues.first != null) {
-                      final start = _tempValues.first!;
-                      final end = _tempValues.length > 1 && _tempValues[1] != null ? _tempValues[1]! : start;
-                      _setUpdatedSelectedRange(start, end);
-                    }
-                  },
-                  child: const Text(
-                    'Apply',
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            child: const Divider(height: 1),
           ),
+          _buildDesktopActions(config),
         ],
       ),
     );
   }
 
-  void _handleDateRangeChanged(List<DateTime?> values) {
-    if (values.length >= 2 && values[0] != null && values[1] != null) {
-      _setUpdatedSelectedRange(values[0]!, values[1]!);
+  Widget _buildCalendar(
+    CalendarDatePicker2WithActionButtonsConfig config, {
+    required bool isLeft,
+  }) {
+    return CalendarDatePicker2(
+      config: config.copyWith(
+        hideNextMonthIcon: isLeft,
+        hideLastMonthIcon: !isLeft,
+      ),
+      value: _tempValues,
+      displayedMonthDate: isLeft
+          ? _displayedMonth
+          : DateTime(_displayedMonth.year, _displayedMonth.month + 1),
+      onDisplayedMonthChanged: (date) {
+        setState(() {
+          _displayedMonth = isLeft ? date : DateTime(date.year, date.month - 1);
+        });
+      },
+      onValueChanged: (values) => setState(() => _tempValues = values),
+    );
+  }
+
+  void _applySelectedRange() {
+    if (_tempValues.isNotEmpty && _tempValues[0] != null) {
+      final start = _tempValues[0]!;
+      final end = (_tempValues.length > 1 && _tempValues[1] != null)
+          ? _tempValues[1]!
+          : start;
+      _setUpdatedSelectedRange(start, end);
     }
+  }
+
+  Widget _buildDesktopActions(
+    CalendarDatePicker2WithActionButtonsConfig config,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(
+            onPressed: _resetToPreset,
+            child: config.cancelButton ?? const Text("Cancel"),
+          ),
+          const SizedBox(width: 12),
+          InkWell(
+            onTap: _applySelectedRange,
+            borderRadius: BorderRadius.circular(8),
+            child: config.okButton ?? const Text("Apply"),
+          ),
+        ],
+      ),
+    );
   }
 
   void _resetToPreset() {
