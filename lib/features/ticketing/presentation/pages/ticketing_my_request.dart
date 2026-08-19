@@ -23,6 +23,10 @@ class TicketingMyRequest extends StatefulWidget {
 class _TicketingMyRequestState extends State<TicketingMyRequest> {
   int? _currentPageSize;
   int _currentPageCount = 1;
+  String? _currentFromDate;
+  String? _currentToDate;
+  String? _currentActionStatus;
+  String? _currentSearchText;
 
   @override
   void initState() {
@@ -47,14 +51,20 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       final payload = TicketMyRequestRequest(
         companyId: employee.companyId,
         empCd: employee.empCd,
-        fromDate: fromDate ?? DateFormat("dd/MM/yyyy").format(DateTime.now()),
-        toDate: toDate ?? DateFormat("dd/MM/yyyy").format(DateTime.now()),
+        fromDate:
+            fromDate ??
+            _currentFromDate ??
+            DateFormat("dd/MM/yyyy").format(DateTime.now()),
+        toDate:
+            toDate ??
+            _currentToDate ??
+            DateFormat("dd/MM/yyyy").format(DateTime.now()),
         pageCount: pageCount,
         pageSize: _currentPageSize ?? pageSize,
         departmentId: 0,
         categoryId: 0,
-        actionStatus: actionStatus,
-        searchText: searchText ?? '',
+        actionStatus: _currentActionStatus ?? actionStatus,
+        searchText: _currentSearchText ?? searchText ?? '',
       );
 
       context.read<TicketingBloc>().add(
@@ -85,12 +95,14 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                 children: [
                   CustomDateRangePicker(
                     onDateRangeChanged: (fromDate, toDate) {
+                      _currentFromDate = fromDate;
+                      _currentToDate = toDate;
                       _fetchTicketDetails(
                         actionStatus: '',
                         pageCount: 1,
                         pageSize: 10,
-                        fromDate: fromDate,
-                        toDate: toDate,
+                        fromDate: _currentFromDate,
+                        toDate: _currentToDate,
                       );
                     },
                   ),
@@ -118,11 +130,30 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty && value.length > 2) {
+                            _currentSearchText = value;
                             _fetchTicketDetails(
-                              actionStatus: '',
                               pageCount: 1,
                               pageSize: 10,
-                              searchText: value,
+                              searchText: _currentSearchText,
+                            );
+                          } else {
+                            if (value.isEmpty) {
+                              _currentSearchText = '';
+                              _fetchTicketDetails(
+                                pageCount: 1,
+                                pageSize: 10,
+                                searchText: _currentSearchText,
+                              );
+                            }
+                          }
+                        },
+                        onSubmitted: (value) {
+                          if (value.isEmpty) {
+                            _currentSearchText = '';
+                            _fetchTicketDetails(
+                              pageCount: 1,
+                              pageSize: 10,
+                              searchText: _currentSearchText,
                             );
                           }
                         },
@@ -177,12 +208,21 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                   ),
                   onChanged: (value) {
                     if (value.isNotEmpty && value.length > 2) {
+                      _currentSearchText = value;
                       _fetchTicketDetails(
-                        actionStatus: '',
                         pageCount: 1,
                         pageSize: 10,
-                        searchText: value,
+                        searchText: _currentSearchText,
                       );
+                    } else {
+                      if (value.isEmpty) {
+                        _currentSearchText = '';
+                        _fetchTicketDetails(
+                          pageCount: 1,
+                          pageSize: 10,
+                          searchText: _currentSearchText,
+                        );
+                      }
                     }
                   },
                 ),
@@ -219,7 +259,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         TicketCountHorizontalList(
                           ticketRequestCount: ticketRequestCount,
                           onPressed: (actionStatus) {
-                            _fetchTicketDetails(actionStatus: actionStatus);
+                            _currentActionStatus = actionStatus;
+                            _fetchTicketDetails(
+                              actionStatus: _currentActionStatus,
+                            );
                           },
                         ),
 
