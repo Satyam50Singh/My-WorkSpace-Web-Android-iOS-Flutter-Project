@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details.dart';
 
 import '../../features/auth/presentation/pages/user_login_page.dart';
 import '../../features/auth/presentation/pages/user_onboard_page.dart';
@@ -27,9 +28,7 @@ class AppRouter {
 
       ShellRoute(
         builder: (context, state, child) {
-          return EmployeeDashboard(
-            child: child
-          );
+          return EmployeeDashboard(child: child);
         },
         routes: [
           GoRoute(
@@ -44,6 +43,13 @@ class AppRouter {
             name: AppRoutes.myTickets.replaceAll('/', ''),
             builder: (context, state) {
               return TicketingMyRequest();
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.viewTicketDetails,
+            name: AppRoutes.viewTicketDetails.replaceAll('/', ''),
+            builder: (context, state) {
+              return ViewTicketDetails();
             },
           ),
         ],

@@ -7,6 +7,7 @@ class AppRoutes {
 
   static const ticketing = '/ticketing';
   static const myTickets = '/my-tickets';
+  static const viewTicketDetails = '/view-ticket-details';
   static const checklist = '/checklist';
   static const workpermit = '/workpermit';
   static const gatepass = '/gatepass';

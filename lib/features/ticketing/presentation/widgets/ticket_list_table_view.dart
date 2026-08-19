@@ -9,6 +9,7 @@ class TicketListTableView extends StatefulWidget {
   final List<TicketDetailList>? ticketingDetailList;
   final void Function(int) updatePageSize;
   final void Function(int) updatePageCount;
+  final void Function(String) onTapViewTicketDetail;
   final int rowsPerPage;
   final int totalRecordsCount;
   final int currentPage;
@@ -21,6 +22,7 @@ class TicketListTableView extends StatefulWidget {
     required this.rowsPerPage,
     required this.totalRecordsCount,
     required this.currentPage,
+    required this.onTapViewTicketDetail,
   });
 
   @override
@@ -70,6 +72,9 @@ class _TicketListTableViewState extends State<TicketListTableView> {
         tickets,
         widget.totalRecordsCount,
         (widget.currentPage - 1) * effectiveRowsPerPage,
+        onTap: (selectedTicketId) {
+          widget.onTapViewTicketDetail(selectedTicketId);
+        },
       ),
       initialFirstRowIndex: (widget.currentPage - 1) * effectiveRowsPerPage,
       onRowsPerPageChanged: (value) {

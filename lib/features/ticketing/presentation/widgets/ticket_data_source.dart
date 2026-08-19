@@ -10,13 +10,15 @@ class TicketDataSource extends DataTableSource {
   final List<TicketDetailList> tickets;
   final int totalRecordsCount;
   final int firstRowIndex;
+  final void Function(String) onTap;
 
   TicketDataSource(
     this.context,
     this.tickets,
     this.totalRecordsCount,
-    this.firstRowIndex,
-  );
+    this.firstRowIndex, {
+    required this.onTap,
+  });
 
   @override
   DataRow? getRow(int index) {
@@ -32,7 +34,9 @@ class TicketDataSource extends DataTableSource {
         DataCell(
           InkWell(
             onTap: () {
-              debugPrint('Ticket #:: ${ticket.ticketCode}');
+              if (ticket.ticketCode != null) {
+                onTap(ticket.ticketCode ?? "");
+              }
             },
             child: Text(
               ticket.ticketCode ?? '-',

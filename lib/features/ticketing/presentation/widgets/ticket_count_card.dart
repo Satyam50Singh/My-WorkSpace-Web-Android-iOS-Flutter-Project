@@ -50,7 +50,7 @@ class TicketCountCard extends StatelessWidget {
           bottomLeft: Radius.circular(12),
           bottomRight: Radius.circular(12),
         ),
-        border: Border.all(width: 2, color: statusColor),
+        border: Border.all(width: 1, color: statusColor),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

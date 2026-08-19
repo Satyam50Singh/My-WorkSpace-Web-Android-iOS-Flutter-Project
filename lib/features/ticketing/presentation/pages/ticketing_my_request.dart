@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_date_range_picker.dart';
+import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
@@ -131,7 +133,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                           icon: Icon(Icons.filter_alt_off),
                           style: IconButton.styleFrom(
                             elevation: 4,
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 16,
+                            ),
                             backgroundColor: AppColors.primaryDark,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -142,7 +147,6 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                     ],
                   ),
                   SizedBox(width: 8),
-
 
                   Flexible(
                     child: ConstrainedBox(
@@ -231,7 +235,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         icon: Icon(Icons.filter_alt_off),
                         style: IconButton.styleFrom(
                           elevation: 4,
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 16,
+                          ),
                           backgroundColor: AppColors.primaryDark,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -338,6 +345,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                           },
                           updatePageCount: (pageCount) {
                             _fetchTicketDetails(pageCount: pageCount);
+                          },
+                          onTapViewTicketDetail: (selectedTicketId) {
+                            debugPrint('Selected Ticket ID: $selectedTicketId');
+                            context.goNamed('view-ticket-details');
                           },
                         ),
                       ),
