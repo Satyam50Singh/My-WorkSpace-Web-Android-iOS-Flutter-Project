@@ -46,10 +46,11 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: AppRoutes.viewTicketDetails,
-            name: AppRoutes.viewTicketDetails.replaceAll('/', ''),
+            path: AppRoutes.viewTicketDetailsPath,
+            name: AppRoutes.viewTicketDetails,
             builder: (context, state) {
-              return ViewTicketDetails();
+              final ticketId = state.pathParameters['ticketId'] ?? '';
+              return ViewTicketDetails(ticketId: ticketId);
             },
           ),
         ],
