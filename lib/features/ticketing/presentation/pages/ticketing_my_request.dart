@@ -73,6 +73,20 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     }
   }
 
+  void _resetAllFilters() {
+    _currentFromDate = null;
+    _currentToDate = null;
+    _currentActionStatus = '';
+    _currentSearchText = '';
+    _fetchTicketDetails(
+      actionStatus: '',
+      pageCount: 1,
+      pageSize: 10,
+      fromDate: _currentFromDate,
+      toDate: _currentToDate,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -93,19 +107,42 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomDateRangePicker(
-                    onDateRangeChanged: (fromDate, toDate) {
-                      _currentFromDate = fromDate;
-                      _currentToDate = toDate;
-                      _fetchTicketDetails(
-                        actionStatus: '',
-                        pageCount: 1,
-                        pageSize: 10,
-                        fromDate: _currentFromDate,
-                        toDate: _currentToDate,
-                      );
-                    },
+                  Row(
+                    children: [
+                      CustomDateRangePicker(
+                        onDateRangeChanged: (fromDate, toDate) {
+                          _currentFromDate = fromDate;
+                          _currentToDate = toDate;
+                          _fetchTicketDetails(
+                            actionStatus: '',
+                            pageCount: 1,
+                            pageSize: 10,
+                            fromDate: _currentFromDate,
+                            toDate: _currentToDate,
+                          );
+                        },
+                      ),
+                      SizedBox(width: 8),
+                      SizedBox(
+                        height: 40,
+                        child: ElevatedButton.icon(
+                          label: Text('Reset'),
+                          onPressed: _resetAllFilters,
+                          icon: Icon(Icons.filter_alt_off),
+                          style: IconButton.styleFrom(
+                            elevation: 4,
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                            backgroundColor: AppColors.primaryDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  SizedBox(width: 8),
+
 
                   Flexible(
                     child: ConstrainedBox(
@@ -183,6 +220,23 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                             toDate: toDate,
                           );
                         },
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    SizedBox(
+                      height: 40,
+                      child: ElevatedButton.icon(
+                        label: Text('Reset'),
+                        onPressed: _resetAllFilters,
+                        icon: Icon(Icons.filter_alt_off),
+                        style: IconButton.styleFrom(
+                          elevation: 4,
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                          backgroundColor: AppColors.primaryDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
                       ),
                     ),
                   ],
