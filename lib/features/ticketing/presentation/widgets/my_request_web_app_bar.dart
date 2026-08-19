@@ -38,47 +38,6 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Flexible(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 240,
-                            maxHeight: 36,
-                          ),
-                          child: TextField(
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              hintText: 'Search...',
-                              suffixIcon: const Icon(Icons.search),
-                              suffixIconColor: AppColors.primaryDark,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton.filled(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.filter_alt_outlined,
-                          color: AppColors.white,
-                          size: 18,
-                        ),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(36, 36),
-                          backgroundColor: AppColors.primaryDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
                       if (isCompact)
                         IconButton.filled(
                           onPressed: () {},

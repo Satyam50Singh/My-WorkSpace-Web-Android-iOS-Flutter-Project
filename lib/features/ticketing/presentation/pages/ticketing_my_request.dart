@@ -9,6 +9,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketin
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_count_horizontal_list.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_list_table_view.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 import '../widgets/my_request_web_app_bar.dart';
 
@@ -35,6 +36,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     int? pageSize = 10,
     String? fromDate,
     String? toDate,
+    String? searchText,
   }) {
     _currentPageCount = pageCount ?? 1;
     final employeeState = context.read<EmployeeDetailCubit>().state;
@@ -52,6 +54,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         departmentId: 0,
         categoryId: 0,
         actionStatus: actionStatus,
+        searchText: searchText ?? '',
       );
 
       context.read<TicketingBloc>().add(
@@ -72,24 +75,120 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         if (!isMobile && !isMini) const TicketingMyRequestWebAppBar(),
         SizedBox(height: 16),
 
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: CustomDateRangePicker(
-              onDateRangeChanged: (fromDate, toDate) {
-                _fetchTicketDetails(
-                  actionStatus: '',
-                  pageCount: 1,
-                  pageSize: 10,
-                  fromDate: fromDate,
-                  toDate: toDate,
-                );
-              },
+        if (!isMobile)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomDateRangePicker(
+                    onDateRangeChanged: (fromDate, toDate) {
+                      _fetchTicketDetails(
+                        actionStatus: '',
+                        pageCount: 1,
+                        pageSize: 10,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                      );
+                    },
+                  ),
+
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 240,
+                        maxHeight: 48,
+                      ),
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'Search...',
+                          suffixIcon: const Icon(Icons.search),
+                          suffixIconColor: AppColors.primaryDark,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          if (value.isNotEmpty && value.length > 2) {
+                            _fetchTicketDetails(
+                              actionStatus: '',
+                              pageCount: 1,
+                              pageSize: 10,
+                              searchText: value,
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
 
+        if (isMobile)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomDateRangePicker(
+                        onDateRangeChanged: (fromDate, toDate) {
+                          _fetchTicketDetails(
+                            actionStatus: '',
+                            pageCount: 1,
+                            pageSize: 10,
+                            fromDate: fromDate,
+                            toDate: toDate,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    hintText: 'Search by ticket ID or subject...',
+                    prefixIcon: const Icon(Icons.search, size: 20),
+                    prefixIconColor: AppColors.primaryDark,
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value.isNotEmpty && value.length > 2) {
+                      _fetchTicketDetails(
+                        actionStatus: '',
+                        pageCount: 1,
+                        pageSize: 10,
+                        searchText: value,
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
 
         Expanded(
           child: BlocConsumer<TicketingBloc, TicketingState>(
