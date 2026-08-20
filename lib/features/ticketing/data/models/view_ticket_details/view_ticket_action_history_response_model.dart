@@ -1,9 +1,9 @@
 import '../../../domain/entities/ticket_history_entity.dart';
 
 class ViewTicketActionHistoryResponseModel {
-  int? status;
-  String? message;
-  List<TicketHistory>? ticketHistory;
+  final int? status;
+  final String? message;
+  final List<TicketHistoryModel>? ticketHistory;
 
   ViewTicketActionHistoryResponseModel({
     this.status,
@@ -19,7 +19,7 @@ class ViewTicketActionHistoryResponseModel {
       message: json['Message'],
       ticketHistory: json['TicketHistory'] != null
           ? (json['TicketHistory'] as List)
-                .map((i) => TicketHistory.fromJson(i))
+                .map((i) => TicketHistoryModel.fromJson(i))
                 .toList()
           : null,
     );
@@ -34,8 +34,8 @@ class ViewTicketActionHistoryResponseModel {
   }
 }
 
-class TicketHistory extends TicketHistoryEntity {
-  TicketHistory({
+class TicketHistoryModel extends TicketHistoryEntity {
+  TicketHistoryModel({
     super.level,
     super.userName,
     super.userProfilePic,
@@ -47,8 +47,8 @@ class TicketHistory extends TicketHistoryEntity {
     super.userMobileNo,
   });
 
-  factory TicketHistory.fromJson(Map<String, dynamic> json) {
-    return TicketHistory(
+  factory TicketHistoryModel.fromJson(Map<String, dynamic> json) {
+    return TicketHistoryModel(
       level: json['Level'],
       userName: json['UserName'],
       userProfilePic: json['User_ProfilePic'],

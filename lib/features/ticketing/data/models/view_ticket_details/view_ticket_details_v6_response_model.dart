@@ -1,9 +1,9 @@
 import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_v6.dart';
 
 class ViewTicketDetailsV6ResponseModel {
-  int? status;
-  String? message;
-  List<ViewTicketDetailV6>? ticketDetails;
+  final int? status;
+  final String? message;
+  final List<ViewTicketDetailV6Model>? ticketDetails;
 
   ViewTicketDetailsV6ResponseModel({
     this.status,
@@ -11,15 +11,14 @@ class ViewTicketDetailsV6ResponseModel {
     this.ticketDetails,
   });
 
-
   factory ViewTicketDetailsV6ResponseModel.fromJson(Map<String, dynamic> json) {
     return ViewTicketDetailsV6ResponseModel(
       status: json['Status'] as int?,
       message: json['Message'] as String?,
       ticketDetails: json['TicketDetails'] != null
           ? (json['TicketDetails'] as List)
-          .map((v) => ViewTicketDetailV6.fromJson(v))
-          .toList()
+              .map((v) => ViewTicketDetailV6Model.fromJson(v))
+              .toList()
           : null,
     );
   }
@@ -30,16 +29,15 @@ class ViewTicketDetailsV6ResponseModel {
     data['Message'] = message;
     if (ticketDetails != null) {
       data['TicketDetails'] = ticketDetails!
-          .map((v) => (v as ViewTicketDetailV6).toJson())
+          .map((v) => v.toJson())
           .toList();
     }
     return data;
   }
 }
 
-
-class ViewTicketDetailV6 extends ViewTicketDetailV6Entity {
-  ViewTicketDetailV6({
+class ViewTicketDetailV6Model extends ViewTicketDetailV6Entity {
+  ViewTicketDetailV6Model({
     super.ticketID,
     super.ticketCode,
     super.level,
@@ -74,39 +72,41 @@ class ViewTicketDetailV6 extends ViewTicketDetailV6Entity {
     super.assetName,
   });
 
-  ViewTicketDetailV6.fromJson(Map<String, dynamic> json) {
-    ticketID = json['TicketID'];
-    ticketCode = json['TicketCode'];
-    level = json['Level'];
-    ticketDate = json['Ticket_Date'];
-    ticketStatus = json['Ticket_Status'];
-    ticketActionStatus = json['Ticket_ActionStatus'];
-    raisedByUser = json['RaisedByUser'];
-    raisedByMobileNo = json['RaisedByMobileNo'];
-    raisedByEmailID = json['RaisedByEmailID'];
-    locDesc = json['Loc_Desc'];
-    categoryDesc = json['Category_Desc'];
-    subCategoryDesc = json['SubCategory_Desc'];
-    assignedDepartment = json['Assigned_Department'];
-    ticketMessage = json['Ticket_Message'];
-    ticketRaisedImage = json['TicketRaised_Image'];
-    closedByUser = json['ClosedByUser'];
-    closureRemarks = json['Closure_Remarks'];
-    ticketClosureImage = json['TicketClosure_Image'];
-    isActionAllowed = json['Is_Action_Allowed'];
-    isAcceptAllowed = json['Is_Accept_Allowed'];
-    isReopenReviewAllowed = json['Is_Reopen_Review_Allowed'];
-    isAcceptedByAnotherUser = json['Is_AcceptedByAnotherUser'];
-    acceptedByUser = json['AcceptedByUser'];
-    ticketType = json['Ticket_Type'];
-    checklistQuestion = json['Checklist_Question'];
-    userResponse = json['User_Response'];
-    isReviewDone = json['Is_Review_Done'];
-    reviewedBy = json['Reviewed_By'];
-    reviewedDate = json['Reviewed_Date'];
-    reviewedRemarks = json['Reviewed_Remarks'];
-    assetID = json['AssetID'];
-    assetName = json['Asset_Name'];
+  factory ViewTicketDetailV6Model.fromJson(Map<String, dynamic> json) {
+    return ViewTicketDetailV6Model(
+      ticketID: json['TicketID'],
+      ticketCode: json['TicketCode'],
+      level: json['Level'],
+      ticketDate: json['Ticket_Date'],
+      ticketStatus: json['Ticket_Status'],
+      ticketActionStatus: json['Ticket_ActionStatus'],
+      raisedByUser: json['RaisedByUser'],
+      raisedByMobileNo: json['RaisedByMobileNo'],
+      raisedByEmailID: json['RaisedByEmailID'],
+      locDesc: json['Loc_Desc'],
+      categoryDesc: json['Category_Desc'],
+      subCategoryDesc: json['SubCategory_Desc'],
+      assignedDepartment: json['Assigned_Department'],
+      ticketMessage: json['Ticket_Message'],
+      ticketRaisedImage: json['TicketRaised_Image'],
+      closedByUser: json['ClosedByUser'],
+      closureRemarks: json['Closure_Remarks'],
+      ticketClosureImage: json['TicketClosure_Image'],
+      isActionAllowed: json['Is_Action_Allowed'],
+      isAcceptAllowed: json['Is_Accept_Allowed'],
+      isReopenReviewAllowed: json['Is_Reopen_Review_Allowed'],
+      isAcceptedByAnotherUser: json['Is_AcceptedByAnotherUser'],
+      acceptedByUser: json['AcceptedByUser'],
+      ticketType: json['Ticket_Type'],
+      checklistQuestion: json['Checklist_Question'],
+      userResponse: json['User_Response'],
+      isReviewDone: json['Is_Review_Done'],
+      reviewedBy: json['Reviewed_By'],
+      reviewedDate: json['Reviewed_Date'],
+      reviewedRemarks: json['Reviewed_Remarks'],
+      assetID: json['AssetID'],
+      assetName: json['Asset_Name'],
+    );
   }
 
   Map<String, dynamic> toJson() {

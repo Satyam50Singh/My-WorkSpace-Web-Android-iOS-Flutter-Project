@@ -1,13 +1,13 @@
 class TicketHistoryEntity {
-  int? level;
-  String? userName;
-  String? userProfilePic;
-  String? remarks;
-  String? actionDateTime;
-  String? expectedDateTime;
-  String? ticketStatus;
-  String? ticketActionStatus;
-  String? userMobileNo;
+  final int? level;
+  final String? userName;
+  final String? userProfilePic;
+  final String? remarks;
+  final String? actionDateTime;
+  final String? expectedDateTime;
+  final String? ticketStatus;
+  final String? ticketActionStatus;
+  final String? userMobileNo;
 
   TicketHistoryEntity({
     this.level,
