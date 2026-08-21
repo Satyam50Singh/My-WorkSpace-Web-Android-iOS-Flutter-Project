@@ -17,8 +17,8 @@ class ViewTicketDetailsV6ResponseModel {
       message: json['Message'] as String?,
       ticketDetails: json['TicketDetails'] != null
           ? (json['TicketDetails'] as List)
-              .map((v) => ViewTicketDetailV6Model.fromJson(v))
-              .toList()
+                .map((v) => ViewTicketDetailV6Model.fromJson(v))
+                .toList()
           : null,
     );
   }
@@ -28,9 +28,7 @@ class ViewTicketDetailsV6ResponseModel {
     data['Status'] = status;
     data['Message'] = message;
     if (ticketDetails != null) {
-      data['TicketDetails'] = ticketDetails!
-          .map((v) => v.toJson())
-          .toList();
+      data['TicketDetails'] = ticketDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -144,5 +142,42 @@ class ViewTicketDetailV6Model extends ViewTicketDetailV6Entity {
     data['AssetID'] = assetID;
     data['Asset_Name'] = assetName;
     return data;
+  }
+
+  ViewTicketDetailV6Entity toEntity() {
+    return ViewTicketDetailV6Entity(
+      ticketID: ticketID,
+      ticketCode: ticketCode,
+      level: level,
+      ticketDate: ticketDate,
+      ticketStatus: ticketStatus,
+      ticketActionStatus: ticketActionStatus,
+      raisedByUser: raisedByUser,
+      raisedByMobileNo: raisedByMobileNo,
+      raisedByEmailID: raisedByEmailID,
+      locDesc: locDesc,
+      categoryDesc: categoryDesc,
+      subCategoryDesc: subCategoryDesc,
+      assignedDepartment: assignedDepartment,
+      ticketMessage: ticketMessage,
+      ticketRaisedImage: ticketRaisedImage,
+      closedByUser: closedByUser,
+      closureRemarks: closureRemarks,
+      ticketClosureImage: ticketClosureImage,
+      isActionAllowed: isActionAllowed,
+      isAcceptAllowed: isAcceptAllowed,
+      isReopenReviewAllowed: isReopenReviewAllowed,
+      isAcceptedByAnotherUser: isAcceptedByAnotherUser,
+      acceptedByUser: acceptedByUser,
+      ticketType: ticketType,
+      checklistQuestion: checklistQuestion,
+      userResponse: userResponse,
+      isReviewDone: isReviewDone,
+      reviewedBy: reviewedBy,
+      reviewedDate: reviewedDate,
+      reviewedRemarks: reviewedRemarks,
+      assetID: assetID,
+      assetName: assetName,
+    );
   }
 }

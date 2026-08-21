@@ -9,8 +9,8 @@ class ApiEndpoints {
   // -- Ticketing Module APIs -- //
   static const fetchTicketMyRequestDetails = "/Ticketing/Fetch_Ticket_MyRequest_Web_API";
 
-  static const fetchViewTicketDetailsV6  = "Ticketing/View_Ticket_Details_V6";
-  static const fetchViewTicketWorkflowDetails = "Ticketing/View_Ticket_Workflow_Details_Web_API";
-  static const fetchViewTicketActionHistory = "Ticketing/View_Ticket_Action_History";
+  static const fetchViewTicketDetailsV6  = "/Ticketing/View_Ticket_Details_V6";
+  static const fetchViewTicketWorkflowDetails = "/Ticketing/View_Ticket_Workflow_Details_Web_API";
+  static const fetchViewTicketActionHistory = "/Ticketing/View_Ticket_Action_History";
 
 }

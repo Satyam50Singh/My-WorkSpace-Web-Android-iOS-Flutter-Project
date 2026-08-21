@@ -50,4 +50,12 @@ class TicketWorkflowModel extends TicketWorkflowEntity {
     data['GroupName'] = groupName;
     return data;
   }
+
+  TicketWorkflowEntity toEntity() {
+    return TicketWorkflowEntity(
+      level: level,
+      userName: userName,
+      groupName: groupName,
+    );
+  }
 }

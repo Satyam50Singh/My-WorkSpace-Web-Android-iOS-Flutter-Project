@@ -9,13 +9,20 @@ import 'package:my_worksphere_web/features/auth/domain/usecases/validate_company
 import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/auth_bloc.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/ticketing_remote_data_source.dart';
+import 'package:my_worksphere_web/features/ticketing/data/datasources/view_ticket_detail_remote_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticketing_repository.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/repositories/view_ticket_detail_repository.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_action_history_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_request_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_detail_v6_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/ticketing/data/repositories/ticketing_repository_impl.dart';
+import '../../features/ticketing/data/repositories/view_ticket_detail_repository_impl.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
 import '../network/api_client.dart';
 
@@ -52,6 +59,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketingRemoteDataSource>(
     () => TicketingRemoteDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<ViewTicketDetailRemoteDataSource>(
+    () => ViewTicketDetailRemoteDataSourceImpl(sl()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<AuthRepository>(
@@ -59,6 +69,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<TicketingRepository>(
     () => TicketingRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<ViewTicketDetailRepository>(
+    () => ViewTicketDetailRepositoryImpl(sl()),
   );
 
   // ---------- Use cases ----------
@@ -71,9 +84,19 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketingMyRequestUseCase>(
     () => TicketingMyRequestUseCase(sl()),
   );
+  sl.registerLazySingleton<ViewTicketDetailV6UseCase>(
+    () => ViewTicketDetailV6UseCase(sl()),
+  );
+  sl.registerLazySingleton<TicketWorkflowUseCase>(
+    () => TicketWorkflowUseCase(sl()),
+  );
+  sl.registerLazySingleton<TicketActionHistoryUseCase>(
+    () => TicketActionHistoryUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
   sl.registerFactory(() => EmployeeDetailCubit(sl()));
   sl.registerFactory(() => TicketingBloc(sl()));
+  sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl()));
 }

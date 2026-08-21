@@ -6,8 +6,9 @@ import '../../../../../core/theme/app_colors.dart';
 
 class ViewTicketDetailHeader extends StatelessWidget {
   final String ticketId;
+  final String? ticketStatus;
 
-  const ViewTicketDetailHeader({super.key, required this.ticketId});
+  const ViewTicketDetailHeader({super.key, required this.ticketId, this.ticketStatus});
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +66,11 @@ class ViewTicketDetailHeader extends StatelessWidget {
             ),
             const Spacer(),
             Chip(
-              label: const Text(
-                'Open',
+              label: Text(
+                ticketStatus ?? 'Open',
                 style: TextStyle(color: Colors.white, fontSize: 12),
               ),
-              backgroundColor: AppColors.rose,
+              backgroundColor: getColor(ticketStatus ?? 'Open'),
               padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               visualDensity: VisualDensity.compact,
               side: BorderSide.none,
@@ -81,5 +82,16 @@ class ViewTicketDetailHeader extends StatelessWidget {
         ),
       ),
     );
+  }
+  Color getColor(String text) {
+    return text.toLowerCase() == "closed"
+        ? AppColors.success.withValues(alpha: 0.3)
+        : text.toLowerCase() == "parked"
+        ? AppColors.rose.withValues(alpha: 0.3)
+        : text.toLowerCase() == "hold"
+        ? AppColors.amber.withValues(alpha: 0.3)
+        : text.toLowerCase() == "expired"
+        ? AppColors.slate.withValues(alpha: 0.3)
+        : AppColors.primary.withValues(alpha: 0.3);
   }
 }

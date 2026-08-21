@@ -74,4 +74,18 @@ class TicketHistoryModel extends TicketHistoryEntity {
       'User_MobileNo': userMobileNo,
     };
   }
+
+  TicketHistoryEntity toEntity() {
+    return TicketHistoryEntity(
+      level: level,
+      userName: userName,
+      userProfilePic: userProfilePic,
+      remarks: remarks,
+      actionDateTime: actionDateTime,
+      expectedDateTime: expectedDateTime,
+      ticketStatus: ticketStatus,
+      ticketActionStatus: ticketActionStatus,
+      userMobileNo: userMobileNo,
+    );
+  }
 }
