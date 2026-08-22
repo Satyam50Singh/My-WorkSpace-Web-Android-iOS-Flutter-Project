@@ -17,19 +17,15 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 160),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
+        child: Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: AppColors.primaryDark.withOpacity(0.6),
-              width: 1,
-            ),
-            color: AppColors.white,
           ),
+          margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -50,7 +46,7 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
                     ),
                   ),
                   icon: Icon(
-                    Icons.text_snippet_rounded,
+                    Icons.confirmation_number_outlined,
                     color: selectedTab == 'Ticket Details'
                         ? AppColors.white
                         : AppColors.primaryDark,
@@ -79,7 +75,7 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
                     ),
                   ),
                   icon: Icon(
-                    Icons.workspaces_filled,
+                    Icons.layers_outlined,
                     color: selectedTab == 'Workflow'
                         ? AppColors.white
                         : AppColors.primaryDark,

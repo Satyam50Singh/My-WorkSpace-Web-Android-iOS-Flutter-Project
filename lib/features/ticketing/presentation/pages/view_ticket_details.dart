@@ -10,6 +10,7 @@ import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/view_ticket_detail_v6.dart';
+import '../widgets/view_ticket_details/ticket_detail_over_view.dart';
 import '../widgets/view_ticket_details/ticket_detail_tab_bar.dart';
 
 class ViewTicketDetails extends StatefulWidget {
@@ -23,7 +24,7 @@ class ViewTicketDetails extends StatefulWidget {
 
 class _ViewTicketDetailsState extends State<ViewTicketDetails> {
   String _selectedTab = 'Ticket Details';
-  List<ViewTicketDetailV6Entity>? viewTicketDetailV6Response;
+  ViewTicketDetailV6Entity? viewTicketDetailV6Response;
   List<TicketWorkflowEntity>? viewTicketWorkflowResponse;
   List<TicketHistoryEntity>? viewTicketActionHistoryResponse;
 
@@ -84,7 +85,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
         }
 
         if (state is ViewTicketDetailsV6Success) {
-          viewTicketDetailV6Response = state.viewTicketDetailV6;
+          viewTicketDetailV6Response = state.viewTicketDetailV6.first;
         }
         if (state is ViewTicketWorkflowDetailsSuccess) {
           viewTicketWorkflowResponse = state.ticketWorkflow;
@@ -99,7 +100,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
             if (viewTicketDetailV6Response != null)
               ViewTicketDetailHeader(
                 ticketId: widget.ticketId,
-                ticketStatus: viewTicketDetailV6Response?.first.ticketStatus,
+                ticketStatus: viewTicketDetailV6Response?.ticketStatus,
               ),
 
             SizedBox(height: 16.0),
@@ -115,8 +116,10 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
             SizedBox(height: 16.0),
 
             // Conditional Rendering based on selected tab
-            if (_selectedTab == 'Ticket Details')
-              const Center(child: Text("Ticket Details Content")),
+            if (_selectedTab == 'Ticket Details' &&
+                viewTicketDetailV6Response != null)
+              TicketDetailOverView(ticketDetails: viewTicketDetailV6Response),
+
             if (_selectedTab == 'Workflow')
               const Center(child: Text("Workflow Content")),
             if (_selectedTab == 'Action History')
