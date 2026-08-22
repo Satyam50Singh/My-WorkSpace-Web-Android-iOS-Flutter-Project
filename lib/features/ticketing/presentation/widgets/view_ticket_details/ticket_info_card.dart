@@ -15,7 +15,7 @@ class TicketInfoCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 8.0),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: double.infinity),
+          constraints: BoxConstraints(maxWidth: double.infinity, maxHeight: 348),
           child: Card(
             elevation: 2,
             color: AppColors.white,
