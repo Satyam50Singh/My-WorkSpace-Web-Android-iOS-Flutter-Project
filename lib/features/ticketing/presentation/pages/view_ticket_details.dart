@@ -118,7 +118,11 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
             // Conditional Rendering based on selected tab
             if (_selectedTab == 'Ticket Details' &&
                 viewTicketDetailV6Response != null)
-              TicketDetailOverView(ticketDetails: viewTicketDetailV6Response),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TicketDetailOverView(ticketDetails: viewTicketDetailV6Response),
+                ),
+              ),
 
             if (_selectedTab == 'Workflow')
               const Center(child: Text("Workflow Content")),
