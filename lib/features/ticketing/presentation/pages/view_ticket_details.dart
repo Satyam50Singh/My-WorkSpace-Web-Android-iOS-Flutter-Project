@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_history_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
 
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
+import '../../domain/entities/view_ticket_detail_v6.dart';
+import '../widgets/view_ticket_details/ticket_detail_tab_bar.dart';
 
 class ViewTicketDetails extends StatefulWidget {
   final String ticketId;
@@ -18,6 +22,11 @@ class ViewTicketDetails extends StatefulWidget {
 }
 
 class _ViewTicketDetailsState extends State<ViewTicketDetails> {
+  String _selectedTab = 'Ticket Details';
+  List<ViewTicketDetailV6Entity>? viewTicketDetailV6Response;
+  List<TicketWorkflowEntity>? viewTicketWorkflowResponse;
+  List<TicketHistoryEntity>? viewTicketActionHistoryResponse;
+
   @override
   void initState() {
     super.initState();
@@ -73,19 +82,47 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
             state is ViewTicketActionHistorySuccess) {
           LoaderUtils.hideLoader(context);
         }
+
+        if (state is ViewTicketDetailsV6Success) {
+          viewTicketDetailV6Response = state.viewTicketDetailV6;
+        }
+        if (state is ViewTicketWorkflowDetailsSuccess) {
+          viewTicketWorkflowResponse = state.ticketWorkflow;
+        }
+        if (state is ViewTicketActionHistorySuccess) {
+          viewTicketActionHistoryResponse = state.ticketHistory;
+        }
       },
       builder: (context, state) {
         return Column(
           children: [
-            if (state is ViewTicketDetailsV6Success)
+            if (viewTicketDetailV6Response != null)
               ViewTicketDetailHeader(
                 ticketId: widget.ticketId,
-                ticketStatus: state.viewTicketDetailV6.first.ticketStatus,
+                ticketStatus: viewTicketDetailV6Response?.first.ticketStatus,
               ),
+
+            SizedBox(height: 16.0),
+
+            TicketDetailTabBar(
+              onSelectedTab: (String tabName) {
+                setState(() {
+                  _selectedTab = tabName;
+                });
+              },
+            ),
+
+            SizedBox(height: 16.0),
+
+            // Conditional Rendering based on selected tab
+            if (_selectedTab == 'Ticket Details')
+              const Center(child: Text("Ticket Details Content")),
+            if (_selectedTab == 'Workflow')
+              const Center(child: Text("Workflow Content")),
+            if (_selectedTab == 'Action History')
+              const Center(child: Text("Action History Content")),
           ],
         );
-
-        return SizedBox.shrink();
       },
     );
   }
