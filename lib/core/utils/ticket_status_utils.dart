@@ -11,6 +11,8 @@ class TicketStatusUtils {
     if (status == "expired") return AppColors.slate.withValues(alpha: 0.9);
     if (status == "transferred") return AppColors.blue.withValues(alpha: 0.9);
     if (status == "assigned") return AppColors.error.withValues(alpha: 0.9);
+    if (status == "accepted") return AppColors.success.withValues(alpha: 0.9);
+    if (status == "in progress") return AppColors.amber.withValues(alpha: 0.9);
     return AppColors.primary.withValues(alpha: 0.9);
   }
 
@@ -23,6 +25,8 @@ class TicketStatusUtils {
     if (status == "expired") return AppColors.slate.withValues(alpha: 0.4);
     if (status == "transferred") return AppColors.blue.withValues(alpha: 0.4);
     if (status == "assigned") return AppColors.error.withValues(alpha: 0.4);
+    if (status == "accepted") return AppColors.success.withValues(alpha: 0.4);
+    if (status == "in progress") return AppColors.amber.withValues(alpha: 0.4);
     return AppColors.primary.withValues(alpha: 0.4);
   }
 
@@ -35,6 +39,8 @@ class TicketStatusUtils {
     if (status == "expired") return AppColors.slate;
     if (status == "transferred") return AppColors.blue;
     if (status == "assigned") return AppColors.error;
+    if (status == "accepted") return AppColors.success;
+    if (status == "in progress") return AppColors.amber;
     return AppColors.primary;
   }
 }

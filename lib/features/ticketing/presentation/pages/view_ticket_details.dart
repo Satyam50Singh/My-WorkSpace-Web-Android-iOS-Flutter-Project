@@ -4,6 +4,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_det
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_history_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_action_history.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
 
@@ -138,8 +139,12 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
               ),
 
             if (_selectedTab == 'Action History')
-              const Expanded(
-                child: Center(child: Text("Action History Content")),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TicketDetailActionHistory(
+                    actionHistoryList: viewTicketActionHistoryResponse,
+                  ),
+                ),
               ),
           ],
         );

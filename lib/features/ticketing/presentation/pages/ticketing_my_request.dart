@@ -54,9 +54,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         companyId: employee.companyId,
         empCd: employee.empCd,
         fromDate:
-            fromDate ??
-            _currentFromDate ??
-            DateFormat("dd/MM/yyyy").format(DateTime.now()),
+            '01/05/2026',
         toDate:
             toDate ??
             _currentToDate ??
