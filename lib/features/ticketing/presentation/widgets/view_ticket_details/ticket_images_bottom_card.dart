@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/image_dialog_utils.dart';
 import '../../../domain/entities/view_ticket_detail_v6.dart';
 
 class TicketImagesBottomCard extends StatelessWidget {
@@ -30,13 +31,11 @@ class TicketImagesBottomCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: double.infinity),
+        constraints: const BoxConstraints(maxWidth: double.infinity),
         child: Card(
           elevation: 2,
           color: AppColors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -45,12 +44,12 @@ class TicketImagesBottomCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.image_outlined,
                       color: AppColors.slate,
                       size: 20,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       'Reported Images:'.toUpperCase(),
                       overflow: TextOverflow.ellipsis,
@@ -66,21 +65,28 @@ class TicketImagesBottomCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                if (raisedImages != null && raisedImages.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                if (raisedImages.isNotEmpty) ...[
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
                     children: raisedImages
                         .map(
-                          (image) => Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                image: NetworkImage(image),
-                                fit: BoxFit.cover,
+                          (image) => InkWell(
+                            onTap: () => ImageDialogUtils.showImageDialog(
+                              context,
+                              image,
+                              title: 'Reported Image',
+                            ),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: NetworkImage(image),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -88,18 +94,18 @@ class TicketImagesBottomCard extends StatelessWidget {
                         .toList(),
                   ),
                 ] else
-                  Text('No reported images attached.'),
+                  const Text('No reported images attached.'),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.image_outlined,
                       color: AppColors.slate,
                       size: 20,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       'Closure Images:'.toUpperCase(),
                       overflow: TextOverflow.ellipsis,
@@ -115,23 +121,29 @@ class TicketImagesBottomCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-                if (closureImages != null &&
-                    closureImages.isNotEmpty) ...[
+                if (closureImages.isNotEmpty) ...[
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
                     children: closureImages
                         .map(
-                          (image) => Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                image: NetworkImage(image),
-                                fit: BoxFit.cover,
+                          (image) => InkWell(
+                            onTap: () => ImageDialogUtils.showImageDialog(
+                              context,
+                              image,
+                              title: 'Closure Image',
+                            ),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: NetworkImage(image),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -141,12 +153,11 @@ class TicketImagesBottomCard extends StatelessWidget {
                 ] else
                   Text(
                     'No closure images attached.',
-                    style: Theme.of(context).textTheme.headlineSmall
-                        ?.copyWith(
-                          color: AppColors.slate,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: AppColors.slate,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
               ],
             ),
@@ -155,5 +166,4 @@ class TicketImagesBottomCard extends StatelessWidget {
       ),
     );
   }
-
 }
