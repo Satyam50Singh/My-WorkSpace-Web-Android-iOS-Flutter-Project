@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_worksphere_web/core/utils/ticket_status_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/label_text.dart';
 
 import '../../../../../core/theme/app_colors.dart';
@@ -14,7 +15,11 @@ class TicketInfoCard extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < 800;
 
     return Padding(
-      padding: EdgeInsets.only(left: 16.0, right: isMobile ? 16.0 : 8.0, bottom: 16.0),
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: isMobile ? 16.0 : 8.0,
+        bottom: 16.0,
+      ),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: double.infinity, maxHeight: 348),
         child: Card(
@@ -240,10 +245,14 @@ class TicketInfoCard extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.rose.withOpacity(0.2),
+                              color: TicketStatusUtils.getStatusBgColor(
+                                ticketDetails!.ticketActionStatus.toString(),
+                              ),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: AppColors.rose,
+                                color: TicketStatusUtils.getStatusBorderColor(
+                                  ticketDetails!.ticketActionStatus.toString(),
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -251,7 +260,10 @@ class TicketInfoCard extends StatelessWidget {
                               ticketDetails!.ticketActionStatus.toString(),
                               style: Theme.of(context).textTheme.headlineMedium
                                   ?.copyWith(
-                                    color: AppColors.rose,
+                                    color: TicketStatusUtils.getStatusTextColor(
+                                      ticketDetails!.ticketActionStatus
+                                          .toString(),
+                                    ),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
                                   ),

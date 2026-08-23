@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/ticket_status_utils.dart';
 
 class StatusCell extends StatelessWidget {
   final String text;
@@ -12,11 +13,11 @@ class StatusCell extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: getColor(text),
+        color: TicketStatusUtils.getStatusBgColor(text),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           width: 1,
-          color: getColor(text),
+          color: TicketStatusUtils.getStatusBorderColor(text),
         ),
       ),
       child: Text(
@@ -24,6 +25,7 @@ class StatusCell extends StatelessWidget {
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
           fontSize: 12,
           fontWeight: FontWeight.w400,
+          color: TicketStatusUtils.getStatusTextColor(text)
         ),
       ),
     );

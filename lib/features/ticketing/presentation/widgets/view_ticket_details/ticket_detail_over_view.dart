@@ -13,7 +13,7 @@ class TicketDetailOverView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 800;
+    final isMobile = MediaQuery.of(context).size.width < 600;
     if (isMobile) {
       return Column(
         children: [
