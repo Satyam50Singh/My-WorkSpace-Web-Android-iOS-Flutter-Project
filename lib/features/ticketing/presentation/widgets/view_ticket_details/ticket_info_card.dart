@@ -45,7 +45,7 @@ class TicketInfoCard extends StatelessWidget {
                       size: 20,
                     ),
                   ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 4),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,21 +69,23 @@ class TicketInfoCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.slate.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Level ${ticketDetails?.level}/${ticketDetails?.level}',
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: AppColors.slate,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.slate.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'Level ${ticketDetails?.level}/${ticketDetails?.level}',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              color: AppColors.slate,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                      ),
                     ),
                   ),
                 ],
@@ -215,10 +217,14 @@ class TicketInfoCard extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.rose.withOpacity(0.2),
+                            color: TicketStatusUtils.getStatusBgColor(
+                              ticketDetails!.ticketStatus.toString(),
+                            ),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: AppColors.rose,
+                              color: TicketStatusUtils.getStatusTextColor(
+                                ticketDetails!.ticketStatus.toString(),
+                              ),
                               width: 1,
                             ),
                           ),
@@ -226,7 +232,9 @@ class TicketInfoCard extends StatelessWidget {
                             ticketDetails!.ticketStatus.toString(),
                             style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(
-                                  color: AppColors.rose,
+                                  color: TicketStatusUtils.getStatusTextColor(
+                                    ticketDetails!.ticketStatus.toString(),
+                                  ),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
                                 ),
