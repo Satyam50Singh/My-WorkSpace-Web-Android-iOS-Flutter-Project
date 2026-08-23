@@ -4,6 +4,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_det
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_history_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
 
 import '../../../../core/utils/loader_utils.dart';
@@ -121,14 +122,25 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                 viewTicketDetailV6Response != null)
               Expanded(
                 child: SingleChildScrollView(
-                  child: TicketDetailOverView(ticketDetails: viewTicketDetailV6Response),
+                  child: TicketDetailOverView(
+                    ticketDetails: viewTicketDetailV6Response,
+                  ),
                 ),
               ),
 
             if (_selectedTab == 'Workflow')
-              const Expanded(child: Center(child: Text("Workflow Content"))),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TicketDetailWorkflow(
+                    workFlowDetail: viewTicketWorkflowResponse,
+                  ),
+                ),
+              ),
+
             if (_selectedTab == 'Action History')
-              const Expanded(child: Center(child: Text("Action History Content"))),
+              const Expanded(
+                child: Center(child: Text("Action History Content")),
+              ),
           ],
         );
       },
