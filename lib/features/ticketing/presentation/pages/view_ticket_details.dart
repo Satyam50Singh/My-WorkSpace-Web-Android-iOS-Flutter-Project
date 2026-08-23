@@ -96,6 +96,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
       },
       builder: (context, state) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (viewTicketDetailV6Response != null)
               ViewTicketDetailHeader(
@@ -125,9 +126,9 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
               ),
 
             if (_selectedTab == 'Workflow')
-              const Center(child: Text("Workflow Content")),
+              const Expanded(child: Center(child: Text("Workflow Content"))),
             if (_selectedTab == 'Action History')
-              const Center(child: Text("Action History Content")),
+              const Expanded(child: Center(child: Text("Action History Content"))),
           ],
         );
       },

@@ -110,6 +110,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomDateRangePicker(
                         onDateRangeChanged: (fromDate, toDate) {
@@ -228,7 +229,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                     ),
                     SizedBox(width: 8),
                     SizedBox(
-                      height: 40,
+                      height: 44,
                       child: ElevatedButton.icon(
                         label: Text('Reset'),
                         onPressed: _resetAllFilters,
@@ -237,7 +238,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                           elevation: 4,
                           padding: EdgeInsets.symmetric(
                             horizontal: 8,
-                            vertical: 16,
+                            vertical: 8,
                           ),
                           backgroundColor: AppColors.primaryDark,
                           shape: RoundedRectangleBorder(

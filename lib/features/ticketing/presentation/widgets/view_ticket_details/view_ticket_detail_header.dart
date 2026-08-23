@@ -48,27 +48,31 @@ class ViewTicketDetailHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'View Ticket Details',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.primaryDark,
-                    fontWeight: FontWeight.w600,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'View Ticket Details',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  'Ticket ID: $ticketId',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.slate,
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    'Ticket ID: $ticketId',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.slate,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const Spacer(),
             Container(

@@ -27,15 +27,21 @@ class TicketDetailOverView extends StatelessWidget {
     } else {
       return Column(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: TicketInfoCard(ticketDetails: ticketDetails)),
-              Expanded(
-                child: ClassificationLocationCard(ticketDetails: ticketDetails),
-              ),
-              Expanded(child: RequestorProfileCard(ticketDetails: ticketDetails)),
-            ],
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: TicketInfoCard(ticketDetails: ticketDetails)),
+                Expanded(
+                  child: ClassificationLocationCard(
+                    ticketDetails: ticketDetails,
+                  ),
+                ),
+                Expanded(
+                  child: RequestorProfileCard(ticketDetails: ticketDetails),
+                ),
+              ],
+            ),
           ),
           TicketImagesBottomCard(ticketDetails: ticketDetails),
           const SizedBox(height: 24), // Bottom spacing
@@ -43,6 +49,4 @@ class TicketDetailOverView extends StatelessWidget {
       );
     }
   }
-
-
 }
