@@ -10,6 +10,7 @@ import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_deta
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_count_horizontal_list.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_list_table_view.dart';
 
+import '../../../../core/common/widgets/custom_search_bar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 import '../blocs/my_ticket_request_bloc/ticketing_bloc.dart';
@@ -53,8 +54,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       final payload = TicketMyRequestRequest(
         companyId: employee.companyId,
         empCd: employee.empCd,
-        fromDate:
-            '01/05/2026',
+        fromDate: '01/05/2026',
         toDate:
             toDate ??
             _currentToDate ??
@@ -153,21 +153,8 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         maxWidth: 240,
                         maxHeight: 48,
                       ),
-                      child: TextField(
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          hintText: 'Search...',
-                          suffixIcon: const Icon(Icons.search),
-                          suffixIconColor: AppColors.primaryDark,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                        ),
+                      child: CustomSearchBar(
+                        hintText: 'Search...',
                         onChanged: (value) {
                           if (value.isNotEmpty && value.length > 2) {
                             _currentSearchText = value;
@@ -185,16 +172,6 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                                 searchText: _currentSearchText,
                               );
                             }
-                          }
-                        },
-                        onSubmitted: (value) {
-                          if (value.isEmpty) {
-                            _currentSearchText = '';
-                            _fetchTicketDetails(
-                              pageCount: 1,
-                              pageSize: 10,
-                              searchText: _currentSearchText,
-                            );
                           }
                         },
                       ),
@@ -358,7 +335,6 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                   ),
                 );
               }
-
               return SizedBox.shrink();
             },
           ),

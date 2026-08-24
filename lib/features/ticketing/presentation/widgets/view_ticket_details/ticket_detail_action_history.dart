@@ -21,17 +21,40 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
   void filterList(String value) {
     debugPrint('Value: $value');
     setState(() {
-      filteredList = widget.actionHistoryList
-          ?.where(
-            (item) {
-              final searchTerm = value.toLowerCase();
-              return (item.userName?.toLowerCase().contains(searchTerm) ?? false) ||
-                  (item.ticketStatus?.toLowerCase().contains(searchTerm) ?? false) ||
-                  (item.ticketActionStatus?.toLowerCase().contains(searchTerm) ?? false);
-            },
-      )
-          .toList();
+      filteredList = widget.actionHistoryList?.where((item) {
+        final searchTerm = value.toLowerCase();
+        return (item.userName?.toLowerCase().contains(searchTerm) ?? false) ||
+            (item.ticketStatus?.toLowerCase().contains(searchTerm) ?? false) ||
+            (item.ticketActionStatus?.toLowerCase().contains(searchTerm) ??
+                false);
+      }).toList();
     });
+  }
+
+  Widget _buildHeaderCell(String title, {required int flex}) {
+    return Expanded(
+      flex: flex,
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentCell(String title, {required int flex}) {
+    return Expanded(
+      flex: flex,
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
   }
 
   @override
@@ -47,7 +70,6 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
         widget.actionHistoryList as Iterable<TicketHistoryEntity>,
       );
     }
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -120,90 +142,13 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  'Level',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  'User Name',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  'Remarks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Center(
-                                child: Text(
-                                  'Action Date & Time',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Center(
-                                child: Text(
-                                  'Expected Date & Time',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  'Ticket Status',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  'Action Status',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            _buildHeaderCell('Level', flex: 1),
+                            _buildHeaderCell('User Name', flex: 1),
+                            _buildHeaderCell('Remarks', flex: 1),
+                            _buildHeaderCell('Action Date & Time', flex: 2),
+                            _buildHeaderCell('Expected Date & Time', flex: 2),
+                            _buildHeaderCell('Ticket Status', flex: 1),
+                            _buildHeaderCell('Action Status', flex: 1),
                           ],
                         ),
                       ),
@@ -225,75 +170,25 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
+                                    _buildContentCell(
+                                      'L${actionHistory.level}',
                                       flex: 1,
-                                      child: Center(
-                                        child: Text(
-                                          'L${actionHistory.level}',
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                     ),
-                                    Expanded(
+                                    _buildContentCell(
+                                      actionHistory.userName ?? '-',
                                       flex: 1,
-                                      child: Center(
-                                        child: Text(
-                                          actionHistory.userName ?? '-',
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                     ),
-                                    Expanded(
+                                    _buildContentCell(
+                                      actionHistory.remarks ?? '-',
                                       flex: 1,
-                                      child: Center(
-                                        child: Text(
-                                          actionHistory.remarks ?? '-',
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                     ),
-                                    Expanded(
+                                    _buildContentCell(
+                                      actionHistory.actionDateTime ?? '-',
                                       flex: 2,
-                                      child: Center(
-                                        child: Text(
-                                          actionHistory.actionDateTime ?? '-',
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                     ),
-                                    Expanded(
+                                    _buildContentCell(
+                                      actionHistory.expectedDateTime ?? '-',
                                       flex: 2,
-                                      child: Center(
-                                        child: Text(
-                                          actionHistory.expectedDateTime ?? '-',
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                     ),
                                     Expanded(
                                       flex: 1,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_worksphere_web/core/common/widgets/custom_chip.dart';
 
 import '../../../../../core/routes/app_routes.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/utils/ticket_status_utils.dart';
 
 class ViewTicketDetailHeader extends StatelessWidget {
   final String ticketId;
@@ -75,30 +75,8 @@ class ViewTicketDetailHeader extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Container(
-              decoration: BoxDecoration(
-                color: TicketStatusUtils.getStatusBgColor(statusText),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: TicketStatusUtils.getStatusBorderColor(statusText),
-                  width: 1,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 4,
-                ),
-                child: Text(
-                  statusText,
-                  style: TextStyle(
-                    color: TicketStatusUtils.getStatusTextColor(statusText),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
+            CustomChip(status: statusText),
+            const SizedBox(width: 16),
           ],
         ),
       ),

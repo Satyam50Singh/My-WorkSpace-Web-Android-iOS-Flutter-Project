@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_worksphere_web/core/utils/ticket_status_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/label_text.dart';
 
+import '../../../../../core/common/widgets/custom_chip.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/entities/view_ticket_detail_v6.dart';
 
@@ -211,34 +211,8 @@ class TicketInfoCard extends StatelessWidget {
                       children: [
                         LabelText(label: 'Ticket Status'),
                         SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: TicketStatusUtils.getStatusBgColor(
-                              ticketDetails!.ticketStatus.toString(),
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: TicketStatusUtils.getStatusTextColor(
-                                ticketDetails!.ticketStatus.toString(),
-                              ),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            ticketDetails!.ticketStatus.toString(),
-                            style: Theme.of(context).textTheme.headlineMedium
-                                ?.copyWith(
-                                  color: TicketStatusUtils.getStatusTextColor(
-                                    ticketDetails!.ticketStatus.toString(),
-                                  ),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                          ),
+                        CustomChip(
+                          status: ticketDetails!.ticketStatus.toString(),
                         ),
                       ],
                     ),
@@ -249,35 +223,8 @@ class TicketInfoCard extends StatelessWidget {
                       children: [
                         LabelText(label: 'Action Status'),
                         SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: TicketStatusUtils.getStatusBgColor(
-                              ticketDetails!.ticketActionStatus.toString(),
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: TicketStatusUtils.getStatusBorderColor(
-                                ticketDetails!.ticketActionStatus.toString(),
-                              ),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            ticketDetails!.ticketActionStatus.toString(),
-                            style: Theme.of(context).textTheme.headlineMedium
-                                ?.copyWith(
-                                  color: TicketStatusUtils.getStatusTextColor(
-                                    ticketDetails!.ticketActionStatus
-                                        .toString(),
-                                  ),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                          ),
+                        CustomChip(
+                          status: ticketDetails!.ticketActionStatus.toString(),
                         ),
                       ],
                     ),
