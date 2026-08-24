@@ -6,11 +6,13 @@ import 'ticket_count_card.dart';
 
 class TicketCountHorizontalList extends StatefulWidget {
   final TicketRequestCount? ticketRequestCount;
+  final String selectedStatus;
   final void Function(String) onPressed;
 
   const TicketCountHorizontalList({
     super.key,
     this.ticketRequestCount,
+    required this.selectedStatus,
     required this.onPressed,
   });
 
@@ -126,7 +128,11 @@ class _TicketCountHorizontalListState extends State<TicketCountHorizontalList> {
               final item = counts[index];
               return InkWell(
                 onTap: () => widget.onPressed(item.$1),
-                child: TicketCountCard(title: item.$1, count: item.$2 ?? 0),
+                child: TicketCountCard(
+                  title: item.$1,
+                  count: item.$2 ?? 0,
+                  selectedStatus: widget.selectedStatus,
+                ),
               );
             },
           ),

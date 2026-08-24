@@ -30,6 +30,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
   String? _currentToDate;
   String? _currentActionStatus;
   String? _currentSearchText;
+  String selectedStatus = 'All';
 
   @override
   void initState() {
@@ -78,6 +79,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     _currentToDate = null;
     _currentActionStatus = '';
     _currentSearchText = '';
+    // Add this to update the UI highlight
+    setState(() {
+      selectedStatus = 'All';
+    });
     _fetchTicketDetails(
       actionStatus: '',
       pageCount: 1,
@@ -300,7 +305,11 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                             _fetchTicketDetails(
                               actionStatus: _currentActionStatus,
                             );
+                            setState(() {
+                              selectedStatus = actionStatus;
+                            });
                           },
+                          selectedStatus: selectedStatus,
                         ),
 
                       SizedBox(height: 36),

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 
 class TicketCountCard extends StatelessWidget {
   final String title;
   final int count;
+  final String selectedStatus;
 
-  const TicketCountCard({super.key, required this.title, required this.count});
+  const TicketCountCard({
+    super.key,
+    required this.title,
+    required this.count,
+    required this.selectedStatus,
+  });
 
   Color _getColorCode(String title) {
     switch (title) {
@@ -44,7 +51,9 @@ class TicketCountCard extends StatelessWidget {
     return Container(
       width: isMini || isMobile ? 140 : 150,
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: (selectedStatus == title)
+            ? _getColorCode(title).withOpacity(0.2)
+            : AppColors.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           bottomLeft: Radius.circular(12),
@@ -82,7 +91,7 @@ class TicketCountCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize:isMini || isMobile ? 14 : 16,
+                    fontSize: isMini || isMobile ? 14 : 16,
                     fontWeight: FontWeight.bold,
                     color: statusColor,
                   ),
