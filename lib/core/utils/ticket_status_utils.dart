@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_colors.dart';
 
 class TicketStatusUtils {
@@ -42,5 +43,30 @@ class TicketStatusUtils {
     if (status == "accepted") return AppColors.success;
     if (status == "in progress") return AppColors.amber;
     return AppColors.primary;
+  }
+
+  static Color getColorCode(String title) {
+    switch (title) {
+      case 'All':
+        return AppColors.primaryDark;
+      case 'Open':
+        return AppColors.rose;
+      case 'Assigned':
+        return AppColors.cyan;
+      case 'Accepted':
+        return Colors.teal.shade300;
+      case 'In Progress':
+        return AppColors.amber;
+      case 'On Hold':
+        return AppColors.secondary;
+      case 'Closed':
+        return AppColors.error;
+      case 'Expired':
+        return AppColors.slate;
+      case 'Transferred':
+        return AppColors.violet;
+      default:
+        return AppColors.success;
+    }
   }
 }

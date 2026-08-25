@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_worksphere_web/core/utils/ticket_status_utils.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -14,34 +15,9 @@ class TicketCountCard extends StatelessWidget {
     required this.selectedStatus,
   });
 
-  Color _getColorCode(String title) {
-    switch (title) {
-      case 'All':
-        return AppColors.primaryDark;
-      case 'Open':
-        return AppColors.rose;
-      case 'Assigned':
-        return AppColors.cyan;
-      case 'Accepted':
-        return Colors.teal.shade300;
-      case 'In Progress':
-        return AppColors.amber;
-      case 'On Hold':
-        return AppColors.secondary;
-      case 'Closed':
-        return AppColors.error;
-      case 'Expired':
-        return AppColors.slate;
-      case 'Transferred':
-        return AppColors.violet;
-      default:
-        return AppColors.success;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Color statusColor = _getColorCode(title);
+    final Color statusColor = TicketStatusUtils.getColorCode(title);
 
     final width = MediaQuery.sizeOf(context).width;
 
@@ -52,7 +28,7 @@ class TicketCountCard extends StatelessWidget {
       width: isMini || isMobile ? 140 : 150,
       decoration: BoxDecoration(
         color: (selectedStatus == title)
-            ? _getColorCode(title).withOpacity(0.2)
+            ? TicketStatusUtils.getColorCode(title).withOpacity(0.2)
             : AppColors.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
