@@ -5,6 +5,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_info_card.dart';
 
 import '../../../domain/entities/view_ticket_detail_v6.dart';
+import 'manage_ticket_card.dart';
 
 class TicketDetailOverView extends StatelessWidget {
   final ViewTicketDetailV6Entity? ticketDetails;
@@ -21,7 +22,10 @@ class TicketDetailOverView extends StatelessWidget {
           ClassificationLocationCard(ticketDetails: ticketDetails),
           RequestorProfileCard(ticketDetails: ticketDetails),
           TicketImagesBottomCard(ticketDetails: ticketDetails),
-          const SizedBox(height: 24), // Bottom spacing to avoid overlay issues
+          const SizedBox(height: 16),
+          if (ticketDetails?.isReopenReviewAllowed == true)
+            ManageTicketCard(),
+          const SizedBox(height: 48), // Bottom spacing
         ],
       );
     } else {
@@ -44,7 +48,10 @@ class TicketDetailOverView extends StatelessWidget {
             ),
           ),
           TicketImagesBottomCard(ticketDetails: ticketDetails),
-          const SizedBox(height: 24), // Bottom spacing
+          const SizedBox(height: 16),
+          if (ticketDetails?.isReopenReviewAllowed == true)
+            ManageTicketCard(),
+          const SizedBox(height: 48), // Bottom spacing
         ],
       );
     }

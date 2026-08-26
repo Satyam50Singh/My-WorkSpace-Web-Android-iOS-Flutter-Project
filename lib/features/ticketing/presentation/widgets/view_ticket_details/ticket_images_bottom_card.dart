@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/utils/image_dialog_utils.dart';
+import '../../../../../core/utils/custom_dialog_utils.dart';
 import '../../../domain/entities/view_ticket_detail_v6.dart';
 
 class TicketImagesBottomCard extends StatelessWidget {
@@ -42,6 +42,7 @@ class TicketImagesBottomCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 8),
                 Row(
                   children: [
                     const Icon(
@@ -73,14 +74,14 @@ class TicketImagesBottomCard extends StatelessWidget {
                     children: raisedImages
                         .map(
                           (image) => InkWell(
-                            onTap: () => ImageDialogUtils.showImageDialog(
+                            onTap: () => CustomDialogUtils.showImageDialog(
                               context,
                               image,
                               title: 'Reported Image',
                             ),
                             child: Container(
-                              width: 100,
-                              height: 100,
+                              width: 140,
+                              height: 120,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 image: DecorationImage(
@@ -121,7 +122,7 @@ class TicketImagesBottomCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
 
                 if (closureImages.isNotEmpty) ...[
                   Wrap(
@@ -130,14 +131,14 @@ class TicketImagesBottomCard extends StatelessWidget {
                     children: closureImages
                         .map(
                           (image) => InkWell(
-                            onTap: () => ImageDialogUtils.showImageDialog(
+                            onTap: () => CustomDialogUtils.showImageDialog(
                               context,
                               image,
                               title: 'Closure Image',
                             ),
                             child: Container(
-                              width: 100,
-                              height: 100,
+                              width: 140,
+                              height: 120,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 image: DecorationImage(
@@ -159,6 +160,7 @@ class TicketImagesBottomCard extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
+                SizedBox(height: 8),
               ],
             ),
           ),
