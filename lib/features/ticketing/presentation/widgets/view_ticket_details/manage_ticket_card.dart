@@ -4,10 +4,12 @@ import 'package:my_worksphere_web/core/utils/custom_dialog_utils.dart';
 import '../../../../../core/theme/app_colors.dart';
 
 class ManageTicketCard extends StatelessWidget {
-  const ManageTicketCard({super.key});
+  final Function(String remarks, int isReview) onActionSubmit;
 
-  void _submitReviewOrReOpen(String remarks) {
+  const ManageTicketCard({super.key, required this.onActionSubmit});
 
+  void _submitReviewOrReOpen(String remarks, {required int isReview}) {
+    onActionSubmit(remarks, isReview);
   }
 
   @override
@@ -55,7 +57,7 @@ class ManageTicketCard extends StatelessWidget {
                         'Submit',
                         'Enter reopen remarks...',
                         (remarks) {
-                          _submitReviewOrReOpen(remarks);
+                          _submitReviewOrReOpen(remarks, isReview: 0);
                         },
                       );
                     },
@@ -79,7 +81,7 @@ class ManageTicketCard extends StatelessWidget {
                         'Submit',
                         'Enter review remarks...',
                         (remarks) {
-                          _submitReviewOrReOpen(remarks);
+                          _submitReviewOrReOpen(remarks, isReview: 1);
                         },
                       );
                     },

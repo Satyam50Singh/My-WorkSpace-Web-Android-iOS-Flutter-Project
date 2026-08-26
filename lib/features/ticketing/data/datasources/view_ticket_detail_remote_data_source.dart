@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:my_worksphere_web/core/network/api_client.dart';
 import 'package:my_worksphere_web/core/network/api_endpoints.dart';
 import 'package:my_worksphere_web/core/network/api_exceptions.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_action_history_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_details_v6_response_model.dart';
 
@@ -20,6 +23,10 @@ abstract class ViewTicketDetailRemoteDataSource {
 
   Future<ViewTicketActionHistoryResponseModel> fetchTicketActionHistory({
     required ViewTicketDetailRequest payload,
+  });
+
+  Future<SubmitReopenReviewResponseModel> submitReopenReviewTicket({
+    required SubmitReopenReviewRequest payload,
   });
 }
 
@@ -85,6 +92,25 @@ class ViewTicketDetailRemoteDataSourceImpl
         },
       );
       return ViewTicketActionHistoryResponseModel.fromJson(json);
+    } on ApiException catch (e) {
+      throw ServerException(message: e.message);
+    } on DioException catch (e) {
+      throw ServerException(message: e.message ?? "Something went wrong!");
+    }
+  }
+
+  @override
+  Future<SubmitReopenReviewResponseModel> submitReopenReviewTicket({
+    required SubmitReopenReviewRequest payload,
+  }) async {
+    try {
+      final json = await _apiClient.post(
+        ApiEndpoints.submitReOpenReviewTicket,
+        data: FormData.fromMap({
+          '0': jsonEncode(payload.toJson()),
+        }),
+      );
+      return SubmitReopenReviewResponseModel.fromJson(json);
     } on ApiException catch (e) {
       throw ServerException(message: e.message);
     } on DioException catch (e) {

@@ -9,8 +9,13 @@ import 'manage_ticket_card.dart';
 
 class TicketDetailOverView extends StatelessWidget {
   final ViewTicketDetailV6Entity? ticketDetails;
+  final Function(String remarks, int isReview) onActionSubmit;
 
-  const TicketDetailOverView({super.key, required this.ticketDetails});
+  const TicketDetailOverView({
+    super.key,
+    required this.ticketDetails,
+    required this.onActionSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class TicketDetailOverView extends StatelessWidget {
           TicketImagesBottomCard(ticketDetails: ticketDetails),
           const SizedBox(height: 16),
           if (ticketDetails?.isReopenReviewAllowed == true)
-            ManageTicketCard(),
+            ManageTicketCard(onActionSubmit: onActionSubmit),
           const SizedBox(height: 48), // Bottom spacing
         ],
       );
@@ -50,7 +55,7 @@ class TicketDetailOverView extends StatelessWidget {
           TicketImagesBottomCard(ticketDetails: ticketDetails),
           const SizedBox(height: 16),
           if (ticketDetails?.isReopenReviewAllowed == true)
-            ManageTicketCard(),
+            ManageTicketCard(onActionSubmit: onActionSubmit),
           const SizedBox(height: 48), // Bottom spacing
         ],
       );

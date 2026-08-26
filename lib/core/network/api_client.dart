@@ -19,6 +19,25 @@ class ApiClient {
     }
   }
 
+  Future<Map<String, dynamic>> post(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    dynamic data,
+    Options? options,
+  }) async {
+    try {
+      final response = await _dio.post(
+        path,
+        queryParameters: queryParameters,
+        data: data,
+        options: options,
+      );
+      return _extractData(response);
+    } on DioException catch (e) {
+      throw _mapDioException(e);
+    }
+  }
+
   Map<String, dynamic> _extractData(Response response) {
     if (response.data is Map<String, dynamic>) {
       return response.data as Map<String, dynamic>;

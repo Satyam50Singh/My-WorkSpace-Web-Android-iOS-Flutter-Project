@@ -19,3 +19,9 @@ class ViewTicketActionHistoryRequested extends ViewTicketDetailsEvent {
 
   ViewTicketActionHistoryRequested({this.payload});
 }
+
+class SubmitReopenReviewTicketRequested extends ViewTicketDetailsEvent {
+  final SubmitReopenReviewRequest? payload;
+
+  SubmitReopenReviewTicketRequested({this.payload});
+}

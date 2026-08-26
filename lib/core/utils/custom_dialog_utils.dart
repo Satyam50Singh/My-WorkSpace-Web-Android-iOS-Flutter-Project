@@ -143,13 +143,13 @@ class CustomDialogUtils {
                         height: 32,
                         width: 32,
                         decoration: BoxDecoration(
-                          color: AppColors.orange.withOpacity(0.2),
+                          color: AppColors.primary.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           size: 18,
                           headerIcon,
-                          color: AppColors.orange,
+                          color: AppColors.primaryDark,
                         ),
                       ),
                       SizedBox(width: 8),
@@ -186,6 +186,7 @@ class CustomDialogUtils {
                   ),
                   SizedBox(height: 8),
                   TextField(
+                    controller: remarksController,
                     maxLines: 4,
                     decoration: InputDecoration(hint: Text(hintText)),
                   ),

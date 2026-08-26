@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_history_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
@@ -71,6 +72,26 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
     );
   }
 
+  void _submitReOpenReviewTicket(String remarks, int isReview) {
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final companyId = employee.companyId;
+      final empCd = employee.empCd;
+
+      SubmitReopenReviewRequest payload = SubmitReopenReviewRequest(
+        companyId: companyId,
+        empCd: empCd,
+        ticketId: widget.ticketId.toLowerCase().replaceFirst("tkt", ""),
+        remarks: remarks,
+        isReview: isReview,
+      );
+      context.read<ViewTicketDetailsBloc>().add(
+        SubmitReopenReviewTicketRequested(payload: payload),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ViewTicketDetailsBloc, ViewTicketDetailsState>(
@@ -82,8 +103,28 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
           SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
         } else if (state is ViewTicketDetailsV6Success ||
             state is ViewTicketWorkflowDetailsSuccess ||
-            state is ViewTicketActionHistorySuccess) {
+            state is ViewTicketActionHistorySuccess ||
+            state is SubmitReopenReviewSuccess) {
           LoaderUtils.hideLoader(context);
+        }
+
+        if (state is SubmitReopenReviewSuccess) {
+          SnackBarUtils.showFloatingSnackBar(
+            context,
+            state.submitReopenReviewEntity.message ?? "Action successful",
+          );
+          // Refresh data
+          final employeeState = context.read<EmployeeDetailCubit>().state;
+          if (employeeState is EmployeeDetailFetched) {
+            final payload = ViewTicketDetailRequest(
+              companyId: employeeState.employeeDetail.companyId,
+              empCd: employeeState.employeeDetail.empCd,
+              ticketId: widget.ticketId.toLowerCase().replaceFirst("tkt", ""),
+            );
+            _fetchViewTicketDetailV6Api(payload);
+            _fetchViewTicketActionHistory(payload);
+            _fetchViewTicketWorkFlowDetails(payload);
+          }
         }
 
         if (state is ViewTicketDetailsV6Success) {
@@ -125,6 +166,9 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                 child: SingleChildScrollView(
                   child: TicketDetailOverView(
                     ticketDetails: viewTicketDetailV6Response,
+                    onActionSubmit: (remarks, isReview) {
+                      _submitReOpenReviewTicket(remarks, isReview);
+                    },
                   ),
                 ),
               ),

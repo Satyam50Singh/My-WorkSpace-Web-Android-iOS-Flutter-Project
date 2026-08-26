@@ -13,4 +13,6 @@ class ApiEndpoints {
   static const fetchViewTicketWorkflowDetails = "/Ticketing/View_Ticket_Workflow_Details_Web_API";
   static const fetchViewTicketActionHistory = "/Ticketing/View_Ticket_Action_History";
 
+  static const submitReOpenReviewTicket = "/Ticketing/Submit_ReOpen_Review_Ticket_Web";
+
 }

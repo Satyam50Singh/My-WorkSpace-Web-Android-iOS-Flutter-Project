@@ -12,6 +12,7 @@ import 'package:my_worksphere_web/features/ticketing/data/datasources/ticketing_
 import 'package:my_worksphere_web/features/ticketing/data/datasources/view_ticket_detail_remote_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticketing_repository.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/view_ticket_detail_repository.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/submit_reopen_review_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_action_history_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_request_usecase.dart';
@@ -93,10 +94,13 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketActionHistoryUseCase>(
     () => TicketActionHistoryUseCase(sl()),
   );
+  sl.registerLazySingleton<SubmitReopenReviewUseCase>(
+    () => SubmitReopenReviewUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
   sl.registerFactory(() => EmployeeDetailCubit(sl()));
   sl.registerFactory(() => TicketingBloc(sl()));
-  sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl()));
+  sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl(), sl()));
 }

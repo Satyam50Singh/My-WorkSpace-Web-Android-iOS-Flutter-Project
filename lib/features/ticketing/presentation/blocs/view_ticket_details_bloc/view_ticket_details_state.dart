@@ -29,3 +29,9 @@ final class ViewTicketActionHistorySuccess extends ViewTicketDetailsState {
 
   ViewTicketActionHistorySuccess(this.ticketHistory);
 }
+
+final class SubmitReopenReviewSuccess extends ViewTicketDetailsState {
+  final SubmitReopenReviewEntity submitReopenReviewEntity;
+
+  SubmitReopenReviewSuccess(this.submitReopenReviewEntity);
+}
