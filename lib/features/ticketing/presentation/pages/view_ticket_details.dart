@@ -188,6 +188,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                 child: SingleChildScrollView(
                   child: TicketDetailActionHistory(
                     actionHistoryList: viewTicketActionHistoryResponse,
+                    ticketDetails: viewTicketDetailV6Response,
                   ),
                 ),
               ),

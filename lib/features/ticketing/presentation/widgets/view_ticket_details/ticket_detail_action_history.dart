@@ -4,11 +4,17 @@ import 'package:my_worksphere_web/core/common/widgets/custom_search_bar.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 
 import '../../../domain/entities/ticket_history_entity.dart';
+import '../../../domain/entities/view_ticket_detail_v6.dart';
 
 class TicketDetailActionHistory extends StatefulWidget {
   final List<TicketHistoryEntity>? actionHistoryList;
+  final ViewTicketDetailV6Entity? ticketDetails;
 
-  const TicketDetailActionHistory({super.key, required this.actionHistoryList});
+  const TicketDetailActionHistory({
+    super.key,
+    required this.actionHistoryList,
+    required this.ticketDetails,
+  });
 
   @override
   State<TicketDetailActionHistory> createState() =>
@@ -224,6 +230,162 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
                       ),
                     ],
                   ),
+                ),
+              ),
+
+              SizedBox(height: 24),
+
+              if (widget.ticketDetails?.isReviewDone == true)
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(color: AppColors.primary, width: 1),
+                  ),
+                  surfaceTintColor: AppColors.primary,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline_rounded,
+                              color: AppColors.primary,
+                              size: isMobile ? 18 : 24,
+                            ),
+                            SizedBox(width: isMobile ? 4 : 8),
+                            Text(
+                              'Review Details',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontSize: isMobile ? 12 : 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: isMobile ? 8 : 16),
+                        if (!isMobile)
+                          Padding(
+                            padding: EdgeInsets.all(isMobile ? 4 : 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildReviewDetailInnerChild(
+                                    isMobile,
+                                    title: 'Reviewed By',
+                                    subTitle:
+                                        widget.ticketDetails?.reviewedBy ?? '-',
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildReviewDetailInnerChild(
+                                    isMobile,
+                                    title: 'Reviewed Date',
+                                    subTitle:
+                                        widget.ticketDetails?.reviewedDate ??
+                                        '-',
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildReviewDetailInnerChild(
+                                    isMobile,
+                                    title: 'Reviewed Remarks',
+                                    subTitle:
+                                        widget.ticketDetails?.reviewedRemarks != null
+                                            ? '"${widget.ticketDetails?.reviewedRemarks}"'
+                                            : '-',
+                                    isItalic: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (isMobile)
+                          Padding(
+                            padding: EdgeInsets.all(isMobile ? 4 : 8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildReviewDetailInnerChild(
+                                  isMobile,
+                                  title: 'Reviewed By',
+                                  subTitle:
+                                      widget.ticketDetails?.reviewedBy ?? '-',
+                                ),
+                                _buildReviewDetailInnerChild(
+                                  isMobile,
+                                  title: 'Reviewed Date',
+                                  subTitle:
+                                      widget.ticketDetails?.reviewedDate ?? '-',
+                                ),
+                                _buildReviewDetailInnerChild(
+                                  isMobile,
+                                  title: 'Reviewed Remarks',
+                                  subTitle:
+                                      widget.ticketDetails?.reviewedRemarks != null
+                                          ? '"${widget.ticketDetails?.reviewedRemarks}"'
+                                          : '-',
+                                  isItalic: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReviewDetailInnerChild(
+    bool isMobile, {
+    required String title,
+    required String subTitle,
+    bool isItalic = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.white.withOpacity(0.6),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title.toUpperCase(),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                subTitle,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontSize: isMobile ? 12 : 14,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
