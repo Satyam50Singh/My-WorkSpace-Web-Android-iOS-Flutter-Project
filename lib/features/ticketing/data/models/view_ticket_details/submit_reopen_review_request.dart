@@ -20,7 +20,7 @@ class SubmitReopenReviewRequest {
       'EmpCD': empCd,
       'TicketID': ticketId,
       'Remarks': remarks,
-      'IsReview': isReview,
+      'Is_Review': isReview,
     };
   }
 }

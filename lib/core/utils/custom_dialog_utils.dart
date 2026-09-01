@@ -126,7 +126,7 @@ class CustomDialogUtils {
           ),
           child: SizedBox(
             width: isMobile
-                ? MediaQuery.sizeOf(context).width * 0.6
+                ? MediaQuery.sizeOf(context).width * 1
                 : MediaQuery.sizeOf(context).width * 0.4,
             height: MediaQuery.sizeOf(context).height * 0.35,
             child: Padding(

@@ -109,6 +109,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
         }
 
         if (state is SubmitReopenReviewSuccess) {
+          Navigator.of(context, rootNavigator: true).pop();
           SnackBarUtils.showFloatingSnackBar(
             context,
             state.submitReopenReviewEntity.message ?? "Action successful",
