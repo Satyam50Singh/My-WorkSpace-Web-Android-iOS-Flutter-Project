@@ -184,6 +184,10 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                 child: SingleChildScrollView(
                   child: TicketDetailWorkflow(
                     workFlowDetail: viewTicketWorkflowResponse,
+                    ticketDetails: viewTicketDetailV6Response,
+                    onActionSubmit: (remarks, isReview) {
+                      _submitReOpenReviewTicket(remarks, isReview);
+                    },
                   ),
                 ),
               ),
@@ -194,6 +198,9 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                   child: TicketDetailActionHistory(
                     actionHistoryList: viewTicketActionHistoryResponse,
                     ticketDetails: viewTicketDetailV6Response,
+                    onActionSubmit: (remarks, isReview) {
+                      _submitReOpenReviewTicket(remarks, isReview);
+                    },
                   ),
                 ),
               ),
