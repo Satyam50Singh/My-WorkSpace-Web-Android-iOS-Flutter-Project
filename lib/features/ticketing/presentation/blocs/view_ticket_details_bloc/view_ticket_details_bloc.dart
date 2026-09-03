@@ -101,21 +101,20 @@ class ViewTicketDetailsBloc
     SubmitReopenReviewTicketRequested event,
     Emitter<ViewTicketDetailsState> emit,
   ) async {
-    emit(ViewTicketDetailsLoading());
     try {
       if (event.payload != null) {
         final result = await _submitReopenReviewUseCase(
           payload: event.payload!,
         );
         result.fold(
-          (failure) => emit(ViewTicketDetailsFailure(failure.message)),
+          (failure) => emit(SubmitReopenReviewFailure(failure.message)),
           (response) => emit(SubmitReopenReviewSuccess(response)),
         );
       } else {
-        emit(ViewTicketDetailsFailure('Payload is null'));
+        emit(SubmitReopenReviewFailure('Payload is null'));
       }
     } catch (e) {
-      emit(ViewTicketDetailsFailure(e.toString()));
+      emit(SubmitReopenReviewFailure(e.toString()));
     }
   }
 }

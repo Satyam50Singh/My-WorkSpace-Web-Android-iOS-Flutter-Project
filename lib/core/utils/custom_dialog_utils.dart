@@ -117,6 +117,8 @@ class CustomDialogUtils {
 
     TextEditingController remarksController = TextEditingController();
 
+    final isSubmitted = ValueNotifier<bool>(false);
+
     showDialog(
       context: context,
       builder: (_) {
@@ -196,7 +198,8 @@ class CustomDialogUtils {
                     children: [
                       Spacer(),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true).pop(),
                         child: Text(
                           'Cancel',
                           style: TextStyle(
@@ -206,26 +209,41 @@ class CustomDialogUtils {
                           ),
                         ),
                       ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryDark,
-                          foregroundColor: AppColors.background,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        icon: Icon(headerIcon),
-                        onPressed: () {
-                          if (remarksController.text.trim().isNotEmpty) {
-                            onSubmit(remarksController.text.trim());
-                          } else {
-                            SnackBarUtils.showFloatingSnackBar(
-                              context,
-                              'Please enter remarks before submitting',
-                            );
-                          }
+                      ValueListenableBuilder(
+                        valueListenable: isSubmitted,
+                        builder: (context, loading, child) {
+                          return ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryDark,
+                              foregroundColor: AppColors.background,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            icon: loading
+                                ? SizedBox(
+                                    height: 16,
+                                    width: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.background,
+                                    ),
+                                  )
+                                : Icon(headerIcon, size: 16),
+                            onPressed: () {
+                              if (remarksController.text.trim().isNotEmpty) {
+                                isSubmitted.value = true;
+                                onSubmit(remarksController.text.trim());
+                              } else {
+                                SnackBarUtils.showFloatingSnackBar(
+                                  context,
+                                  'Please enter remarks before submitting',
+                                );
+                              }
+                            },
+                            label: Text(loading ? 'Submitting...' : btnText),
+                          );
                         },
-                        label: Text(btnText),
                       ),
                     ],
                   ),

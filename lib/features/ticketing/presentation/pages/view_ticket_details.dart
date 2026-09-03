@@ -128,6 +128,11 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
           }
         }
 
+        if (state is SubmitReopenReviewFailure) {
+          Navigator.of(context, rootNavigator: true).pop();
+          SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
+        }
+
         if (state is ViewTicketDetailsV6Success) {
           viewTicketDetailV6Response = state.viewTicketDetailV6.first;
         }

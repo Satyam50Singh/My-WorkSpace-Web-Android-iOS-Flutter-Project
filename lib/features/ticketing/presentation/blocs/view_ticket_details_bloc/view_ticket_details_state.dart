@@ -35,3 +35,10 @@ final class SubmitReopenReviewSuccess extends ViewTicketDetailsState {
 
   SubmitReopenReviewSuccess(this.submitReopenReviewEntity);
 }
+
+
+final class SubmitReopenReviewFailure extends ViewTicketDetailsState {
+  final String errorMessage;
+
+  SubmitReopenReviewFailure(this.errorMessage);
+}
