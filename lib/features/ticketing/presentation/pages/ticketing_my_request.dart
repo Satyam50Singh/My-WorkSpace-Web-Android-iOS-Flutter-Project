@@ -51,18 +51,19 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
 
     if (employeeState is EmployeeDetailFetched) {
       final employee = employeeState.employeeDetail;
+      final dateFormatter = DateFormat("dd/MM/yyyy");
 
       final payload = TicketMyRequestRequest(
         companyId: employee.companyId,
         empCd: employee.empCd,
         fromDate:
-            fromDate ??
             _currentFromDate ??
-            DateFormat("dd/MM/yyyy").format(DateTime.now()),
+            fromDate ??
+            dateFormatter.format(DateTime.now()),
         toDate:
-            toDate ??
             _currentToDate ??
-            DateFormat("dd/MM/yyyy").format(DateTime.now()),
+            toDate ??
+                dateFormatter.format(DateTime.now()),
         pageCount: pageCount,
         pageSize: _currentPageSize ?? pageSize,
         departmentId: 0,
@@ -200,12 +201,14 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                     Expanded(
                       child: CustomDateRangePicker(
                         onDateRangeChanged: (fromDate, toDate) {
+                          _currentFromDate = fromDate;
+                          _currentToDate = toDate;
                           _fetchTicketDetails(
                             actionStatus: '',
                             pageCount: 1,
                             pageSize: 10,
-                            fromDate: fromDate,
-                            toDate: toDate,
+                            fromDate: _currentFromDate,
+                            toDate: _currentToDate,
                           );
                         },
                       ),
