@@ -55,7 +55,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       final payload = TicketMyRequestRequest(
         companyId: employee.companyId,
         empCd: employee.empCd,
-        fromDate: '01/05/2026',
+        fromDate:
+            fromDate ??
+            _currentFromDate ??
+            DateFormat("dd/MM/yyyy").format(DateTime.now()),
         toDate:
             toDate ??
             _currentToDate ??

@@ -30,13 +30,20 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   DateTime _displayedMonth = DateTime.now();
   List<DateTime?> _tempValues = [];
 
-  void _setUpdatedSelectedRange(DateTime fromDate, DateTime toDate) {
+  String selectedCategory = "Today";
+
+  void _setUpdatedSelectedRange(
+    DateTime fromDate,
+    DateTime toDate,
+    String categoryType,
+  ) {
     if (_menuController.isOpen) {
       _menuController.close();
     }
     setState(() {
       selectedRange = DateTimeRange(start: fromDate, end: toDate);
       showCalendar = false;
+      selectedCategory = categoryType;
     });
     widget.onDateRangeChanged(
       _dateFormat.format(fromDate),
@@ -114,25 +121,37 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
     return [
       _buildMenuItem("Today", () {
         final today = DateTime.now();
-        _setUpdatedSelectedRange(today, today);
+        _setUpdatedSelectedRange(today, today, "Today");
       }),
       _buildMenuItem("Yesterday", () {
         final yesterday = DateTime.now().subtract(const Duration(days: 1));
-        _setUpdatedSelectedRange(yesterday, yesterday);
+        _setUpdatedSelectedRange(yesterday, yesterday, "Yesterday");
       }),
       _buildMenuItem("Last 7 days", () {
         final sevenDays = DateTime.now().subtract(const Duration(days: 7));
-        _setUpdatedSelectedRange(sevenDays, DateTime.now());
+        _setUpdatedSelectedRange(sevenDays, DateTime.now(), "Last 7 days");
       }),
       _buildMenuItem("Last 30 days", () {
         final thirtyDays = DateTime.now().subtract(const Duration(days: 30));
-        _setUpdatedSelectedRange(thirtyDays, DateTime.now());
+        _setUpdatedSelectedRange(thirtyDays, DateTime.now(), "Last 30 days");
       }),
       _buildMenuItem("This Month", () {
         final now = DateTime.now();
         final firstDay = DateTime(now.year, now.month, 1);
         final lastDay = DateTime(now.year, now.month + 1, 0);
-        _setUpdatedSelectedRange(firstDay, lastDay);
+        _setUpdatedSelectedRange(firstDay, lastDay, "This Month");
+      }),
+      _buildMenuItem("Last month", () {
+        final now = DateTime.now();
+        final firstDay = DateTime(now.year, now.month - 1, 1);
+        final lastDay = DateTime(now.year, now.month, 0);
+        _setUpdatedSelectedRange(firstDay, lastDay, "Last month");
+      }),
+      _buildMenuItem("Last 6 months", () {
+        final now = DateTime.now();
+        final firstDay = DateTime(now.year, now.month - 5, 1);
+        final lastDay = DateTime(now.year, now.month, 0);
+        _setUpdatedSelectedRange(firstDay, lastDay, "Last 6 months");
       }),
       _buildMenuItem("Custom Range", () {
         _menuController.close();
@@ -153,22 +172,60 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
     VoidCallback onPressed, {
     IconData? icon,
   }) {
-    return MenuItemButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        padding: WidgetStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        ),
-        minimumSize: WidgetStateProperty.all(const Size(240, 48)),
-      ),
-      leadingIcon: icon != null
-          ? Icon(icon, size: 20, color: AppColors.slate)
-          : null,
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-      ),
-    );
+    bool isSelected = label == selectedCategory;
+
+    return isSelected
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MenuItemButton(
+              onPressed: onPressed,
+              style: ButtonStyle(
+                padding: WidgetStateProperty.all(
+                  EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+                minimumSize: WidgetStateProperty.all(const Size(240, 48)),
+                backgroundColor: isSelected
+                    ? WidgetStateProperty.all(AppColors.primary)
+                    : null,
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                elevation: WidgetStateProperty.all(0),
+              ),
+              leadingIcon: icon != null
+                  ? Icon(icon, size: 20, color: AppColors.slate)
+                  : null,
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+          )
+        : MenuItemButton(
+            onPressed: onPressed,
+            style: ButtonStyle(
+              padding: WidgetStateProperty.all(
+                EdgeInsets.symmetric(
+                  horizontal: isSelected ? 14 : 20,
+                  vertical: 12,
+                ),
+              ),
+              minimumSize: WidgetStateProperty.all(const Size(240, 48)),
+            ),
+            leadingIcon: icon != null
+                ? Icon(icon, size: 20, color: AppColors.slate)
+                : null,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+          );
   }
 
   Widget _buildCustomCalendar(bool isMobile) {
@@ -192,7 +249,7 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
     }
 
     return SizedBox(
-      width:540,
+      width: 540,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -249,7 +306,7 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
       final end = (_tempValues.length > 1 && _tempValues[1] != null)
           ? _tempValues[1]!
           : start;
-      _setUpdatedSelectedRange(start, end);
+      _setUpdatedSelectedRange(start, end, "Custom Range");
     }
   }
 
