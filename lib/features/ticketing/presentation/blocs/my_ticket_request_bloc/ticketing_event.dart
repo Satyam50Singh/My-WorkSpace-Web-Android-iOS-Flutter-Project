@@ -7,3 +7,9 @@ class TicketingMyRequestDetailRequested extends TicketingEvent {
 
   TicketingMyRequestDetailRequested({this.payload});
 }
+
+class TicketingExportRequested extends TicketingEvent {
+  TicketMyRequestRequest? payload;
+
+  TicketingExportRequested({this.payload});
+}

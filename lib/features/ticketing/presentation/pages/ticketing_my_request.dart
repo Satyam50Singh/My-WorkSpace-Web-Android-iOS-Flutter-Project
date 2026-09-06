@@ -7,6 +7,7 @@ import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_count_horizontal_list.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_list_table_view.dart';
 
@@ -31,6 +32,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
   String? _currentActionStatus;
   String? _currentSearchText;
   String selectedStatus = 'All';
+  int _totalRecordsCount = 0;
 
   @override
   void initState() {
@@ -61,9 +63,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
             fromDate ??
             dateFormatter.format(DateTime.now()),
         toDate:
-            _currentToDate ??
-            toDate ??
-                dateFormatter.format(DateTime.now()),
+            _currentToDate ?? toDate ?? dateFormatter.format(DateTime.now()),
         pageCount: pageCount,
         pageSize: _currentPageSize ?? pageSize,
         departmentId: 0,
@@ -74,6 +74,32 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
 
       context.read<TicketingBloc>().add(
         TicketingMyRequestDetailRequested(payload: payload),
+      );
+    }
+  }
+
+  void _fetchTicketExportRecords() {
+    final employeeState = context.read<EmployeeDetailCubit>().state;
+
+    if (employeeState is EmployeeDetailFetched) {
+      final employee = employeeState.employeeDetail;
+      final dateFormatter = DateFormat("dd/MM/yyyy");
+
+      final payload = TicketMyRequestRequest(
+        pageCount: 1,
+        departmentId: 0,
+        categoryId: 0,
+        companyId: employee.companyId,
+        empCd: employee.empCd,
+        fromDate: _currentFromDate ?? dateFormatter.format(DateTime.now()),
+        toDate: _currentToDate ?? dateFormatter.format(DateTime.now()),
+        pageSize: _totalRecordsCount,
+        actionStatus: _currentActionStatus ?? '',
+        searchText: _currentSearchText ?? '',
+      );
+
+      context.read<TicketingBloc>().add(
+        TicketingExportRequested(payload: payload),
       );
     }
   }
@@ -105,7 +131,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
 
     return Column(
       children: [
-        if (!isMobile && !isMini) const TicketingMyRequestWebAppBar(),
+        if (!isMobile && !isMini)
+          TicketingMyRequestWebAppBar(
+            onTapExportToExcel: _fetchTicketExportRecords,
+          ),
         SizedBox(height: 16),
 
         if (!isMobile)
@@ -280,6 +309,9 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
 
         Expanded(
           child: BlocConsumer<TicketingBloc, TicketingState>(
+            buildWhen: (previous, current) {
+              return current is TicketingMyRequestDetailSuccess;
+            },
             listener: (context, state) {
               if (state is TicketingLoading) {
                 LoaderUtils.showLoader(context);
@@ -287,10 +319,22 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                 LoaderUtils.hideLoader(context);
                 SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
               } else if (state is TicketingMyRequestDetailSuccess) {
+                _totalRecordsCount = state.ticketDetail.totalRecords ?? 0;
                 LoaderUtils.hideLoader(context);
+              } else if (state is TicketingExportSuccess) {
+                LoaderUtils.hideLoader(context);
+                final exportList = state.ticketDetail.ticketDetailList;
+                if (exportList != null && exportList.isNotEmpty) {
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    'Exporting ${exportList.length} records is in progress...',
+                  );
+                  exportToExcel(exportList);
+                }
               }
             },
             builder: (context, state) {
+              debugPrint('UI Rebuilding started...');
               if (state is TicketingMyRequestDetailSuccess) {
                 final ticketingDetailList = state.ticketDetail.ticketDetailList;
                 final ticketRequestCount =
@@ -356,5 +400,9 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         ),
       ],
     );
+  }
+
+  void exportToExcel(List<TicketDetailList> exportList) {
+
   }
 }

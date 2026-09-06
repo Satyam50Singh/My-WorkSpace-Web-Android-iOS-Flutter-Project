@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class TicketingMyRequestWebAppBar extends StatelessWidget {
-  const TicketingMyRequestWebAppBar({super.key});
+  final void Function() onTapExportToExcel;
+
+  const TicketingMyRequestWebAppBar({
+    super.key,
+    required this.onTapExportToExcel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                       const SizedBox(width: 8),
                       if (isCompact)
                         IconButton.outlined(
-                          onPressed: () {},
+                          onPressed: onTapExportToExcel,
                           icon: const Icon(
                             Icons.download_sharp,
                             color: AppColors.primaryDark,
@@ -89,7 +94,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                         )
                       else
                         OutlinedButton.icon(
-                          onPressed: () {},
+                          onPressed: onTapExportToExcel,
                           label: const Text(
                             "Export",
                             style: TextStyle(fontWeight: FontWeight.bold),

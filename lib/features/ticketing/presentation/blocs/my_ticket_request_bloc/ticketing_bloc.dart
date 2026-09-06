@@ -14,6 +14,7 @@ class TicketingBloc extends Bloc<TicketingEvent, TicketingState> {
 
   TicketingBloc(this._ticketingUseCase) : super(TicketingInitial()) {
     on<TicketingMyRequestDetailRequested>(_onTicketingMyRequestDetailRequested);
+    on<TicketingExportRequested>(_onTicketingExportRequested);
   }
 
   FutureOr<void> _onTicketingMyRequestDetailRequested(
@@ -29,6 +30,26 @@ class TicketingBloc extends Bloc<TicketingEvent, TicketingState> {
           (failure) => emit(TicketingFailure(failure.message)),
           (myRequestDetails) =>
               emit(TicketingMyRequestDetailSuccess(myRequestDetails)),
+        );
+      } else {
+        emit(TicketingFailure('Payload is null'));
+      }
+    } catch (e) {
+      emit(TicketingFailure(e.toString()));
+    }
+  }
+
+  FutureOr<void> _onTicketingExportRequested(
+    TicketingExportRequested event,
+    Emitter<TicketingState> emit,
+  ) async {
+    emit(TicketingLoading());
+    try {
+      if (event.payload != null) {
+        final result = await _ticketingUseCase(payload: event.payload!);
+        result.fold(
+          (failure) => emit(TicketingFailure(failure.message)),
+          (data) => emit(TicketingExportSuccess(data)),
         );
       } else {
         emit(TicketingFailure('Payload is null'));

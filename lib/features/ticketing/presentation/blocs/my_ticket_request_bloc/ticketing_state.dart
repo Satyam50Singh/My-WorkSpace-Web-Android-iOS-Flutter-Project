@@ -17,3 +17,9 @@ final class TicketingMyRequestDetailSuccess extends TicketingState {
 
   TicketingMyRequestDetailSuccess(this.ticketDetail);
 }
+
+final class TicketingExportSuccess extends TicketingState {
+  final TicketDetail ticketDetail;
+
+  TicketingExportSuccess(this.ticketDetail);
+}
