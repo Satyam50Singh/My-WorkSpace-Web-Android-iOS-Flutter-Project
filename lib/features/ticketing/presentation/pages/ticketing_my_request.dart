@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_date_range_picker.dart';
+import 'package:my_worksphere_web/core/export/excel_exporter.dart';
 import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
@@ -402,7 +403,25 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     );
   }
 
-  void exportToExcel(List<TicketDetailList> exportList) {
+  void exportToExcel(List<TicketDetailList> exportList) async {
+    final List<String> headers = [
+      'Ticket Number',
+      'Level',
+      'Ticket Date & Time',
+      'Request Status',
+      'Action Status',
+      'Raised By',
+      'Ticket Type',
+      'Sub Category',
+      'Last Action By',
+      'Location',
+    ];
 
+    ExcelExporter().export(
+      fileName: 'ticketing_export.xlsx',
+      sheetName: 'Ticket Records',
+      headers: headers,
+      dataList: exportList,
+    );
   }
 }

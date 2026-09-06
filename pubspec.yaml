@@ -30,6 +30,9 @@ dependencies:
   data_table_2: ^2.7.2
   intl: ^0.20.3
   calendar_date_picker2: ^3.0.0
+  syncfusion_flutter_xlsio: ^33.2.13
+  path_provider: ^2.1.6
+  open_file: ^3.5.11
 
 dev_dependencies:
   flutter_test:
