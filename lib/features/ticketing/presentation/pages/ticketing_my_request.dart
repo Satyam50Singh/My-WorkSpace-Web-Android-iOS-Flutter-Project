@@ -106,12 +106,13 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
   }
 
   void _resetAllFilters() {
-    _currentFromDate = null;
-    _currentToDate = null;
-    _currentActionStatus = '';
-    _currentSearchText = '';
     // Add this to update the UI highlight
     setState(() {
+      _currentFromDate = null;
+      _currentToDate = null;
+      _currentActionStatus = '';
+      _currentSearchText = '';
+      _currentPageCount = 1;
       selectedStatus = 'All';
     });
     _fetchTicketDetails(
@@ -243,19 +244,44 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         },
                       ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 4),
                     SizedBox(
-                      height: 44,
-                      child: ElevatedButton.icon(
-                        label: Text('Reset'),
+                      height: 42,
+                      child: IconButton.filled(
                         onPressed: _resetAllFilters,
                         icon: Icon(Icons.filter_alt_off),
                         style: IconButton.styleFrom(
-                          elevation: 4,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 8,
+                          backgroundColor: AppColors.primaryDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 42,
+                      child: IconButton.filled(
+                        onPressed: _fetchTicketExportRecords,
+                        icon: const Icon(
+                          Icons.download_sharp,
+                          color: AppColors.white,
+                        ),
+                        style: IconButton.styleFrom(
+                          minimumSize: const Size(24, 24),
+                          backgroundColor: AppColors.primaryDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 42,
+                      child: IconButton.filled(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add, color: AppColors.white),
+                        style: IconButton.styleFrom(
+                          minimumSize: const Size(24, 24),
                           backgroundColor: AppColors.primaryDark,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -328,7 +354,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                 if (exportList != null && exportList.isNotEmpty) {
                   SnackBarUtils.showFloatingSnackBar(
                     context,
-                    'Exporting ${exportList.length} records is in progress...',
+                    'Downloading excel file...',
                   );
                   exportToExcel(exportList);
                 }
@@ -363,7 +389,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                           selectedStatus: selectedStatus,
                         ),
 
-                      SizedBox(height: 36),
+                      SizedBox(height: 16),
 
                       Expanded(
                         child: TicketListTableView(
