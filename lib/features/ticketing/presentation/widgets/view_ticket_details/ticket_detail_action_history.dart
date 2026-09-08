@@ -115,6 +115,7 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
                           child: SizedBox(
                             width: 200,
                             child: CustomSearchBar(
+                              searchController: TextEditingController(),
                               hintText: 'Search logs, user, action status ...',
                               onChanged: (value) {
                                 if (value.length > 1) {

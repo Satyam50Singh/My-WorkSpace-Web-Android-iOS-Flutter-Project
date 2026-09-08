@@ -4,10 +4,12 @@ import '../../../../core/theme/app_colors.dart';
 
 class TicketingMyRequestWebAppBar extends StatelessWidget {
   final void Function() onTapExportToExcel;
+  final void Function() onTapAddNewRequest;
 
   const TicketingMyRequestWebAppBar({
     super.key,
     required this.onTapExportToExcel,
+    required this.onTapAddNewRequest,
   });
 
   @override
@@ -45,7 +47,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                     children: [
                       if (isCompact)
                         IconButton.filled(
-                          onPressed: () {},
+                          onPressed: onTapAddNewRequest,
                           icon: const Icon(Icons.add, color: AppColors.white),
                           style: IconButton.styleFrom(
                             minimumSize: const Size(36, 36),
@@ -57,7 +59,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                         )
                       else
                         ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: onTapAddNewRequest,
                           label: const Text("New Request"),
                           icon: const Icon(Icons.add),
                           style: ElevatedButton.styleFrom(

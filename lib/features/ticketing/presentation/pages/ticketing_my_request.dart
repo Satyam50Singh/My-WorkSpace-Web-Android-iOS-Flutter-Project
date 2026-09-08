@@ -32,13 +32,20 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
   String? _currentToDate;
   String? _currentActionStatus;
   String? _currentSearchText;
-  String selectedStatus = 'All';
+  String _selectedStatus = 'All';
   int _totalRecordsCount = 0;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _fetchTicketDetails(actionStatus: '');
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _fetchTicketDetails({
@@ -113,7 +120,8 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       _currentActionStatus = '';
       _currentSearchText = '';
       _currentPageCount = 1;
-      selectedStatus = 'All';
+      _selectedStatus = 'All';
+      _searchController.clear();
     });
     _fetchTicketDetails(
       actionStatus: '',
@@ -136,6 +144,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
         if (!isMobile && !isMini)
           TicketingMyRequestWebAppBar(
             onTapExportToExcel: _fetchTicketExportRecords,
+            onTapAddNewRequest: _addNewTicketRequest,
           ),
         SizedBox(height: 16),
 
@@ -194,6 +203,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         maxHeight: 48,
                       ),
                       child: CustomSearchBar(
+                        searchController: _searchController,
                         hintText: 'Search...',
                         onChanged: (value) {
                           if (value.isNotEmpty && value.length > 2) {
@@ -278,7 +288,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                     SizedBox(
                       height: 42,
                       child: IconButton.filled(
-                        onPressed: () {},
+                        onPressed: _addNewTicketRequest,
                         icon: const Icon(Icons.add, color: AppColors.white),
                         style: IconButton.styleFrom(
                           minimumSize: const Size(24, 24),
@@ -293,6 +303,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                 ),
                 const SizedBox(height: 12),
                 TextField(
+                  controller: _searchController,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     isDense: true,
@@ -383,10 +394,10 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                               actionStatus: _currentActionStatus,
                             );
                             setState(() {
-                              selectedStatus = actionStatus;
+                              _selectedStatus = actionStatus;
                             });
                           },
-                          selectedStatus: selectedStatus,
+                          selectedStatus: _selectedStatus,
                         ),
 
                       SizedBox(height: 16),
@@ -449,5 +460,11 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
       headers: headers,
       dataList: exportList,
     );
+  }
+
+  void _addNewTicketRequest() {
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+    if (isMobile) {
+    } else {}
   }
 }

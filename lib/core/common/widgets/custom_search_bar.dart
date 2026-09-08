@@ -5,16 +5,19 @@ import '../../theme/app_colors.dart';
 class CustomSearchBar extends StatelessWidget {
   final String hintText;
   final Function(String) onChanged;
+  final TextEditingController searchController;
 
   const CustomSearchBar({
     super.key,
     required this.hintText,
     required this.onChanged,
+    required this.searchController,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: searchController,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
         isDense: true,
