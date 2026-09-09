@@ -471,7 +471,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     final dialogWidth = isTablet
         ? 440.0
         : isMobile
-        ? 320.0
+        ? 360.0
         : 640.0;
 
     showDialog(

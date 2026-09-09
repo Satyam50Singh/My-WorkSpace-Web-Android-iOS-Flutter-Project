@@ -9,7 +9,7 @@ class AddNewRequestHeader extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(color: AppColors.primaryDark),
 
-      height: 60,
+      height: 64,
       child: Padding(
         padding: const EdgeInsets.only(
           top: 8.0,
@@ -28,19 +28,23 @@ class AddNewRequestHeader extends StatelessWidget {
               ),
             ),
             Spacer(),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            SizedBox(
+              height: 48,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(4.0),
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Save',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.bold,
+                child: Text(
+                  'Save',
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -48,16 +52,15 @@ class AddNewRequestHeader extends StatelessWidget {
             SizedBox(
               height: 24,
               width: 24,
-              child: IconButton(
-                onPressed: () {
+              child: InkWell(
+                onTap: () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-                padding: EdgeInsets.zero,
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  minimumSize: const Size(24, 24),
+                child: const Icon(
+                  Icons.close,
+                  color: AppColors.white,
+                  size: 18,
                 ),
-                icon: const Icon(Icons.close, color: AppColors.white, size: 14),
               ),
             ),
           ],
