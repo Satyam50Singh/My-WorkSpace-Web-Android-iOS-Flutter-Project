@@ -3,6 +3,7 @@ import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/aut
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 
+import '../../features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
 import 'injection_container.dart';
 
@@ -14,5 +15,6 @@ class AppBlocProviders {
     BlocProvider<EmployeeDetailCubit>(create: (_) => sl<EmployeeDetailCubit>()),
     BlocProvider<TicketingBloc>(create: (_) => sl<TicketingBloc>()),
     BlocProvider<ViewTicketDetailsBloc>(create: (_) => sl<ViewTicketDetailsBloc>()),
+    BlocProvider<AddNewTicketBloc>(create: (_) => sl<AddNewTicketBloc>()),
   ];
 }

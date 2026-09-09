@@ -15,4 +15,9 @@ class ApiEndpoints {
 
   static const submitReOpenReviewTicket = "/Ticketing/Submit_ReOpen_Review_Ticket_Web";
 
+  static const fetchTicketLocationCategoryV2 = "/Ticketing/Fetch_Ticket_Location_Category_V2";
+  static const fetchTicketSubCategory = "/Ticketing/Fetch_Ticket_Sub_Category";
+  static const fetchTicketWorkflowDetailsV2  = "/Ticketing/View_Ticket_Workflow_Details_V2";
+  static const fetchTicketRequestDetailsV4 = "/Ticketing/Ticket_Request_Details_V4";
+
 }

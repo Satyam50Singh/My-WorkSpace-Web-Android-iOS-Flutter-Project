@@ -9,6 +9,7 @@ import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_count_horizontal_list.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_list_table_view.dart';
 
@@ -463,8 +464,29 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
   }
 
   void _addNewTicketRequest() {
-    final isMobile = MediaQuery.sizeOf(context).width < 600;
-    if (isMobile) {
-    } else {}
+    final width = MediaQuery.sizeOf(context).width;
+    final isTablet = width >= 600 && width < 1200;
+    final isMobile = width < 600;
+
+    final dialogWidth = isTablet
+        ? 440.0
+        : isMobile
+        ? 320.0
+        : 640.0;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          alignment: Alignment.centerRight,
+          insetPadding: EdgeInsets.zero,
+          child: SizedBox(
+            width: dialogWidth,
+            height: double.infinity,
+            child: AddNewRequestPage(),
+          ),
+        );
+      },
+    );
   }
 }

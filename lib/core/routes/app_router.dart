@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details.dart';
 
@@ -51,6 +52,13 @@ class AppRouter {
             builder: (context, state) {
               final ticketId = state.pathParameters['ticketId'] ?? '';
               return ViewTicketDetails(ticketId: ticketId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.addNewRequest,
+            name: AppRoutes.addNewRequest.replaceAll('/', ''),
+            builder: (context, state) {
+              return AddNewRequestPage();
             },
           ),
         ],
