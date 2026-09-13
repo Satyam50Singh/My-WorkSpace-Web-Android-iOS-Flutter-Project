@@ -59,8 +59,37 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
             child: BlocConsumer<AddNewTicketBloc, AddNewTicketState>(
               builder: (context, state) {
                 if (state is TicketLocationCategorySuccess) {
+                  final lastSelectedLocation =
+                      state.data.locationDetails![0].lastLocation;
+                  final favoriteLocation =
+                      state.data.locationDetails![0].favouriteLocation;
                   final allLocation =
                       state.data.locationDetails![0].allLocation;
+
+                  final List<LocationEntity> finalLocationList = [];
+                  if (lastSelectedLocation != null) {
+                    finalLocationList.add(
+                      LocationEntity(
+                        locationId: lastSelectedLocation[0].locationId,
+                        locationDesc: lastSelectedLocation[0].locationDesc,
+                        isLastLocation: true,
+                      ),
+                    );
+                  }
+                  if (favoriteLocation != null) {
+                    for (var location in favoriteLocation) {
+                      finalLocationList.add(
+                        LocationEntity(
+                          locationId: location.locationId,
+                          locationDesc: location.locationDesc,
+                          isFavouriteLocation: true,
+                        ),
+                      );
+                    }
+                  }
+                  if (allLocation != null) {
+                    finalLocationList.addAll(allLocation);
+                  }
                   final categories = state.data.categoryDetails;
 
                   return SingleChildScrollView(
@@ -102,23 +131,23 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   ],
                                 ),
                                 SizedBox(height: 16),
-                                if (allLocation != null)
-                                  CustomDropDown<LocationEntity>(
-                                    listItems: allLocation,
-                                    label: 'Location',
-                                    hintText: 'Select Location',
-                                    searchHintText: 'Search Locations ...',
-                                    itemAsString: (location) =>
-                                        location.locationDesc!,
-                                    onSelected: (value) {
-                                      debugPrint(
-                                        'Selected location: ${value?.locationId} ${value?.locationDesc}',
-                                      );
-                                    },
-                                    compareFn: (f1, f2) {
-                                      return f1 == f2;
-                                    },
-                                  ),
+                                CustomDropDown<LocationEntity>(
+                                  listItems: finalLocationList,
+                                  selectedValue: finalLocationList[0],
+                                  label: 'Location',
+                                  hintText: 'Select Location',
+                                  searchHintText: 'Search Locations ...',
+                                  itemAsString: (location) =>
+                                      location.locationDesc!,
+                                  onSelected: (value) {
+                                    debugPrint(
+                                      'Selected location: ${value?.locationId} ${value?.locationDesc}',
+                                    );
+                                  },
+                                  compareFn: (f1, f2) {
+                                    return f1 == f2;
+                                  },
+                                ),
                                 SizedBox(height: 16),
                                 Row(
                                   children: [

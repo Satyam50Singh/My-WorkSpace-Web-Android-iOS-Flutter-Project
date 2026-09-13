@@ -1,8 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:my_worksphere_web/core/theme/app_colors.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_location_category_entity.dart';
 
 class CustomDropDown<T> extends StatefulWidget {
   final List<T> listItems;
+  final T? selectedValue;
   final String label;
   final String hintText;
   final String searchHintText;
@@ -13,6 +16,7 @@ class CustomDropDown<T> extends StatefulWidget {
   const CustomDropDown({
     super.key,
     required this.listItems,
+    this.selectedValue,
     required this.label,
     required this.hintText,
     required this.searchHintText,
@@ -27,6 +31,15 @@ class CustomDropDown<T> extends StatefulWidget {
 
 class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
   T? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.selectedValue != null) {
+      selectedValue = widget.selectedValue;
+    }
+  }
 
   String _itemLabel(T item) {
     return widget.itemAsString?.call(item) ?? item.toString();
@@ -57,15 +70,27 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
           return ListTile(
             trailing: isSelected
                 ? Icon(
-                    Icons.check_circle,
+                    Icons.check_circle_outline_sharp,
                     color: Colors.blue.withOpacity(.8),
                     size: 18,
                   )
                 : null,
+            leading: (item is LocationEntity && item.isLastLocation == true)
+                ? const Icon(
+                    Icons.access_time_rounded,
+                    color: AppColors.primaryDark,
+                    size: 18,
+                  )
+                : (item is LocationEntity && item.isFavouriteLocation == true)
+                ? const Icon(Icons.star, color: AppColors.primaryDark, size: 18)
+                : null,
             title: Text(
               _itemLabel(item),
               style: isSelected
-                  ? TextStyle(color: Colors.blueAccent.shade700)
+                  ? TextStyle(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.bold,
+                    )
                   : null,
             ),
             tileColor: isSelected ? Colors.blue.withOpacity(.2) : null,

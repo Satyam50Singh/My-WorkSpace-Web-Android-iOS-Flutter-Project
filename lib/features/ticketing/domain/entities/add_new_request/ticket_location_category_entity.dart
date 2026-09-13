@@ -23,10 +23,18 @@ class LocationDetailsEntity {
 class LocationEntity {
   final int? locationId;
   final String? locationDesc;
+  final bool? isLastLocation;
+
+  final bool? isFavouriteLocation;
+
+  final bool? isAllLocation;
 
   const LocationEntity({
     this.locationId,
     this.locationDesc,
+    this.isLastLocation = false,
+    this.isFavouriteLocation = false,
+    this.isAllLocation = false,
   });
 }
 
@@ -34,8 +42,5 @@ class CategoryEntity {
   final int? categoryId;
   final String? categoryDesc;
 
-  const CategoryEntity({
-    this.categoryId,
-    this.categoryDesc,
-  });
+  const CategoryEntity({this.categoryId, this.categoryDesc});
 }
