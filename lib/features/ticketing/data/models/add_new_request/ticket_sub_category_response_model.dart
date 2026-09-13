@@ -25,8 +25,8 @@ class TicketSubCategoryModel extends TicketSubCategoryEntity {
 
   factory TicketSubCategoryModel.fromJson(Map<String, dynamic> json) {
     return TicketSubCategoryModel(
-      subCategories: json['SubCategories'] != null
-          ? (json['SubCategories'] as List)
+      subCategories: json['SubCategoryDetails'] != null
+          ? (json['SubCategoryDetails'] as List)
                 .map(
                   (i) => SubCategoryModel.fromJson(i as Map<String, dynamic>),
                 )

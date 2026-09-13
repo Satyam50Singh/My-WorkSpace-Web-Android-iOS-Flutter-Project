@@ -70,6 +70,11 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
           ),
         ),
         itemBuilder: (context, item, isDisabled, isSelected) {
+          final bool isLast =
+              (item is LocationEntity && item.isLastLocation == true);
+          final bool isFav =
+              (item is LocationEntity && item.isFavouriteLocation == true);
+
           return ListTile(
             trailing: isSelected
                 ? Icon(
@@ -78,23 +83,24 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
                     size: 18,
                   )
                 : null,
-            leading: (item is LocationEntity && item.isLastLocation == true)
+            leading: isLast
                 ? const Icon(
                     Icons.access_time_rounded,
                     color: AppColors.primaryDark,
                     size: 18,
                   )
-                : (item is LocationEntity && item.isFavouriteLocation == true)
-                ? const Icon(Icons.star, color: AppColors.primaryDark, size: 18)
+                : isFav
+                ? const Icon(Icons.star, color: AppColors.amber, size: 18)
                 : null,
             title: Text(
               _itemLabel(item),
-              style: isSelected
-                  ? TextStyle(
+              style: (isSelected)
+                  ? const TextStyle(
                       color: AppColors.primaryDark,
                       fontWeight: FontWeight.bold,
+                      fontSize: 13,
                     )
-                  : null,
+                  : const TextStyle(color: AppColors.textPrimary, fontSize: 13),
             ),
             tileColor: isSelected ? Colors.blue.withOpacity(.2) : null,
           );

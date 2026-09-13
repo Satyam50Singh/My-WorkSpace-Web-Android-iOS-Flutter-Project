@@ -529,6 +529,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                 }
                 if (state is TicketSubCategorySuccess) {
                   LoaderUtils.hideLoader(context);
+                  subCategories?.clear();
                   if (state.data.subCategories != null) {
                     subCategories = state.data.subCategories!;
                   }
