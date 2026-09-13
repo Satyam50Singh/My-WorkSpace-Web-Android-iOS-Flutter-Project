@@ -206,8 +206,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                                 'WORK DETAIL',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color:
-                                                      AppColors.textSecondary,
+                                                  color: AppColors.primaryDark,
                                                   fontSize: 13,
                                                 ),
                                               ),
@@ -249,42 +248,18 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                                   ),
                                                 ),
                                               ),
-                                            ] else
-                                              SizedBox(
-                                                height: 360,
-                                                child: ListView.builder(
-                                                  itemCount:
-                                                      workFlowList.length,
-                                                  itemBuilder: (context, index) {
-                                                    return ListTile(
-                                                      leading: CircleAvatar(
-                                                        backgroundColor:
-                                                            AppColors.primary,
-                                                        child: Text(
-                                                          '${index + 1}',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      title: Text(
-                                                        workFlowList[index]
-                                                                .userName ??
-                                                            '',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      subtitle: Text(
-                                                        workFlowList[index]
-                                                                .groupName ??
-                                                            '',
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
+                                            ] else ...[
+                                              ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: workFlowList.length,
+                                                itemBuilder: (context, index) {
+                                                  return _buildWorkflowCards(
+                                                    workFlowList[index],
+                                                  );
+                                                },
                                               ),
+                                              SizedBox(height: 8),
+                                            ],
                                           ],
                                         ),
                                       ),
@@ -543,7 +518,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
               },
               listener: (context, state) {
                 if (state is AddNewTicketLoading) {
-                  LoaderUtils.showLoader(context);
+                  // LoaderUtils.showLoader(context);
                 }
                 if (state is AddNewTicketFailure) {
                   SnackBarUtils.showFloatingSnackBar(
@@ -658,6 +633,138 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
           style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.rose),
         ),
       ],
+    );
+  }
+
+  Widget _buildWorkflowCards(TicketWorkflowEntity workflow) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Stack(
+        children: [
+          // Vertical timeline line
+          Positioned(
+            left: 8,
+            top: 8,
+            bottom: -4,
+            child: Container(width: 2, color: AppColors.primaryDark),
+          ),
+
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 20,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    height: 14,
+                    width: 14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primaryDark,
+                      border: Border.all(color: AppColors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 4,
+                          spreadRadius: 0.5,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Level ${workflow.level}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryDark,
+                        fontSize: 14,
+                      ),
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    Card(
+                      margin: EdgeInsets.zero,
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      surfaceTintColor: AppColors.blue,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    workflow.groupName ?? '',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primaryDark,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 8),
+
+                                Container(
+                                  height: 18,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade200,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    '${workflow.time} min',
+                                    style: TextStyle(
+                                      color: AppColors.primaryDark,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            if (workflow.workflowUsers != null)
+                              Text(
+                                workflow.workflowUsers!
+                                    .map((user) => user.userName ?? '')
+                                    .join(', '),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
