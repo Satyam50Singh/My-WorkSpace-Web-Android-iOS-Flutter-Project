@@ -14,6 +14,9 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_req
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_workflow_details_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/add_new_request_header.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/file_upload_section.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/label_heading.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_details_section.dart';
 
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
 
@@ -31,7 +34,6 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   List<SubCategoryEntity>? subCategories;
   TicketLocationCategoryEntity? _locationCategoryData;
   List<LocationEntity> _finalLocationList = [];
-  bool showWorkFlowDetails = false;
   List<TicketWorkflowEntity> workFlowList = [];
 
   @override
@@ -54,9 +56,6 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   @override
   Widget build(BuildContext context) {
     final bool isMobile = MediaQuery.of(context).size.width < 600;
-
-    debugPrint('Page is getting rebuild');
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -83,12 +82,12 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildLabelHeading(
-                                  'Location',
-                                  Icons.location_on_outlined,
+                                const LabelHeading(
+                                  label: 'Location',
+                                  icon: Icons.location_on_outlined,
                                 ),
 
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 CustomDropDown<LocationEntity>(
                                   listItems: _finalLocationList,
                                   selectedValue: _finalLocationList.isNotEmpty
@@ -108,12 +107,12 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     return f1 == f2;
                                   },
                                 ),
-                                SizedBox(height: 16),
-                                _buildLabelHeading(
-                                  'Category',
-                                  Icons.local_offer_outlined,
+                                const SizedBox(height: 16),
+                                const LabelHeading(
+                                  label: 'Category',
+                                  icon: Icons.local_offer_outlined,
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 if (categories != null)
                                   CustomDropDown<CategoryEntity>(
                                     listItems: categories,
@@ -139,12 +138,12 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                       return f1 == f2;
                                     },
                                   ),
-                                SizedBox(height: 16),
-                                _buildLabelHeading(
-                                  'Sub Category',
-                                  Icons.description_outlined,
+                                const SizedBox(height: 16),
+                                const LabelHeading(
+                                  label: 'Sub Category',
+                                  icon: Icons.description_outlined,
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
 
                                 CustomDropDown<SubCategoryEntity>(
                                   listItems: subCategories ?? [],
@@ -172,114 +171,24 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   },
                                 ),
 
-                                SizedBox(height: 16),
-                                Card(
-                                  elevation: 2,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            showWorkFlowDetails =
-                                                !showWorkFlowDetails;
-                                          });
-                                        },
-                                        splashColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 12.0,
-                                            horizontal: 16.0,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.settings_outlined,
-                                                size: 16,
-                                                color: AppColors.primary,
-                                              ),
-                                              SizedBox(width: 4),
-                                              Text(
-                                                'WORK DETAIL',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: AppColors.primaryDark,
-                                                  fontSize: 13,
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              Icon(
-                                                Icons.arrow_drop_down,
-                                                size: 18,
-                                                color: AppColors.textSecondary,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-
-                                      Visibility(
-                                        visible: showWorkFlowDetails,
-                                        child: Column(
-                                          children: [
-                                            Divider(
-                                              thickness: 1,
-                                              color: AppColors.background,
-                                            ),
-                                            if (workFlowList.isEmpty) ...[
-                                              Container(
-                                                height: 80,
-                                                width: double.infinity,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Select a Sub Category to view the workflow.',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: AppColors
-                                                          .textSecondary,
-                                                    ),
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              ),
-                                            ] else ...[
-                                              ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: workFlowList.length,
-                                                itemBuilder: (context, index) {
-                                                  return _buildWorkflowCards(
-                                                    workFlowList[index],
-                                                  );
-                                                },
-                                              ),
-                                              SizedBox(height: 8),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                const SizedBox(height: 16),
+                                WorkflowDetailsSection(
+                                  workFlowList: workFlowList,
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
 
-                                _buildLabelHeading(
-                                  'Description',
-                                  Icons.description_outlined,
+                                const LabelHeading(
+                                  label: 'Description',
+                                  icon: Icons.description_outlined,
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
 
                                 TextFormField(
                                   maxLines: 4,
                                   decoration: InputDecoration(
                                     hintText:
                                         'Provide a detailed information regarding the issue...',
-                                    hintStyle: TextStyle(
+                                    hintStyle: const TextStyle(
                                       color: AppColors.textSecondary,
                                       fontSize: 14,
                                     ),
@@ -300,16 +209,18 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   // 'Provide a detailed information regarding the issue'
                                 ),
 
-                                SizedBox(height: 16),
-                                _buildLabelHeading(
-                                  'Upload images',
-                                  Icons.file_upload_outlined,
+                                const SizedBox(height: 16),
+                                const LabelHeading(
+                                  label: 'Upload images',
+                                  icon: Icons.file_upload_outlined,
                                 ),
 
-                                SizedBox(height: 16),
-                                InkWell(
-                                  onTap: () {
-                                    // select file
+                                const SizedBox(height: 16),
+                                FileUploadSection(
+                                  isMobile: isMobile,
+                                  selectedFiles: selectedFiles,
+                                  selectedWebFiles: selectedWebFiles,
+                                  onUploadTap: () {
                                     _pickFile(
                                       isMobile,
                                       allowMultiple: false,
@@ -331,181 +242,17 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                       },
                                     );
                                   },
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 160,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 2.0,
-                                        color: Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12.0),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.file_upload_outlined,
-                                            size: 32,
-                                            color: Colors.blueAccent.shade700,
-                                          ),
-                                          SizedBox(height: 16.0),
-                                          Text(
-                                            isMobile
-                                                ? 'Click to Upload'
-                                                : 'Drag & drop files or Click to Upload',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.blueAccent.shade700,
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          SizedBox(height: 8.0),
-                                          Text(
-                                            'Supports PNG, JPG, JPEG, GIF, WEBP (Max 3 MB per image)',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.grey.shade700,
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  onRemoveFile: (index) {
+                                    setState(() {
+                                      selectedFiles.removeAt(index);
+                                    });
+                                  },
+                                  onRemoveWebFile: (index) {
+                                    setState(() {
+                                      selectedWebFiles.removeAt(index);
+                                    });
+                                  },
                                 ),
-                                const SizedBox(height: 16),
-                                if (selectedFiles.isNotEmpty)
-                                  GridView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 8,
-                                          mainAxisSpacing: 8,
-                                        ),
-                                    itemCount: selectedFiles.length,
-                                    itemBuilder: (context, index) {
-                                      final fileMap = selectedFiles[index];
-                                      final fileName = fileMap.keys.first;
-                                      final file = fileMap.values.first as File;
-
-                                      return Stack(
-                                        children: [
-                                          Positioned.fill(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Image.file(
-                                                file,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 4,
-                                            right: 4,
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedFiles.removeAt(index);
-                                                });
-                                              },
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.black54,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                padding: const EdgeInsets.all(
-                                                  2,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.close,
-                                                  size: 16,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                if (selectedWebFiles.isNotEmpty)
-                                  GridView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 8,
-                                          mainAxisSpacing: 8,
-                                        ),
-                                    itemCount: selectedWebFiles.length,
-                                    itemBuilder: (context, index) {
-                                      final fileMap = selectedWebFiles[index];
-                                      final fileName = fileMap.keys.first;
-                                      final bytes =
-                                          fileMap.values.first as Uint8List;
-
-                                      return Stack(
-                                        children: [
-                                          Positioned.fill(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Image.memory(
-                                                bytes,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 4,
-                                            right: 4,
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedWebFiles.removeAt(
-                                                    index,
-                                                  );
-                                                });
-                                              },
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.black54,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                padding: const EdgeInsets.all(
-                                                  2,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.close,
-                                                  size: 16,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
                               ],
                             ),
                           ],
@@ -612,159 +359,5 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
         selectFile(file, pickedFile.name);
       }
     }
-  }
-
-  Widget _buildLabelHeading(String label, IconData icon) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: AppColors.primary),
-        SizedBox(width: 4),
-        Text(
-          label.toUpperCase(),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.textSecondary,
-            fontSize: 14,
-          ),
-        ),
-        SizedBox(width: 4),
-        Text(
-          '*',
-          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.rose),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildWorkflowCards(TicketWorkflowEntity workflow) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Stack(
-        children: [
-          // Vertical timeline line
-          Positioned(
-            left: 8,
-            top: 8,
-            bottom: -4,
-            child: Container(width: 2, color: AppColors.primaryDark),
-          ),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 20,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    height: 14,
-                    width: 14,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primaryDark,
-                      border: Border.all(color: AppColors.white, width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          blurRadius: 4,
-                          spreadRadius: 0.5,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 8),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Level ${workflow.level}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryDark,
-                        fontSize: 14,
-                      ),
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      surfaceTintColor: AppColors.blue,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    workflow.groupName ?? '',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.primaryDark,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 8),
-
-                                Container(
-                                  height: 18,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade200,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    '${workflow.time} min',
-                                    style: TextStyle(
-                                      color: AppColors.primaryDark,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            if (workflow.workflowUsers != null)
-                              Text(
-                                workflow.workflowUsers!
-                                    .map((user) => user.userName ?? '')
-                                    .join(', '),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
