@@ -15,6 +15,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/repositories/add_new
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticketing_repository.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/view_ticket_detail_repository.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/ticket_location_category_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/ticket_workflow_details_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/submit_reopen_review_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_action_history_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecase.dart';
@@ -115,11 +116,14 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketSubCategoryUseCase>(
     () => TicketSubCategoryUseCase(sl()),
   );
+  sl.registerLazySingleton<TicketWorkFlowDetailsUseCase>(
+    () => TicketWorkFlowDetailsUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
   sl.registerFactory(() => EmployeeDetailCubit(sl()));
   sl.registerFactory(() => TicketingBloc(sl()));
   sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => AddNewTicketBloc(sl(), sl()));
+  sl.registerFactory(() => AddNewTicketBloc(sl(), sl(), sl()));
 }

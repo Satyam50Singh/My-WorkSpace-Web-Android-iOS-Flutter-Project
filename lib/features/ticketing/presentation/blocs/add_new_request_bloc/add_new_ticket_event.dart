@@ -13,3 +13,10 @@ final class FetchTicketSubCategoryRequested extends AddNewTicketEvent {
 
   FetchTicketSubCategoryRequested(this.categoryID);
 }
+
+final class FetchTicketWorkFlowDetailsRequested extends AddNewTicketEvent {
+  int categoryID;
+  int subCategoryID;
+
+  FetchTicketWorkFlowDetailsRequested(this.categoryID, this.subCategoryID);
+}

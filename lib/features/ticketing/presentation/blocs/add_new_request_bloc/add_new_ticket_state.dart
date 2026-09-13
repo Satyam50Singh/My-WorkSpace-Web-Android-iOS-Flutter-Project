@@ -23,3 +23,9 @@ final class TicketSubCategorySuccess extends AddNewTicketState {
 
   TicketSubCategorySuccess(this.data);
 }
+
+final class TicketWorkFlowDetailsSuccess extends AddNewTicketState {
+  final TicketWorkflowDetailsEntity data;
+
+  TicketWorkFlowDetailsSuccess(this.data);
+}

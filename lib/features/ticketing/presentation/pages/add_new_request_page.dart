@@ -11,6 +11,7 @@ import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_location_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_sub_category_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_workflow_details_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/add_new_request_header.dart';
 
@@ -30,6 +31,8 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   List<SubCategoryEntity>? subCategories;
   TicketLocationCategoryEntity? _locationCategoryData;
   List<LocationEntity> _finalLocationList = [];
+  bool showWorkFlowDetails = false;
+  List<TicketWorkflowEntity> workFlowList = [];
 
   @override
   void initState() {
@@ -151,9 +154,18 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   itemAsString: (category) =>
                                       category.subCategoryDesc!,
                                   onSelected: (value) {
-                                    debugPrint(
-                                      'Selected Category: ${value?.categoryId} ${value?.subCategoryDesc}',
-                                    );
+                                    if (value != null &&
+                                        value.subCategoryId != 0) {
+                                      debugPrint(
+                                        'Selected CategoryID: ${value.categoryId} --- SubCategoryID: ${value.subCategoryId} ${value.subCategoryDesc}',
+                                      );
+                                      context.read<AddNewTicketBloc>().add(
+                                        FetchTicketWorkFlowDetailsRequested(
+                                          value.categoryId ?? 0,
+                                          value.subCategoryId ?? 0,
+                                        ),
+                                      );
+                                    }
                                   },
                                   compareFn: (f1, f2) {
                                     return f1 == f2;
@@ -167,63 +179,112 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12.0,
-                                          horizontal: 16.0,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.settings_outlined,
-                                              size: 16,
-                                              color: AppColors.primary,
-                                            ),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              'WORK DETAIL',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.textSecondary,
-                                                fontSize: 13,
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            showWorkFlowDetails =
+                                                !showWorkFlowDetails;
+                                          });
+                                        },
+                                        splashColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 12.0,
+                                            horizontal: 16.0,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.settings_outlined,
+                                                size: 16,
+                                                color: AppColors.primary,
                                               ),
-                                            ),
-                                            Spacer(),
-                                            Icon(
-                                              Icons.arrow_drop_down,
-                                              size: 18,
-                                              color: AppColors.textSecondary,
-                                            ),
-                                          ],
+                                              SizedBox(width: 4),
+                                              Text(
+                                                'WORK DETAIL',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      AppColors.textSecondary,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.arrow_drop_down,
+                                                size: 18,
+                                                color: AppColors.textSecondary,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
 
                                       Visibility(
-                                        visible: true,
+                                        visible: showWorkFlowDetails,
                                         child: Column(
                                           children: [
                                             Divider(
                                               thickness: 1,
                                               color: AppColors.background,
                                             ),
-                                            Container(
-                                              height: 80,
-                                              width: double.infinity,
-                                              child: Center(
-                                                child: Text(
-                                                  'Select a Sub Category to view the workflow.',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color:
-                                                        AppColors.textSecondary,
+                                            if (workFlowList.isEmpty) ...[
+                                              Container(
+                                                height: 80,
+                                                width: double.infinity,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Select a Sub Category to view the workflow.',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: AppColors
+                                                          .textSecondary,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
                                                   ),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
-                                            ),
+                                            ] else
+                                              SizedBox(
+                                                height: 360,
+                                                child: ListView.builder(
+                                                  itemCount:
+                                                      workFlowList.length,
+                                                  itemBuilder: (context, index) {
+                                                    return ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundColor:
+                                                            AppColors.primary,
+                                                        child: Text(
+                                                          '${index + 1}',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      title: Text(
+                                                        workFlowList[index]
+                                                                .userName ??
+                                                            '',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      subtitle: Text(
+                                                        workFlowList[index]
+                                                                .groupName ??
+                                                            '',
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
                                           ],
                                         ),
                                       ),
@@ -534,6 +595,11 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                     subCategories = state.data.subCategories!;
                   }
                   debugPrint('subCategories = $subCategories');
+                  setState(() {});
+                }
+                if (state is TicketWorkFlowDetailsSuccess) {
+                  LoaderUtils.hideLoader(context);
+                  workFlowList = state.data.workFlowDetailList ?? [];
                   setState(() {});
                 }
               },
