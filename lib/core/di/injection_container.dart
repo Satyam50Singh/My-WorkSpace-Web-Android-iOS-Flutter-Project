@@ -29,6 +29,7 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/ticketing/data/repositories/add_new_request_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticketing_repository_impl.dart';
 import '../../features/ticketing/data/repositories/view_ticket_detail_repository_impl.dart';
+import '../../features/ticketing/domain/usecases/add_new_request/ticket_sub_category_usecase.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
 import '../network/api_client.dart';
 
@@ -111,11 +112,14 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketLocationCategoryUseCase>(
     () => TicketLocationCategoryUseCase(sl()),
   );
+  sl.registerLazySingleton<TicketSubCategoryUseCase>(
+    () => TicketSubCategoryUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
   sl.registerFactory(() => EmployeeDetailCubit(sl()));
   sl.registerFactory(() => TicketingBloc(sl()));
   sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => AddNewTicketBloc(sl()));
+  sl.registerFactory(() => AddNewTicketBloc(sl(), sl()));
 }

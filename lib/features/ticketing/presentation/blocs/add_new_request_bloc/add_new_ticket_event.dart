@@ -7,3 +7,9 @@ final class FetchTicketLocationCategoryRequested extends AddNewTicketEvent {
 
   FetchTicketLocationCategoryRequested(this.payload);
 }
+
+final class FetchTicketSubCategoryRequested extends AddNewTicketEvent {
+  int categoryID;
+
+  FetchTicketSubCategoryRequested(this.categoryID);
+}

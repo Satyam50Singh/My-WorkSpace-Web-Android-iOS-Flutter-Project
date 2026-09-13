@@ -10,6 +10,7 @@ import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_location_category_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_sub_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/add_new_request_header.dart';
 
@@ -26,6 +27,9 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   List<Map<String, File?>> selectedFiles = [];
   List<Map<String, Uint8List?>> selectedWebFiles = [];
   final _formKey = GlobalKey<FormState>();
+  List<SubCategoryEntity>? subCategories;
+  TicketLocationCategoryEntity? _locationCategoryData;
+  List<LocationEntity> _finalLocationList = [];
 
   @override
   void initState() {
@@ -47,6 +51,9 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   @override
   Widget build(BuildContext context) {
     final bool isMobile = MediaQuery.of(context).size.width < 600;
+
+    debugPrint('Page is getting rebuild');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -58,39 +65,8 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
             padding: const EdgeInsets.all(16.0),
             child: BlocConsumer<AddNewTicketBloc, AddNewTicketState>(
               builder: (context, state) {
-                if (state is TicketLocationCategorySuccess) {
-                  final lastSelectedLocation =
-                      state.data.locationDetails![0].lastLocation;
-                  final favoriteLocation =
-                      state.data.locationDetails![0].favouriteLocation;
-                  final allLocation =
-                      state.data.locationDetails![0].allLocation;
-
-                  final List<LocationEntity> finalLocationList = [];
-                  if (lastSelectedLocation != null) {
-                    finalLocationList.add(
-                      LocationEntity(
-                        locationId: lastSelectedLocation[0].locationId,
-                        locationDesc: lastSelectedLocation[0].locationDesc,
-                        isLastLocation: true,
-                      ),
-                    );
-                  }
-                  if (favoriteLocation != null) {
-                    for (var location in favoriteLocation) {
-                      finalLocationList.add(
-                        LocationEntity(
-                          locationId: location.locationId,
-                          locationDesc: location.locationDesc,
-                          isFavouriteLocation: true,
-                        ),
-                      );
-                    }
-                  }
-                  if (allLocation != null) {
-                    finalLocationList.addAll(allLocation);
-                  }
-                  final categories = state.data.categoryDetails;
+                if (_locationCategoryData != null) {
+                  final categories = _locationCategoryData!.categoryDetails;
 
                   return SingleChildScrollView(
                     child: Padding(
@@ -104,36 +80,17 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      size: 16,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      'Location'.toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.textSecondary,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '*',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.rose,
-                                      ),
-                                    ),
-                                  ],
+                                _buildLabelHeading(
+                                  'Location',
+                                  Icons.location_on_outlined,
                                 ),
+
                                 SizedBox(height: 16),
                                 CustomDropDown<LocationEntity>(
-                                  listItems: finalLocationList,
-                                  selectedValue: finalLocationList[0],
+                                  listItems: _finalLocationList,
+                                  selectedValue: _finalLocationList.isNotEmpty
+                                      ? _finalLocationList[0]
+                                      : null,
                                   label: 'Location',
                                   hintText: 'Select Location',
                                   searchHintText: 'Search Locations ...',
@@ -149,31 +106,9 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   },
                                 ),
                                 SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.local_offer_outlined,
-                                      size: 16,
-                                      color: AppColors.success,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      'Category'.toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.textSecondary,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '*',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.rose,
-                                      ),
-                                    ),
-                                  ],
+                                _buildLabelHeading(
+                                  'Category',
+                                  Icons.local_offer_outlined,
                                 ),
                                 SizedBox(height: 16),
                                 if (categories != null)
@@ -185,63 +120,45 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     itemAsString: (category) =>
                                         category.categoryDesc!,
                                     onSelected: (value) {
-                                      debugPrint(
-                                        'Selected Category: ${value?.categoryId} ${value?.categoryDesc}',
-                                      );
+                                      if (value != null &&
+                                          value.categoryId != 0) {
+                                        debugPrint(
+                                          'Selected Category: ${value.categoryId} ${value.categoryDesc}',
+                                        );
+                                        context.read<AddNewTicketBloc>().add(
+                                          FetchTicketSubCategoryRequested(
+                                            value.categoryId ?? 0,
+                                          ),
+                                        );
+                                      }
                                     },
                                     compareFn: (f1, f2) {
                                       return f1 == f2;
                                     },
                                   ),
                                 SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.description_outlined,
-                                      size: 16,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      'Sub Category'.toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.textSecondary,
-                                        fontSize: 14,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '*',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.rose,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                  ],
+                                _buildLabelHeading(
+                                  'Sub Category',
+                                  Icons.description_outlined,
                                 ),
                                 SizedBox(height: 16),
 
-                                if (categories != null)
-                                  CustomDropDown<CategoryEntity>(
-                                    listItems: categories,
-                                    label: 'Category',
-                                    hintText: 'Select Categories',
-                                    searchHintText: 'Search Categories ...',
-                                    itemAsString: (category) =>
-                                        category.categoryDesc!,
-                                    onSelected: (value) {
-                                      debugPrint(
-                                        'Selected Category: ${value?.categoryId} ${value?.categoryDesc}',
-                                      );
-                                    },
-                                    compareFn: (f1, f2) {
-                                      return f1 == f2;
-                                    },
-                                  ),
+                                CustomDropDown<SubCategoryEntity>(
+                                  listItems: subCategories ?? [],
+                                  label: 'Sub Category',
+                                  hintText: 'Select Sub Categories',
+                                  searchHintText: 'Search Sub Categories ...',
+                                  itemAsString: (category) =>
+                                      category.subCategoryDesc!,
+                                  onSelected: (value) {
+                                    debugPrint(
+                                      'Selected Category: ${value?.categoryId} ${value?.subCategoryDesc}',
+                                    );
+                                  },
+                                  compareFn: (f1, f2) {
+                                    return f1 == f2;
+                                  },
+                                ),
 
                                 SizedBox(height: 16),
                                 Card(
@@ -315,34 +232,9 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                 ),
                                 SizedBox(height: 16),
 
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.description_outlined,
-                                      size: 16,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      'Description'.toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.textSecondary,
-                                        fontSize: 14,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '*',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.rose,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                  ],
+                                _buildLabelHeading(
+                                  'Description',
+                                  Icons.description_outlined,
                                 ),
                                 SizedBox(height: 16),
 
@@ -373,36 +265,9 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                 ),
 
                                 SizedBox(height: 16),
-
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.file_upload_outlined,
-                                      size: 16,
-                                      color: AppColors.violet,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Expanded(
-                                      child: Text(
-                                        'Upload images'.toUpperCase(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.textSecondary,
-                                          fontSize: 14,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '*',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.rose,
-                                      ),
-                                    ),
-                                  ],
+                                _buildLabelHeading(
+                                  'Upload images',
+                                  Icons.file_upload_outlined,
                                 ),
 
                                 SizedBox(height: 16),
@@ -613,14 +478,11 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                     ),
                   );
                 }
-                return SizedBox.shrink();
+                return const Center(child: CircularProgressIndicator());
               },
               listener: (context, state) {
                 if (state is AddNewTicketLoading) {
                   LoaderUtils.showLoader(context);
-                }
-                if (state is TicketLocationCategorySuccess) {
-                  LoaderUtils.hideLoader(context);
                 }
                 if (state is AddNewTicketFailure) {
                   SnackBarUtils.showFloatingSnackBar(
@@ -628,6 +490,50 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                     state.errorMessage,
                   );
                   LoaderUtils.hideLoader(context);
+                }
+                if (state is TicketLocationCategorySuccess) {
+                  LoaderUtils.hideLoader(context);
+                  _locationCategoryData = state.data;
+                  _finalLocationList.clear();
+                  final lastSelectedLocation =
+                      state.data.locationDetails![0].lastLocation;
+                  final favoriteLocation =
+                      state.data.locationDetails![0].favouriteLocation;
+                  final allLocation =
+                      state.data.locationDetails![0].allLocation;
+
+                  if (lastSelectedLocation != null) {
+                    _finalLocationList.add(
+                      LocationEntity(
+                        locationId: lastSelectedLocation[0].locationId,
+                        locationDesc: lastSelectedLocation[0].locationDesc,
+                        isLastLocation: true,
+                      ),
+                    );
+                  }
+                  if (favoriteLocation != null) {
+                    for (var location in favoriteLocation) {
+                      _finalLocationList.add(
+                        LocationEntity(
+                          locationId: location.locationId,
+                          locationDesc: location.locationDesc,
+                          isFavouriteLocation: true,
+                        ),
+                      );
+                    }
+                  }
+                  if (allLocation != null) {
+                    _finalLocationList.addAll(allLocation);
+                  }
+                  setState(() {});
+                }
+                if (state is TicketSubCategorySuccess) {
+                  LoaderUtils.hideLoader(context);
+                  if (state.data.subCategories != null) {
+                    subCategories = state.data.subCategories!;
+                  }
+                  debugPrint('subCategories = $subCategories');
+                  setState(() {});
                 }
               },
             ),
@@ -664,5 +570,27 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
         selectFile(file, pickedFile.name);
       }
     }
+  }
+
+  Widget _buildLabelHeading(String label, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: AppColors.primary),
+        SizedBox(width: 4),
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.textSecondary,
+            fontSize: 14,
+          ),
+        ),
+        SizedBox(width: 4),
+        Text(
+          '*',
+          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.rose),
+        ),
+      ],
+    );
   }
 }

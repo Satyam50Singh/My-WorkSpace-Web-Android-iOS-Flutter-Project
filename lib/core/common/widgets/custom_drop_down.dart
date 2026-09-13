@@ -47,6 +47,9 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
+    bool isListEmpty = widget.listItems.isEmpty;
+    double maxMenuHeight = widget.listItems.isEmpty ? 60 : 300;
+
     return DropdownSearch<T>(
       itemAsString: widget.itemAsString,
       compareFn: widget.compareFn,
@@ -57,9 +60,9 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
           )
           .toList(),
       popupProps: PopupProps.menu(
-        showSearchBox: true,
+        showSearchBox: !isListEmpty,
         showSelectedItems: true,
-        constraints: const BoxConstraints(maxHeight: 320),
+        constraints: BoxConstraints(maxHeight: maxMenuHeight),
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
             border: OutlineInputBorder(),

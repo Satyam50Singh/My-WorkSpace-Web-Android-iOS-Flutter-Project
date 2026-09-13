@@ -7,6 +7,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_req
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/add_new_request_repository.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../domain/entities/add_new_request/ticket_sub_category_entity.dart';
 
 class AddNewRequestRepositoryImpl extends AddNewRequestRepository {
   final AddNewRequestDataSource dataSource;
@@ -22,6 +23,30 @@ class AddNewRequestRepositoryImpl extends AddNewRequestRepository {
       final response = await dataSource.fetchTicketLocationCategory(payload);
       if (response.status == 1 && response.ticketLocationCategory != null) {
         return Right(response.ticketLocationCategory!.toEntity());
+      } else {
+        final message = response.message?.trim();
+        return Left(
+          ServerFailure(
+            message?.isNotEmpty == true
+                ? message ?? "Something went wrong!"
+                : "Something went wrong!",
+          ),
+        );
+      }
+    } on ServerException catch (e) {
+      debugPrint('ServerException: ${e.message}');
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TicketSubCategoryEntity>> fetchTicketSubCategory({
+    required int categoryID,
+  }) async {
+    try {
+      final response = await dataSource.fetchTicketSubCategory(categoryID);
+      if (response.status == 1 && response.ticketSubCategory != null) {
+        return Right(response.ticketSubCategory!.toEntity());
       } else {
         final message = response.message?.trim();
         return Left(

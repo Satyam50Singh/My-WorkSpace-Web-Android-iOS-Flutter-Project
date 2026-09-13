@@ -17,3 +17,9 @@ final class TicketLocationCategorySuccess extends AddNewTicketState {
 
   TicketLocationCategorySuccess(this.data);
 }
+
+final class TicketSubCategorySuccess extends AddNewTicketState {
+  final TicketSubCategoryEntity data;
+
+  TicketSubCategorySuccess(this.data);
+}
