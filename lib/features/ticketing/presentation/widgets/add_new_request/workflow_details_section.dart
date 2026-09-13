@@ -33,43 +33,56 @@ class _WorkflowDetailsSectionState extends State<WorkflowDetailsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                _showWorkFlowDetails = !_showWorkFlowDetails;
-              });
-            },
-            splashColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 16.0,
+          Container(
+            decoration: BoxDecoration(
+              color: _showWorkFlowDetails
+                  ? AppColors.primary.withOpacity(0.05)
+                  : null,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.settings_outlined,
-                    size: 16,
-                    color: AppColors.primary,
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    'WORK DETAIL',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryDark,
-                      fontSize: 13,
+            ),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  _showWorkFlowDetails = !_showWorkFlowDetails;
+                });
+              },
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 16.0,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.settings_outlined,
+                      size: 16,
+                      color: AppColors.primary,
                     ),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_drop_down,
-                    size: 18,
-                    color: AppColors.textSecondary,
-                  ),
-                ],
+                    const SizedBox(width: 4),
+                    const Text(
+                      'WORK DETAIL',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryDark,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      _showWorkFlowDetails
+                          ? Icons.arrow_drop_up
+                          : Icons.arrow_drop_down,
+                      size: 18,
+                      color: AppColors.textSecondary,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

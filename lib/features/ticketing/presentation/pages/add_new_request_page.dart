@@ -36,6 +36,10 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   List<LocationEntity> _finalLocationList = [];
   List<TicketWorkflowEntity> workFlowList = [];
 
+  LocationEntity? _selectedLocation;
+  CategoryEntity? _selectedCategory;
+  SubCategoryEntity? _selectedSubCategory;
+
   @override
   void initState() {
     super.initState();
@@ -90,21 +94,22 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                 const SizedBox(height: 16),
                                 CustomDropDown<LocationEntity>(
                                   listItems: _finalLocationList,
-                                  selectedValue: _finalLocationList.isNotEmpty
-                                      ? _finalLocationList[0]
-                                      : null,
+                                  selectedValue: _selectedLocation,
                                   label: 'Location',
                                   hintText: 'Select Location',
                                   searchHintText: 'Search Locations ...',
                                   itemAsString: (location) =>
                                       location.locationDesc!,
                                   onSelected: (value) {
+                                    setState(() {
+                                      _selectedLocation = value;
+                                    });
                                     debugPrint(
                                       'Selected location: ${value?.locationId} ${value?.locationDesc}',
                                     );
                                   },
                                   compareFn: (f1, f2) {
-                                    return f1 == f2;
+                                    return f1.locationId == f2.locationId;
                                   },
                                 ),
                                 const SizedBox(height: 16),
@@ -116,6 +121,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                 if (categories != null)
                                   CustomDropDown<CategoryEntity>(
                                     listItems: categories,
+                                    selectedValue: _selectedCategory,
                                     label: 'Category',
                                     hintText: 'Select Categories',
                                     searchHintText: 'Search Categories ...',
@@ -124,6 +130,12 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     onSelected: (value) {
                                       if (value != null &&
                                           value.categoryId != 0) {
+                                        setState(() {
+                                          _selectedCategory = value;
+                                          _selectedSubCategory = null;
+                                          subCategories = [];
+                                          workFlowList = [];
+                                        });
                                         debugPrint(
                                           'Selected Category: ${value.categoryId} ${value.categoryDesc}',
                                         );
@@ -135,7 +147,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                       }
                                     },
                                     compareFn: (f1, f2) {
-                                      return f1 == f2;
+                                      return f1.categoryId == f2.categoryId;
                                     },
                                   ),
                                 const SizedBox(height: 16),
@@ -147,6 +159,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
 
                                 CustomDropDown<SubCategoryEntity>(
                                   listItems: subCategories ?? [],
+                                  selectedValue: _selectedSubCategory,
                                   label: 'Sub Category',
                                   hintText: 'Select Sub Categories',
                                   searchHintText: 'Search Sub Categories ...',
@@ -155,6 +168,10 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   onSelected: (value) {
                                     if (value != null &&
                                         value.subCategoryId != 0) {
+                                      setState(() {
+                                        _selectedSubCategory = value;
+                                        workFlowList = [];
+                                      });
                                       debugPrint(
                                         'Selected CategoryID: ${value.categoryId} --- SubCategoryID: ${value.subCategoryId} ${value.subCategoryDesc}',
                                       );
@@ -167,7 +184,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     }
                                   },
                                   compareFn: (f1, f2) {
-                                    return f1 == f2;
+                                    return f1.subCategoryId == f2.subCategoryId;
                                   },
                                 ),
 
@@ -193,7 +210,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                       fontSize: 14,
                                     ),
                                     filled: true,
-                                    fillColor: AppColors.background,
+                                    fillColor: AppColors.white,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
@@ -307,6 +324,11 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                   }
                   if (allLocation != null) {
                     _finalLocationList.addAll(allLocation);
+                  }
+
+                  if (_finalLocationList.isNotEmpty &&
+                      _selectedLocation == null) {
+                    _selectedLocation = _finalLocationList[0];
                   }
                   setState(() {});
                 }

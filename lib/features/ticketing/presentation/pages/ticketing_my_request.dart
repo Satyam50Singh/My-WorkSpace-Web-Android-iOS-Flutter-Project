@@ -468,25 +468,29 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     final isTablet = width >= 600 && width < 1200;
     final isMobile = width < 600;
 
-    final dialogWidth = isTablet
-        ? 440.0
-        : isMobile
-        ? 360.0
-        : 640.0;
+    if (isMobile) {
+      context.go(AppRoutes.addNewRequest);
+    } else {
+      final dialogWidth = isTablet
+          ? 440.0
+          : isMobile
+          ? 360.0
+          : 640.0;
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          alignment: Alignment.centerRight,
-          insetPadding: EdgeInsets.zero,
-          child: SizedBox(
-            width: dialogWidth,
-            height: double.infinity,
-            child: AddNewRequestPage(),
-          ),
-        );
-      },
-    );
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            alignment: Alignment.centerRight,
+            insetPadding: EdgeInsets.zero,
+            child: SizedBox(
+              width: dialogWidth,
+              height: double.infinity,
+              child: AddNewRequestPage(),
+            ),
+          );
+        },
+      );
+    }
   }
 }

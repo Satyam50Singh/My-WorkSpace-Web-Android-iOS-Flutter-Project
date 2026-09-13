@@ -9,6 +9,8 @@ class WorkflowCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 600;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Stack(
@@ -82,10 +84,10 @@ class WorkflowCard extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     workflow.groupName ?? '',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.primaryDark,
-                                      fontSize: 16,
+                                      fontSize: isMobile ? 14 : 16,
                                     ),
                                   ),
                                 ),

@@ -12,6 +12,7 @@ class CustomDropDown<T> extends StatefulWidget {
   final ValueChanged<T?> onSelected;
   final DropdownSearchItemAsString<T>? itemAsString;
   final bool Function(T, T)? compareFn;
+  final bool? enabled;
 
   const CustomDropDown({
     super.key,
@@ -23,6 +24,7 @@ class CustomDropDown<T> extends StatefulWidget {
     required this.onSelected,
     this.itemAsString,
     this.compareFn,
+    this.enabled,
   });
 
   @override
@@ -35,8 +37,13 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
   @override
   void initState() {
     super.initState();
+    selectedValue = widget.selectedValue;
+  }
 
-    if (widget.selectedValue != null) {
+  @override
+  void didUpdateWidget(covariant CustomDropDown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedValue != oldWidget.selectedValue) {
       selectedValue = widget.selectedValue;
     }
   }
@@ -48,10 +55,12 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
   @override
   Widget build(BuildContext context) {
     bool isListEmpty = widget.listItems.isEmpty;
-    double maxMenuHeight = widget.listItems.isEmpty ? 60 : 300;
+    bool isEnabled = widget.enabled ?? !isListEmpty;
+    double maxMenuHeight = isListEmpty ? 60 : 300;
 
     return DropdownSearch<T>(
       itemAsString: widget.itemAsString,
+      enabled: isEnabled,
       compareFn: widget.compareFn,
       items: (filter, loadProps) => widget.listItems
           .where(
@@ -65,8 +74,11 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
         constraints: BoxConstraints(maxHeight: maxMenuHeight),
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
             hintText: widget.searchHintText,
+            prefixIcon: const Icon(Icons.search),
           ),
         ),
         itemBuilder: (context, item, isDisabled, isSelected) {
@@ -110,7 +122,26 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
         decoration: InputDecoration(
           hintText: widget.hintText,
           labelText: widget.label,
-          border: OutlineInputBorder(),
+          filled: true,
+          fillColor: isEnabled ? AppColors.white : AppColors.background,
+          labelStyle: TextStyle(
+            color: isEnabled ? AppColors.textSecondary : AppColors.textHint,
+            fontSize: 14,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         ),
       ),
       onSelected: (T? value) {
