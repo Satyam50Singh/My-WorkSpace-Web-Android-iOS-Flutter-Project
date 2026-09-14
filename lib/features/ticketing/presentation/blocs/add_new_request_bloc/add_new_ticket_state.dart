@@ -29,3 +29,9 @@ final class TicketWorkFlowDetailsSuccess extends AddNewTicketState {
 
   TicketWorkFlowDetailsSuccess(this.data);
 }
+
+final class AddNewTicketSubmitSuccess extends AddNewTicketState {
+  final AddNewTicketRequestEntity data;
+
+  AddNewTicketSubmitSuccess(this.data);
+}

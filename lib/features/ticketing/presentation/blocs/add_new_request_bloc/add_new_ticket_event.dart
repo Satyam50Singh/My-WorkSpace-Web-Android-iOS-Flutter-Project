@@ -20,3 +20,10 @@ final class FetchTicketWorkFlowDetailsRequested extends AddNewTicketEvent {
 
   FetchTicketWorkFlowDetailsRequested(this.categoryID, this.subCategoryID);
 }
+
+final class AddNewTicketSubmitted extends AddNewTicketEvent {
+  AddNewTicketRequestModel payload;
+  List<AppMultipartFile> imageFiles;
+
+  AddNewTicketSubmitted(this.payload, this.imageFiles);
+}

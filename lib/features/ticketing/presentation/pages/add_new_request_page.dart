@@ -1,14 +1,18 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_drop_down.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/add_new_request/add_new_ticket_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/add_new_request/app_multipart_file.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_location_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_sub_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_workflow_details_entity.dart';
@@ -18,6 +22,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_ne
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/label_heading.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_details_section.dart';
 
+import '../../../../core/routes/app_routes.dart';
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
 
 class AddNewRequestPage extends StatefulWidget {
@@ -39,6 +44,8 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   LocationEntity? _selectedLocation;
   CategoryEntity? _selectedCategory;
   SubCategoryEntity? _selectedSubCategory;
+  final TextEditingController _descriptionController = TextEditingController();
+  bool isSaveBtnEnabled = false;
 
   @override
   void initState() {
@@ -64,7 +71,10 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        AddNewRequestHeader(),
+        AddNewRequestHeader(
+          onSaveTap: _submitNewTicket,
+          isSaveEnabled: isSaveBtnEnabled,
+        ),
 
         Expanded(
           child: Padding(
@@ -104,6 +114,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     setState(() {
                                       _selectedLocation = value;
                                     });
+                                    _validateForm();
                                     debugPrint(
                                       'Selected location: ${value?.locationId} ${value?.locationDesc}',
                                     );
@@ -136,6 +147,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                           subCategories = [];
                                           workFlowList = [];
                                         });
+                                        _validateForm();
                                         debugPrint(
                                           'Selected Category: ${value.categoryId} ${value.categoryDesc}',
                                         );
@@ -172,6 +184,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                         _selectedSubCategory = value;
                                         workFlowList = [];
                                       });
+                                      _validateForm();
                                       debugPrint(
                                         'Selected CategoryID: ${value.categoryId} --- SubCategoryID: ${value.subCategoryId} ${value.subCategoryDesc}',
                                       );
@@ -202,6 +215,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
 
                                 TextFormField(
                                   maxLines: 4,
+                                  controller: _descriptionController,
                                   decoration: InputDecoration(
                                     hintText:
                                         'Provide a detailed information regarding the issue...',
@@ -216,13 +230,12 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                     ),
                                   ),
                                   textInputAction: TextInputAction.next,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Description is required';
-                                    }
-                                    return null;
+                                  onChanged: (value) {
+                                    _validateForm();
                                   },
-
+                                  onEditingComplete: () {
+                                    _validateForm();
+                                  },
                                   // 'Provide a detailed information regarding the issue'
                                 ),
 
@@ -230,6 +243,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                 const LabelHeading(
                                   label: 'Upload images',
                                   icon: Icons.file_upload_outlined,
+                                  isRequired: false,
                                 ),
 
                                 const SizedBox(height: 16),
@@ -346,6 +360,13 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                   workFlowList = state.data.workFlowDetailList ?? [];
                   setState(() {});
                 }
+                if (state is AddNewTicketSubmitSuccess) {
+                  if (kIsWeb) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  } else {
+                    context.go(AppRoutes.myTickets);
+                  }
+                }
               },
             ),
           ),
@@ -381,5 +402,70 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
         selectFile(file, pickedFile.name);
       }
     }
+  }
+
+  void _validateForm() {
+    if (_selectedCategory != null &&
+        _selectedSubCategory != null &&
+        _descriptionController.text.isNotEmpty &&
+        _selectedLocation != null &&
+        workFlowList.isNotEmpty) {
+      setState(() {
+        isSaveBtnEnabled = true;
+      });
+    } else {
+      setState(() {
+        isSaveBtnEnabled = false;
+      });
+    }
+  }
+
+  void _submitNewTicket() {
+    final List<AppMultipartFile> imageFiles = [];
+    if (kIsWeb) {
+      for (var file in selectedWebFiles) {
+        imageFiles.add(
+          AppMultipartFile(name: file.keys.first, bytes: file.values.first),
+        );
+      }
+    } else {
+      for (var file in selectedFiles) {
+        final ioFile = file.values.first!;
+        imageFiles.add(
+          AppMultipartFile(name: file.keys.first, path: ioFile.path),
+        );
+      }
+    }
+
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final payload = AddNewTicketRequestModel(
+        locationID: _selectedLocation?.locationId,
+        categoryID: _selectedCategory?.categoryId,
+        subCategoryID: _selectedSubCategory?.subCategoryId,
+        ticketMessage: _descriptionController.text,
+        empCD: state.employeeDetail.empCd,
+        companyID: state.employeeDetail.companyId,
+        platformType: kIsWeb ? "Web" : "Mobile",
+        isImageUploaded: imageFiles.isNotEmpty ? 1 : 0,
+        imageCount: imageFiles.length,
+        refNo: _generateRandomNumber(),
+      );
+
+      context.read<AddNewTicketBloc>().add(
+        AddNewTicketSubmitted(payload, imageFiles),
+      );
+    }
+  }
+
+  int _generateRandomNumber() {
+    String randomDigits = List.generate(
+      10,
+      (_) => Random().nextInt(10).toString(),
+    ).join();
+
+    int tenDigitNumber = int.parse(randomDigits);
+
+    return tenDigitNumber;
   }
 }

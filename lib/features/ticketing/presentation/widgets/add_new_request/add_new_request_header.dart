@@ -5,7 +5,14 @@ import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import '../../../../../core/routes/app_routes.dart';
 
 class AddNewRequestHeader extends StatelessWidget {
-  const AddNewRequestHeader({super.key});
+  final VoidCallback onSaveTap;
+  bool isSaveEnabled = false;
+
+  AddNewRequestHeader({
+    super.key,
+    required this.onSaveTap,
+    required this.isSaveEnabled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,24 +58,25 @@ class AddNewRequestHeader extends StatelessWidget {
               ),
             ),
             Spacer(),
-            SizedBox(
-              height: isMobile ? 36 : 48,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: 80,
+                minHeight: isMobile ? 36 : 40,
+              ),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: isSaveEnabled ? onSaveTap : null,
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(4.0),
                   backgroundColor: AppColors.primary,
+                  disabledBackgroundColor: AppColors.white.withOpacity(0.12),
+                  disabledForegroundColor: AppColors.white.withOpacity(0.38),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Save',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
             ),

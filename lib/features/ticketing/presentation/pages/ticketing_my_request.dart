@@ -57,7 +57,9 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
     String? toDate,
     String? searchText,
   }) {
-    _currentPageCount = pageCount ?? 1;
+    setState(() {
+      _currentPageCount = pageCount ?? 1;
+    });
     final employeeState = context.read<EmployeeDetailCubit>().state;
 
     if (employeeState is EmployeeDetailFetched) {
@@ -406,18 +408,19 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                       Expanded(
                         child: TicketListTableView(
                           ticketingDetailList: ticketingDetailList,
-                          rowsPerPage:
-                              (totalRecords > 0 &&
-                                  totalRecords < (_currentPageSize ?? 10))
-                              ? totalRecords
-                              : (_currentPageSize ?? 10),
+                          rowsPerPage: _currentPageSize ?? 10,
                           currentPage: _currentPageCount,
                           totalRecordsCount: totalRecords,
                           updatePageSize: (pageSize) {
-                            _currentPageSize = pageSize;
+                            setState(() {
+                              _currentPageSize = pageSize;
+                            });
                             _fetchTicketDetails(pageSize: pageSize);
                           },
                           updatePageCount: (pageCount) {
+                            setState(() {
+                              _currentPageCount = pageCount;
+                            });
                             _fetchTicketDetails(pageCount: pageCount);
                           },
                           onTapViewTicketDetail: (selectedTicketId) {
