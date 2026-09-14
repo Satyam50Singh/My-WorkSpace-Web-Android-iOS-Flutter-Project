@@ -256,10 +256,10 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                       isMobile,
                                       allowMultiple: false,
                                       allowedExtensions: <String>[
-                                        'PNG',
-                                        'JPG',
-                                        'JPEG',
-                                        'WEBG',
+                                        'png',
+                                        'jpg',
+                                        'jpeg',
+                                        'webp',
                                       ],
                                       selectFile: (file, name) {
                                         setState(() {

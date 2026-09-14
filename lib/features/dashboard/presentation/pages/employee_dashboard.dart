@@ -18,6 +18,21 @@ class EmployeeDashboard extends StatefulWidget {
 }
 
 class _EmployeeDashboardState extends State<EmployeeDashboard> {
+  String _getTitle(BuildContext context) {
+    final location = GoRouterState.of(context).uri.path;
+    debugPrint('Page Location = $location');
+    if (location.startsWith(AppRoutes.dashboardPath)) {
+      return 'Dashboard';
+    } else if (location.startsWith(AppRoutes.myTickets)) {
+      return 'My Tickets';
+    } else if (location.contains(AppRoutes.viewTicketDetails)) {
+      return 'Ticket Details';
+    } else if (location.startsWith(AppRoutes.addNewRequest)) {
+      return 'Add New Request';
+    }
+    return 'My Worksphere';
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -44,7 +59,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           final EmployeeDetail employeeDetail = state.employeeDetail;
 
           return Scaffold(
-            appBar: isMobile || isMini ? const MobileDashboardAppBar() : null,
+            appBar: isMobile || isMini
+                ? MobileDashboardAppBar(title: _getTitle(context))
+                : null,
             drawer: isMobile || isMini
                 ? Drawer(
                     child: DashboardDrawer(

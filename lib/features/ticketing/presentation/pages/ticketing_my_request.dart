@@ -271,6 +271,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         ),
                       ),
                     ),
+                    if (!isMobile) SizedBox(width: 4),
                     SizedBox(
                       height: 42,
                       child: IconButton.filled(
@@ -288,6 +289,7 @@ class _TicketingMyRequestState extends State<TicketingMyRequest> {
                         ),
                       ),
                     ),
+                    if (!isMobile) SizedBox(width: 4),
                     SizedBox(
                       height: 42,
                       child: IconButton.filled(
