@@ -21,6 +21,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_ne
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/file_upload_section.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/label_heading.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_details_section.dart';
+import 'package:path/path.dart' as p;
 
 import '../../../../core/routes/app_routes.dart';
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
@@ -372,12 +373,6 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   }
 
   void _validateForm() {
-    debugPrint('_selectedCategory: ${_selectedCategory != null}');
-    debugPrint('_selectedSubCategory: ${_selectedSubCategory != null}');
-    debugPrint('_descriptionController.text.isNotEmpty: ${_descriptionController.text.isNotEmpty}');
-    debugPrint('_selectedLocation: ${_selectedLocation != null}');
-    debugPrint('workFlowList: ${workFlowList.isNotEmpty}');
-
     if (_selectedCategory != null &&
         _selectedSubCategory != null &&
         _descriptionController.text.isNotEmpty &&
@@ -405,7 +400,10 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
       for (var file in selectedFiles) {
         final ioFile = file.values.first!;
         imageFiles.add(
-          AppMultipartFile(name: file.keys.first, path: ioFile.path),
+          AppMultipartFile(
+            name: p.basename(file.keys.first),
+            path: ioFile.path,
+          ),
         );
       }
     }
