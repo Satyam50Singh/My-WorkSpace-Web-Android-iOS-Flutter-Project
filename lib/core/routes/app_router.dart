@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details_page.dart';
 
 import '../../features/auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../features/auth/presentation/pages/user_login_page.dart';
@@ -68,7 +68,7 @@ class AppRouter {
             path: AppRoutes.myTickets,
             name: AppRoutes.myTickets.replaceAll('/', ''),
             builder: (context, state) {
-              return TicketingMyRequest();
+              return TicketingMyRequestPage();
             },
           ),
           GoRoute(
@@ -76,7 +76,7 @@ class AppRouter {
             name: AppRoutes.viewTicketDetails,
             builder: (context, state) {
               final ticketId = state.pathParameters['ticketId'] ?? '';
-              return ViewTicketDetails(ticketId: ticketId);
+              return ViewTicketDetailsPage(ticketId: ticketId);
             },
           ),
           GoRoute(

@@ -16,16 +16,16 @@ import '../../domain/entities/view_ticket_detail_v6.dart';
 import '../widgets/view_ticket_details/ticket_detail_over_view.dart';
 import '../widgets/view_ticket_details/ticket_detail_tab_bar.dart';
 
-class ViewTicketDetails extends StatefulWidget {
+class ViewTicketDetailsPage extends StatefulWidget {
   final String ticketId;
 
-  const ViewTicketDetails({super.key, required this.ticketId});
+  const ViewTicketDetailsPage({super.key, required this.ticketId});
 
   @override
-  State<ViewTicketDetails> createState() => _ViewTicketDetailsState();
+  State<ViewTicketDetailsPage> createState() => _ViewTicketDetailsPageState();
 }
 
-class _ViewTicketDetailsState extends State<ViewTicketDetails> {
+class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
   String _selectedTab = 'Ticket Details';
   ViewTicketDetailV6Entity? viewTicketDetailV6Response;
   List<TicketWorkflowEntity>? viewTicketWorkflowResponse;
@@ -155,13 +155,14 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
 
             SizedBox(height: 16.0),
 
-            TicketDetailTabBar(
-              onSelectedTab: (String tabName) {
-                setState(() {
-                  _selectedTab = tabName;
-                });
-              },
-            ),
+            if (viewTicketDetailV6Response != null)
+              TicketDetailTabBar(
+                onSelectedTab: (String tabName) {
+                  setState(() {
+                    _selectedTab = tabName;
+                  });
+                },
+              ),
 
             SizedBox(height: 16.0),
 

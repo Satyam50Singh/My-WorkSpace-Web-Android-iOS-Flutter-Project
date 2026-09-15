@@ -19,14 +19,14 @@ import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 import '../blocs/my_ticket_request_bloc/ticketing_bloc.dart';
 import '../widgets/my_request_web_app_bar.dart';
 
-class TicketingMyRequest extends StatefulWidget {
-  const TicketingMyRequest({super.key});
+class TicketingMyRequestPage extends StatefulWidget {
+  const TicketingMyRequestPage({super.key});
 
   @override
-  State<TicketingMyRequest> createState() => _TicketingMyRequestState();
+  State<TicketingMyRequestPage> createState() => _TicketingMyRequestPageState();
 }
 
-class _TicketingMyRequestState extends State<TicketingMyRequest> {
+class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
   int? _currentPageSize;
   int _currentPageCount = 1;
   String? _currentFromDate;
