@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_drop_down.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
+import 'package:my_worksphere_web/core/utils/file_picker_utils.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
@@ -252,23 +252,19 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                   selectedFiles: selectedFiles,
                                   selectedWebFiles: selectedWebFiles,
                                   onUploadTap: () {
-                                    _pickFile(
+                                    FilePickerUtils.pickFile(
                                       isMobile,
-                                      allowMultiple: false,
-                                      allowedExtensions: <String>[
-                                        'png',
-                                        'jpg',
-                                        'jpeg',
-                                        'webp',
-                                      ],
-                                      selectFile: (file, name) {
+                                      allowMultiple: true,
+                                      allowedExtensions:
+                                          FilePickerUtils.allowedExtensions,
+                                      selectFile: (files) {
                                         setState(() {
-                                          selectedFiles.add({name: file});
+                                          selectedFiles.addAll(files);
                                         });
                                       },
-                                      selectWebFile: (bytes, name) {
+                                      selectWebFile: (files) {
                                         setState(() {
-                                          selectedWebFiles.add({name: bytes});
+                                          selectedWebFiles.addAll(files);
                                         });
                                       },
                                     );
@@ -375,36 +371,13 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
     );
   }
 
-  Future<void> _pickFile(
-    bool isMobile, {
-    required List<String>? allowedExtensions,
-    required bool allowMultiple,
-    required Function(File?, String) selectFile,
-    required Function(Uint8List? bytes, String fileName) selectWebFile,
-  }) async {
-    List<PlatformFile> files = await FilePicker.pickFiles(
-      allowMultiple: allowMultiple,
-      type: FileType.custom,
-      allowedExtensions: allowedExtensions,
-    );
-
-    if (files.isEmpty) return;
-
-    final pickedFile = files.first;
-    debugPrint('name = ${pickedFile.name}');
-
-    if (kIsWeb) {
-      final bytes = await pickedFile.readAsBytes();
-      selectWebFile(bytes, pickedFile.name);
-    } else {
-      if (pickedFile.path != null) {
-        final file = File(pickedFile.path!);
-        selectFile(file, pickedFile.name);
-      }
-    }
-  }
-
   void _validateForm() {
+    debugPrint('_selectedCategory: ${_selectedCategory != null}');
+    debugPrint('_selectedSubCategory: ${_selectedSubCategory != null}');
+    debugPrint('_descriptionController.text.isNotEmpty: ${_descriptionController.text.isNotEmpty}');
+    debugPrint('_selectedLocation: ${_selectedLocation != null}');
+    debugPrint('workFlowList: ${workFlowList.isNotEmpty}');
+
     if (_selectedCategory != null &&
         _selectedSubCategory != null &&
         _descriptionController.text.isNotEmpty &&
