@@ -126,7 +126,7 @@ Future<void> configureDependencies() async {
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
-  sl.registerFactory(() => EmployeeDetailCubit(sl()));
+  sl.registerLazySingleton(() => EmployeeDetailCubit(sl()));
   sl.registerFactory(() => TicketingBloc(sl()));
   sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddNewTicketBloc(sl(), sl(), sl(), sl()));
