@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,7 +37,8 @@ class ImageCompressor {
 
       int quality = 85;
       while (quality >= 30) {
-        final targetPath = '${tempDir.path}/compressed_${baseName}_$quality.jpg';
+        final targetPath =
+            '${tempDir.path}/compressed_${baseName}_$quality.jpg';
 
         final compressedXFile = await FlutterImageCompress.compressAndGetFile(
           originalFile.path,
@@ -66,5 +68,48 @@ class ImageCompressor {
       return null;
     }
     return null;
+  }
+
+  static Future<Uint8List?> processWebImage(
+    String fileName,
+    Uint8List bytes,
+  ) async {
+    try {
+      final size = bytes.lengthInBytes;
+      debugPrint(
+        'Original web size ($fileName): '
+            '${(size / 1024 / 1024).toStringAsFixed(2)} MB',
+      );
+
+      // Already below 3 MB.
+      if (size <= maxImageSize) {
+        return bytes;
+      }
+
+      int quality = 85;
+      while(quality >= 30) {
+        final compressed = await FlutterImageCompress.compressWithList(
+          bytes,
+          quality: quality,
+          rotate: 0,
+          format: CompressFormat.jpeg,
+        );
+
+        if (compressed.lengthInBytes <= maxImageSize) {
+          debugPrint(
+            'Compressed web size ($fileName): '
+                '${(compressed.lengthInBytes / 1024 / 1024).toStringAsFixed(2)} MB '
+                'at quality $quality',
+          );
+          return compressed;
+        }
+        bytes = compressed; // re-compress from last output, cheaper each pass
+        quality -= 10;
+      }
+      return bytes;
+    } catch (e) {
+      debugPrint('Exception: $e');
+      return null;
+    }
   }
 }

@@ -34,8 +34,16 @@ class FilePickerUtils {
 
     if (kIsWeb) {
       for (PlatformFile file in files) {
-        final bytes = await file.readAsBytes();
-        selectedWebFiles.add({file.name: bytes});
+        final Uint8List bytes = await file.readAsBytes();
+        final compressedBytes = await ImageCompressor.processWebImage(
+          file.name,
+          bytes,
+        );
+        if (compressedBytes != null) {
+          selectedWebFiles.add({file.name: compressedBytes});
+        } else {
+          debugPrint('File not processed: ${file.name}');
+        }
       }
       selectWebFile(selectedWebFiles);
     } else {
