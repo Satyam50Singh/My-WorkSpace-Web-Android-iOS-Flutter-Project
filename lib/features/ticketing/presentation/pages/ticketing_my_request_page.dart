@@ -468,7 +468,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     );
   }
 
-  void _addNewTicketRequest() {
+  void _addNewTicketRequest() async {
     final width = MediaQuery.sizeOf(context).width;
     final isTablet = width >= 600 && width < 1200;
     final isMobile = width < 600;
@@ -482,7 +482,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
           ? 360.0
           : 640.0;
 
-      showDialog(
+      final result = await showDialog<bool>(
         context: context,
         builder: (context) {
           return Dialog(
@@ -496,6 +496,10 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
           );
         },
       );
+
+      if (result == true) {
+        _fetchTicketDetails();
+      }
     }
   }
 }

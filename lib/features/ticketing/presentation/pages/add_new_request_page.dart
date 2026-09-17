@@ -359,7 +359,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                 }
                 if (state is AddNewTicketSubmitSuccess) {
                   if (kIsWeb) {
-                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(context, rootNavigator: true).pop(true);
                   } else {
                     context.go(AppRoutes.myTickets);
                   }
