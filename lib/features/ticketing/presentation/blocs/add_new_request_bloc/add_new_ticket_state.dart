@@ -6,6 +6,10 @@ final class AddNewTicketInitial extends AddNewTicketState {}
 
 final class AddNewTicketLoading extends AddNewTicketState {}
 
+final class TicketWorkFlowDetailsLoading extends AddNewTicketState {}
+
+final class AddNewTicketSubmitLoading extends AddNewTicketState {}
+
 final class AddNewTicketFailure extends AddNewTicketState {
   final String errorMessage;
 

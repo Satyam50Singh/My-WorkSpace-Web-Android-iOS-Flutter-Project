@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_workflow_details_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_card.dart';
 
 class WorkflowDetailsSection extends StatefulWidget {
@@ -27,7 +29,15 @@ class _WorkflowDetailsSectionState extends State<WorkflowDetailsSection> {
   }
 
   @override
+  void didUpdateWidget(covariant WorkflowDetailsSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _showWorkFlowDetails = widget.initialExpanded;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = context.read<AddNewTicketBloc>().state;
+
     return Card(
       elevation: 2,
       child: Column(
@@ -73,6 +83,19 @@ class _WorkflowDetailsSectionState extends State<WorkflowDetailsSection> {
                         fontSize: 13,
                       ),
                     ),
+                    if (state is TicketWorkFlowDetailsLoading) ...[
+                      const SizedBox(width: 8),
+                      const SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.textSecondary,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
+                    ],
                     const Spacer(),
                     Icon(
                       _showWorkFlowDetails
@@ -90,10 +113,7 @@ class _WorkflowDetailsSectionState extends State<WorkflowDetailsSection> {
             visible: _showWorkFlowDetails,
             child: Column(
               children: [
-                const Divider(
-                  thickness: 1,
-                  color: AppColors.background,
-                ),
+                const Divider(thickness: 1, color: AppColors.background),
                 if (widget.workFlowList.isEmpty) ...[
                   const SizedBox(
                     height: 80,
@@ -117,9 +137,7 @@ class _WorkflowDetailsSectionState extends State<WorkflowDetailsSection> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: widget.workFlowList.length,
                     itemBuilder: (context, index) {
-                      return WorkflowCard(
-                        workflow: widget.workFlowList[index],
-                      );
+                      return WorkflowCard(workflow: widget.workFlowList[index]);
                     },
                   ),
                   const SizedBox(height: 8),

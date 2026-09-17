@@ -6,6 +6,7 @@ class SnackBarUtils {
   SnackBarUtils._();
 
   static void showFloatingSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),

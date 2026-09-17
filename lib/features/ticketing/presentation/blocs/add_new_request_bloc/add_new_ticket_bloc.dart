@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:my_worksphere_web/features/ticketing/data/models/add_new_request/app_multipart_file.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/add_new_request/add_new_ticket_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/add_new_request/app_multipart_file.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_location_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_workflow_details_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/add_new_ticket_usecase.dart';
@@ -82,7 +81,7 @@ class AddNewTicketBloc extends Bloc<AddNewTicketEvent, AddNewTicketState> {
     FetchTicketWorkFlowDetailsRequested event,
     Emitter<AddNewTicketState> emit,
   ) async {
-    emit(AddNewTicketLoading());
+    emit(TicketWorkFlowDetailsLoading());
     try {
       final result = await ticketWorkFlowDetailsUseCase.call(
         categoryID: event.categoryID,
@@ -101,7 +100,7 @@ class AddNewTicketBloc extends Bloc<AddNewTicketEvent, AddNewTicketState> {
     AddNewTicketSubmitted event,
     Emitter<AddNewTicketState> emit,
   ) async {
-    emit(AddNewTicketLoading());
+    emit(AddNewTicketSubmitLoading());
     try {
       final result = await addNewTicketUseCase.call(
         payload: event.payload,
