@@ -85,7 +85,7 @@ class FileUploadSection extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+              crossAxisCount: 4,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
