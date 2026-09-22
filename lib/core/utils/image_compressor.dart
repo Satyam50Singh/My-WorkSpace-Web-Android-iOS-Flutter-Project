@@ -11,12 +11,8 @@ class ImageCompressor {
 
   static const maxImageSize = 3 * 1024 * 1024; // 3MB
 
-  static Future<File?> processedMobileImage(PlatformFile file) async {
+  static Future<File?> compressMobileFile(File originalFile) async {
     try {
-      if (file.path == null) {
-        return null;
-      }
-      final originalFile = File(file.path!);
       final size = await originalFile.length();
 
       debugPrint(
@@ -68,6 +64,13 @@ class ImageCompressor {
       return null;
     }
     return null;
+  }
+
+  static Future<File?> processedMobileImage(PlatformFile file) async {
+    if (file.path == null) {
+      return null;
+    }
+    return compressMobileFile(File(file.path!));
   }
 
   static Future<Uint8List?> processWebImage(

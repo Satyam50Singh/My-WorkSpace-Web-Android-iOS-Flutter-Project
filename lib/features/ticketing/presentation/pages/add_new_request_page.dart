@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_drop_down.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/core/utils/file_picker_utils.dart';
+import 'package:my_worksphere_web/core/utils/image_compressor.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
@@ -23,8 +23,8 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_ne
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/file_upload_section.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/label_heading.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_details_section.dart';
+import 'package:my_worksphere_web/core/utils/permission_utils.dart';
 import 'package:path/path.dart' as p;
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/routes/app_routes.dart';
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
@@ -510,7 +510,8 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   }
 
   Future<void> _openGallery() async {
-    final hasPermission = await _requestGalleryPermission();
+    final hasPermission =
+        await PermissionUtils.requestGalleryPermission(context);
     if (!hasPermission) return;
     debugPrint('hasGalleryPermission: $hasPermission');
 
@@ -520,12 +521,16 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
         limit: 20,
       );
       if (files.isNotEmpty) {
-        setState(() {
-          for (final file in files) {
-            File image = File(file.path);
-            selectedFiles.add({file.path: image});
+        for (final file in files) {
+          final originalFile = File(file.path);
+          final compressedFile =
+              await ImageCompressor.compressMobileFile(originalFile);
+          if (compressedFile != null) {
+            setState(() {
+              selectedFiles.add({file.path: compressedFile});
+            });
           }
-        });
+        }
       }
     } catch (e) {
       debugPrint('Could not open gallery: $e');
@@ -533,7 +538,8 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   }
 
   Future<void> _openCamera() async {
-    final hasPermission = await _requestCameraPermission();
+    final hasPermission =
+        await PermissionUtils.requestCameraPermission(context);
     if (!hasPermission) return;
     debugPrint('hasCameraPermission: $hasPermission');
 
@@ -544,99 +550,17 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
         preferredCameraDevice: CameraDevice.rear,
       );
       if (photo != null) {
-        File image = File(photo.path);
-        final compressedImage = await FlutterImageCompress.compressWithFile(
-          image.path,
-          quality: 80,
-        );
-        if (compressedImage != null) {
+        final originalFile = File(photo.path);
+        final compressedFile =
+            await ImageCompressor.compressMobileFile(originalFile);
+        if (compressedFile != null) {
           setState(() {
-            selectedFiles.add({image.path: image});
+            selectedFiles.add({photo.path: compressedFile});
           });
         }
       }
     } catch (e) {
-      debugPrint('Could not open gallery: $e');
+      debugPrint('Could not open camera: $e');
     }
-  }
-
-  Future<bool> _requestCameraPermission() async {
-    final status = await Permission.camera.status;
-
-    if (status.isGranted) return true;
-
-    if (status.isPermanentlyDenied) {
-      _showSettingsDialog(
-        'Camera permission is permanently denied. Please enable it from Settings.',
-      );
-      return false;
-    }
-
-    final result = await Permission.camera.request();
-
-    if (result.isPermanentlyDenied) {
-      _showSettingsDialog(
-        'Camera permission is permanently denied. Please enable it from Settings.',
-      );
-      return false;
-    }
-    return result.isGranted;
-  }
-
-  Future<bool> _requestGalleryPermission() async {
-    Permission permission;
-    if (Platform.isAndroid) {
-      permission = Permission.photos;
-    } else {
-      permission = Permission.photos;
-    }
-
-    final status = await permission.status;
-
-    if (status.isGranted || status.isLimited) return true;
-
-    if (status.isPermanentlyDenied) {
-      _showSettingsDialog(
-        'Photo library permission is permanently denied. Please enable it from Settings.',
-      );
-      return false;
-    }
-
-    final result = await permission.request();
-
-    if (result.isPermanentlyDenied) {
-      _showSettingsDialog(
-        'Photo library permission is permanently denied. Please enable it from Settings.',
-      );
-      return false;
-    }
-    return result.isGranted || result.isLimited;
-  }
-
-  void _showSettingsDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Permission Denied'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                openAppSettings();
-              },
-              child: const Text('Open Settings'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
