@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_drop_down.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/core/utils/file_picker_utils.dart';
@@ -22,6 +24,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_ne
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/label_heading.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_details_section.dart';
 import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/routes/app_routes.dart';
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
@@ -47,6 +50,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   SubCategoryEntity? _selectedSubCategory;
   final TextEditingController _descriptionController = TextEditingController();
   bool isSaveBtnEnabled = false;
+  ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -260,22 +264,26 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                                       selectedFiles: selectedFiles,
                                       selectedWebFiles: selectedWebFiles,
                                       onUploadTap: () {
-                                        FilePickerUtils.pickFile(
-                                          isMobile,
-                                          allowMultiple: true,
-                                          allowedExtensions:
-                                              FilePickerUtils.allowedExtensions,
-                                          selectFile: (files) {
-                                            setState(() {
-                                              selectedFiles.addAll(files);
-                                            });
-                                          },
-                                          selectWebFile: (files) {
-                                            setState(() {
-                                              selectedWebFiles.addAll(files);
-                                            });
-                                          },
-                                        );
+                                        if (kIsWeb) {
+                                          FilePickerUtils.pickFile(
+                                            isMobile,
+                                            allowMultiple: true,
+                                            allowedExtensions: FilePickerUtils
+                                                .allowedExtensions,
+                                            selectFile: (files) {
+                                              setState(() {
+                                                selectedFiles.addAll(files);
+                                              });
+                                            },
+                                            selectWebFile: (files) {
+                                              setState(() {
+                                                selectedWebFiles.addAll(files);
+                                              });
+                                            },
+                                          );
+                                        } else {
+                                          _showImageSourceSheet();
+                                        }
                                       },
                                       onRemoveFile: (index) {
                                         setState(() {
@@ -447,5 +455,188 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
     int tenDigitNumber = int.parse(randomDigits);
 
     return tenDigitNumber;
+  }
+
+  void _showImageSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              Center(
+                child: ListTile(
+                  title: const Text(
+                    'Select Image Source',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryDark,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(height: 1, color: Colors.grey.shade300),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.photo_camera,
+                  color: AppColors.primaryDark,
+                ),
+                title: const Text('Take Photo'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _openCamera();
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.photo_library,
+                  color: AppColors.primaryDark,
+                ),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _openGallery();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _openGallery() async {
+    final hasPermission = await _requestGalleryPermission();
+    if (!hasPermission) return;
+    debugPrint('hasGalleryPermission: $hasPermission');
+
+    try {
+      final List<XFile> files = await _picker.pickMultiImage(
+        imageQuality: 80,
+        limit: 20,
+      );
+      if (files.isNotEmpty) {
+        setState(() {
+          for (final file in files) {
+            File image = File(file.path);
+            selectedFiles.add({file.path: image});
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('Could not open gallery: $e');
+    }
+  }
+
+  Future<void> _openCamera() async {
+    final hasPermission = await _requestCameraPermission();
+    if (!hasPermission) return;
+    debugPrint('hasCameraPermission: $hasPermission');
+
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+        preferredCameraDevice: CameraDevice.rear,
+      );
+      if (photo != null) {
+        File image = File(photo.path);
+        final compressedImage = await FlutterImageCompress.compressWithFile(
+          image.path,
+          quality: 80,
+        );
+        if (compressedImage != null) {
+          setState(() {
+            selectedFiles.add({image.path: image});
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Could not open gallery: $e');
+    }
+  }
+
+  Future<bool> _requestCameraPermission() async {
+    final status = await Permission.camera.status;
+
+    if (status.isGranted) return true;
+
+    if (status.isPermanentlyDenied) {
+      _showSettingsDialog(
+        'Camera permission is permanently denied. Please enable it from Settings.',
+      );
+      return false;
+    }
+
+    final result = await Permission.camera.request();
+
+    if (result.isPermanentlyDenied) {
+      _showSettingsDialog(
+        'Camera permission is permanently denied. Please enable it from Settings.',
+      );
+      return false;
+    }
+    return result.isGranted;
+  }
+
+  Future<bool> _requestGalleryPermission() async {
+    Permission permission;
+    if (Platform.isAndroid) {
+      permission = Permission.photos;
+    } else {
+      permission = Permission.photos;
+    }
+
+    final status = await permission.status;
+
+    if (status.isGranted || status.isLimited) return true;
+
+    if (status.isPermanentlyDenied) {
+      _showSettingsDialog(
+        'Photo library permission is permanently denied. Please enable it from Settings.',
+      );
+      return false;
+    }
+
+    final result = await permission.request();
+
+    if (result.isPermanentlyDenied) {
+      _showSettingsDialog(
+        'Photo library permission is permanently denied. Please enable it from Settings.',
+      );
+      return false;
+    }
+    return result.isGranted || result.isLimited;
+  }
+
+  void _showSettingsDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Permission Denied'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                openAppSettings();
+              },
+              child: const Text('Open Settings'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
