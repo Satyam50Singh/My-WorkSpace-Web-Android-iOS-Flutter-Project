@@ -5,9 +5,14 @@ import 'package:intl/intl.dart';
 import '../../theme/app_colors.dart';
 
 class CustomDateRangePicker extends StatefulWidget {
-  final void Function(String, String) onDateRangeChanged;
+  final DateTimeRange selectedRange;
+  final void Function(String, String, DateTimeRange) onDateRangeChanged;
 
-  const CustomDateRangePicker({super.key, required this.onDateRangeChanged});
+  const CustomDateRangePicker({
+    super.key,
+    required this.onDateRangeChanged,
+    required this.selectedRange,
+  });
 
   @override
   State<CustomDateRangePicker> createState() => _CustomDateRangePickerState();
@@ -16,11 +21,6 @@ class CustomDateRangePicker extends StatefulWidget {
 class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   static const String _dateFormatStr = "dd/MM/yyyy";
   final DateFormat _dateFormat = DateFormat(_dateFormatStr);
-
-  DateTimeRange selectedRange = DateTimeRange(
-    start: DateTime.now(),
-    end: DateTime.now(),
-  );
 
   final MenuController _menuController = MenuController();
   final ScrollController _calendarScrollController = ScrollController();
@@ -32,6 +32,26 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
 
   String selectedCategory = "Today";
 
+  @override
+  void didUpdateWidget(covariant CustomDateRangePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedRange != oldWidget.selectedRange) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final start = DateTime(widget.selectedRange.start.year,
+          widget.selectedRange.start.month, widget.selectedRange.start.day);
+      final end = DateTime(widget.selectedRange.end.year,
+          widget.selectedRange.end.month, widget.selectedRange.end.day);
+      if (start == today && end == today) {
+        if (selectedCategory != "Today") {
+          setState(() {
+            selectedCategory = "Today";
+          });
+        }
+      }
+    }
+  }
+
   void _setUpdatedSelectedRange(
     DateTime fromDate,
     DateTime toDate,
@@ -41,13 +61,13 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
       _menuController.close();
     }
     setState(() {
-      selectedRange = DateTimeRange(start: fromDate, end: toDate);
       showCalendar = false;
       selectedCategory = categoryType;
     });
     widget.onDateRangeChanged(
       _dateFormat.format(fromDate),
       _dateFormat.format(toDate),
+      DateTimeRange(start: fromDate, end: toDate),
     );
   }
 
@@ -62,7 +82,7 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 600;
     final rangeText =
-        "${_dateFormat.format(selectedRange.start)} - ${_dateFormat.format(selectedRange.end)}";
+        "${_dateFormat.format(widget.selectedRange.start)} - ${_dateFormat.format(widget.selectedRange.end)}";
 
     return MenuAnchor(
       controller: _menuController,
@@ -157,8 +177,8 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
         _menuController.close();
         setState(() {
           showCalendar = true;
-          _displayedMonth = selectedRange.start;
-          _tempValues = [selectedRange.start, selectedRange.end];
+          _displayedMonth = widget.selectedRange.start;
+          _tempValues = [widget.selectedRange.start, widget.selectedRange.end];
         });
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _menuController.open();

@@ -37,6 +37,11 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
   int _totalRecordsCount = 0;
   final TextEditingController _searchController = TextEditingController();
 
+  DateTimeRange selectedRange = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now(),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -125,6 +130,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       _currentPageCount = 1;
       _selectedStatus = 'All';
       _searchController.clear();
+      selectedRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
     });
     _fetchTicketDetails(
       actionStatus: '',
@@ -163,17 +169,24 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomDateRangePicker(
-                        onDateRangeChanged: (fromDate, toDate) {
-                          _currentFromDate = fromDate;
-                          _currentToDate = toDate;
-                          _fetchTicketDetails(
-                            actionStatus: '',
-                            pageCount: 1,
-                            pageSize: 10,
-                            fromDate: _currentFromDate,
-                            toDate: _currentToDate,
-                          );
-                        },
+                        selectedRange: selectedRange,
+                        onDateRangeChanged:
+                            (fromDate, toDate, updatedDateRange) {
+                              _currentFromDate = fromDate;
+                              _currentToDate = toDate;
+
+                              setState(() {
+                                selectedRange = updatedDateRange;
+                              });
+
+                              _fetchTicketDetails(
+                                actionStatus: '',
+                                pageCount: 1,
+                                pageSize: 10,
+                                fromDate: _currentFromDate,
+                                toDate: _currentToDate,
+                              );
+                            },
                       ),
                       SizedBox(width: 8),
                       SizedBox(
@@ -244,9 +257,13 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                   children: [
                     Expanded(
                       child: CustomDateRangePicker(
-                        onDateRangeChanged: (fromDate, toDate) {
+                        selectedRange: selectedRange,
+                        onDateRangeChanged: (fromDate, toDate, updatedDateRange) {
                           _currentFromDate = fromDate;
                           _currentToDate = toDate;
+                          setState(() {
+                            selectedRange = updatedDateRange;
+                          });
                           _fetchTicketDetails(
                             actionStatus: '',
                             pageCount: 1,
