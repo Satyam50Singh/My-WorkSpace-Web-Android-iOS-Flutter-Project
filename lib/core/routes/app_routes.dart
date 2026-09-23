@@ -2,12 +2,10 @@ class AppRoutes {
   static const onboarding = '/user-onboarding';
   static const loginPath = '/user-login/:companyId';
   static const login = 'user-login';
-  static const dashboard = 'employee-dashboard';
   static const dashboardPath = '/employee-dashboard';
 
   static const ticketing = '/ticketing';
   static const myTickets = '/my-tickets';
-  static const viewTicketDetails = 'view-ticket-details';
   static const viewTicketDetailsPath = '/view-ticket-details/:ticketId';
   static const addNewRequest = '/add-new-request';
 

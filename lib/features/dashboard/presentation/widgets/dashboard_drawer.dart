@@ -171,7 +171,6 @@ class DashboardDrawer extends StatelessWidget {
             ),
             onTap: () {
               context.read<EmployeeDetailCubit>().clearEmployeeDetails();
-              context.goNamed(AppRoutes.dashboard);
             },
           ),
         ),

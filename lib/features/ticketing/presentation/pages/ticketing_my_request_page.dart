@@ -445,7 +445,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           onTapViewTicketDetail: (selectedTicketId) {
                             debugPrint('Selected Ticket ID: $selectedTicketId');
                             context.goNamed(
-                              AppRoutes.viewTicketDetails,
+                              'view-ticket-details',
                               pathParameters: {'ticketId': selectedTicketId},
                             );
                           },

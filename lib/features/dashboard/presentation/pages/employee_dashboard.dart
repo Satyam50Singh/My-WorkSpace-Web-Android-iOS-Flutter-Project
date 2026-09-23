@@ -25,8 +25,8 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       return 'Dashboard';
     } else if (location.startsWith(AppRoutes.myTickets)) {
       return 'My Tickets';
-    } else if (location.contains(AppRoutes.viewTicketDetails)) {
-      return 'Ticket Details';
+    } else if (location.contains('/view-ticket-details')) {
+      return 'View Ticket Details';
     } else if (location.startsWith(AppRoutes.addNewRequest)) {
       return 'Add New Request';
     }
@@ -43,18 +43,8 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     final isDesktop = width >= 1024;
     final isWeb = isDesktop || isTablet;
 
-    return BlocConsumer<EmployeeDetailCubit, EmployeeDetailState>(
-      listener: (context, state) {
-        if (state is EmployeeDetailCleared) {
-          context.go(AppRoutes.onboarding);
-        }
-      },
+    return BlocBuilder<EmployeeDetailCubit, EmployeeDetailState>(
       builder: (context, state) {
-        if (state is EmployeeDetailInitial) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
         if (state is EmployeeDetailFetched) {
           final EmployeeDetail employeeDetail = state.employeeDetail;
 
@@ -92,7 +82,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
             ),
           );
         }
-        return const Center(child: Text("No Data"));
+
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
       },
     );
   }

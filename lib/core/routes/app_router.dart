@@ -59,21 +59,21 @@ class AppRouter {
         routes: [
           GoRoute(
             path: AppRoutes.dashboardPath,
-            name: AppRoutes.dashboard,
+            name: 'employee-dashboard',
             builder: (context, state) {
               return const DashboardHome();
             },
           ),
           GoRoute(
             path: AppRoutes.myTickets,
-            name: AppRoutes.myTickets.replaceAll('/', ''),
+            name: 'my-tickets',
             builder: (context, state) {
               return TicketingMyRequestPage();
             },
           ),
           GoRoute(
             path: AppRoutes.viewTicketDetailsPath,
-            name: AppRoutes.viewTicketDetails,
+            name: 'view-ticket-details',
             builder: (context, state) {
               final ticketId = state.pathParameters['ticketId'] ?? '';
               return ViewTicketDetailsPage(ticketId: ticketId);
@@ -81,7 +81,7 @@ class AppRouter {
           ),
           GoRoute(
             path: AppRoutes.addNewRequest,
-            name: AppRoutes.addNewRequest.replaceAll('/', ''),
+            name: 'add-new-request',
             builder: (context, state) {
               return AddNewRequestPage();
             },
@@ -110,7 +110,7 @@ class AppRouter {
     if (employeeState is EmployeeDetailFetched) {
       // If logged in, don't allow accessing login or onboarding pages
       if (isAuthPage) {
-        return AppRoutes.dashboardPath;
+        return AppRoutes.myTickets;
       }
       return null;
     }

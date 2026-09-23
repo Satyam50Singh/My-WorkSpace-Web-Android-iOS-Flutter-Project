@@ -80,7 +80,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               moduleAccess: employeeDetails.moduleAccess,
                             ),
                           );
-                      context.goNamed(AppRoutes.dashboard);
+                      context.go(AppRoutes.myTickets);
                     }
                   },
                   builder: (context, state) {
