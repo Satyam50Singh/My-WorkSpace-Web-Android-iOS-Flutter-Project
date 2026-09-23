@@ -19,6 +19,8 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
+    flavorDimensions.add("environment")
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.my_worksphere_web"
@@ -35,6 +37,23 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    productFlavors {
+        create("uat") {
+            dimension = "environment"
+            applicationIdSuffix = ".uat"
+            buildConfigField("String", "ENVIRONMENT", "\"uat\"")
+        }
+        create("prod") {
+            dimension = "environment"
+            applicationIdSuffix = ".prod"
+            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
         }
     }
 }
