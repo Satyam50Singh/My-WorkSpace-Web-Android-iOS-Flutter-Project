@@ -20,15 +20,15 @@ class AppConfig {
 
   Future<void> configureAppFlavor() async {
     try {
-      final String? env = await _channel.invokeMethod<String>('getEnvironment');
-      debugPrint('Environment from native channel: $env');
-      if (env != null && env.isNotEmpty) {
+      const String env = String.fromEnvironment('APP_ENV');
+      debugPrint('Environment from APP_ENV: $env');
+      if (env.isNotEmpty) {
         setEnvironment(env);
       } else {
         setEnvironment('uat');
       }
     } catch (e) {
-      debugPrint('Failed to get environment from native channel: $e. Falling back to UAT.');
+      debugPrint('Failed to get environment: $e. Falling back to UAT.');
       setEnvironment('uat');
     }
   }

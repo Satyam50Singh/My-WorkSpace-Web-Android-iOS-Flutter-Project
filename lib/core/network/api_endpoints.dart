@@ -2,7 +2,7 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   static const baseUatUrl = "https://apiuat.fsuite.tech/api";
-  static const baseProdUrl = "https://api.fsuite.tech/api";
+  static const baseProdUrl = "https://apinew.fsuite.tech/api";
 
   static String baseUrl = baseUatUrl;
 
