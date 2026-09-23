@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:my_worksphere_web/core/network/api_endpoints.dart';
 
 enum Flavor { uat, prod }
 
 class AppConfig {
-  static const _channel = MethodChannel('com.example.my_worksphere_web/env');
-
   static Flavor _flavor = Flavor.uat;
 
   /// Returns the current active flavor.
