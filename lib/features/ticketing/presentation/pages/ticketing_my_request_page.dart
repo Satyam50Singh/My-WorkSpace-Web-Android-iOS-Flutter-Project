@@ -152,6 +152,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       children: [
         if (!isMobile && !isMini)
           TicketingMyRequestWebAppBar(
+            totalRecordsCount: _totalRecordsCount,
             onTapExportToExcel: _fetchTicketExportRecords,
             onTapAddNewRequest: _addNewTicketRequest,
           ),
@@ -258,20 +259,21 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                     Expanded(
                       child: CustomDateRangePicker(
                         selectedRange: selectedRange,
-                        onDateRangeChanged: (fromDate, toDate, updatedDateRange) {
-                          _currentFromDate = fromDate;
-                          _currentToDate = toDate;
-                          setState(() {
-                            selectedRange = updatedDateRange;
-                          });
-                          _fetchTicketDetails(
-                            actionStatus: '',
-                            pageCount: 1,
-                            pageSize: 10,
-                            fromDate: _currentFromDate,
-                            toDate: _currentToDate,
-                          );
-                        },
+                        onDateRangeChanged:
+                            (fromDate, toDate, updatedDateRange) {
+                              _currentFromDate = fromDate;
+                              _currentToDate = toDate;
+                              setState(() {
+                                selectedRange = updatedDateRange;
+                              });
+                              _fetchTicketDetails(
+                                actionStatus: '',
+                                pageCount: 1,
+                                pageSize: 10,
+                                fromDate: _currentFromDate,
+                                toDate: _currentToDate,
+                              );
+                            },
                       ),
                     ),
                     SizedBox(width: 4),
@@ -289,23 +291,24 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                       ),
                     ),
                     if (!isMobile) SizedBox(width: 4),
-                    SizedBox(
-                      height: 42,
-                      child: IconButton.filled(
-                        onPressed: _fetchTicketExportRecords,
-                        icon: const Icon(
-                          Icons.download_sharp,
-                          color: AppColors.white,
-                        ),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(24, 24),
-                          backgroundColor: AppColors.primaryDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    if (_totalRecordsCount > 0)
+                      SizedBox(
+                        height: 42,
+                        child: IconButton.filled(
+                          onPressed: _fetchTicketExportRecords,
+                          icon: const Icon(
+                            Icons.download_sharp,
+                            color: AppColors.white,
+                          ),
+                          style: IconButton.styleFrom(
+                            minimumSize: const Size(24, 24),
+                            backgroundColor: AppColors.primaryDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                       ),
-                    ),
                     if (!isMobile) SizedBox(width: 4),
                     SizedBox(
                       height: 42,
@@ -379,7 +382,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                 LoaderUtils.hideLoader(context);
                 SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
               } else if (state is TicketingMyRequestDetailSuccess) {
-                _totalRecordsCount = state.ticketDetail.totalRecords ?? 0;
+                setState(() {
+                  _totalRecordsCount = state.ticketDetail.totalRecords ?? 0;
+                });
                 LoaderUtils.hideLoader(context);
               } else if (state is TicketingExportSuccess) {
                 LoaderUtils.hideLoader(context);
