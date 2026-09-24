@@ -51,7 +51,12 @@ class ApiClient {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return const ApiException(
-          message: 'Connection timed out. Please try again.',
+          message: 'Weak network detected. Request timed out.',
+        );
+      case DioExceptionType.connectionError:
+        return const ApiException(
+          message:
+              'Unable to reach server. Please check your internet connection.',
         );
       case DioExceptionType.badResponse:
         return ApiException(
@@ -59,10 +64,6 @@ class ApiClient {
               _extractErrorMessage(e.response?.data) ?? 'Something went wrong.',
           statusCode: e.response?.statusCode,
         );
-      case DioExceptionType.cancel:
-        return const ApiException(message: 'Request cancelled.');
-      case DioExceptionType.connectionError:
-        return const ApiException(message: 'No internet connection.');
       default:
         return ApiException(message: e.message ?? 'Unexpected error occurred.');
     }

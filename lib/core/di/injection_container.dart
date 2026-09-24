@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_worksphere_web/core/network/api_endpoints.dart';
 import 'package:my_worksphere_web/core/network/logging_interceptor.dart';
+import 'package:my_worksphere_web/core/network/network_intercept.dart';
 import 'package:my_worksphere_web/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:my_worksphere_web/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:my_worksphere_web/features/auth/domain/usecases/employee_login_usecase.dart';
@@ -47,11 +48,12 @@ Future<void> configureDependencies() async {
     final dio = Dio(
       BaseOptions(
         baseUrl: ApiEndpoints.baseUrl,
-        connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 15),
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
       ),
     );
 
+    dio.interceptors.add(NetworkIntercept());
     dio.interceptors.add(LoggingInterceptor());
     return dio;
   });
