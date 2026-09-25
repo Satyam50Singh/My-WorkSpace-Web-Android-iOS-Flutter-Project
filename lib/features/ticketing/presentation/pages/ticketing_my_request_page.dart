@@ -20,7 +20,9 @@ import '../blocs/my_ticket_request_bloc/ticketing_bloc.dart';
 import '../widgets/my_request_web_app_bar.dart';
 
 class TicketingMyRequestPage extends StatefulWidget {
-  const TicketingMyRequestPage({super.key});
+  final String pageTag;
+
+  const TicketingMyRequestPage({super.key, this.pageTag = 'my-tickets'});
 
   @override
   State<TicketingMyRequestPage> createState() => _TicketingMyRequestPageState();
@@ -49,6 +51,14 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
   }
 
   @override
+  void didUpdateWidget(covariant TicketingMyRequestPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pageTag != widget.pageTag) {
+      _resetAllFilters();
+    }
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -72,6 +82,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       final dateFormatter = DateFormat("dd/MM/yyyy");
 
       final payload = TicketMyRequestRequest(
+        pageTag: widget.pageTag,
         companyId: employee.companyId,
         empCd: employee.empCd,
         fromDate:
@@ -102,6 +113,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       final dateFormatter = DateFormat("dd/MM/yyyy");
 
       final payload = TicketMyRequestRequest(
+        pageTag: widget.pageTag,
         pageCount: 1,
         departmentId: 0,
         categoryId: 0,
@@ -121,7 +133,6 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
   }
 
   void _resetAllFilters() {
-    // Add this to update the UI highlight
     setState(() {
       _currentFromDate = null;
       _currentToDate = null;
@@ -148,10 +159,15 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     final isMini = width < 360;
     final isMobile = width < 600;
 
+    final pageTitle = widget.pageTag == 'my-actions'
+        ? "My Action"
+        : "My Request";
+
     return Column(
       children: [
         if (!isMobile && !isMini)
           TicketingMyRequestWebAppBar(
+            title: pageTitle,
             totalRecordsCount: _totalRecordsCount,
             onTapExportToExcel: _fetchTicketExportRecords,
             onTapAddNewRequest: _addNewTicketRequest,

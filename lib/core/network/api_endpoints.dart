@@ -23,4 +23,5 @@ class ApiEndpoints {
   static const fetchTicketWorkflowDetailsV2  = "/Ticketing/View_Ticket_Workflow_Details_V2";
   static const fetchTicketRequestDetailsV4 = "/Ticketing/Ticket_Request_Details_V4";
 
+  static const fetchTicketMyActionableDetails = "/Ticketing/Fetch_Ticket_MyActionable_Web_API";
 }

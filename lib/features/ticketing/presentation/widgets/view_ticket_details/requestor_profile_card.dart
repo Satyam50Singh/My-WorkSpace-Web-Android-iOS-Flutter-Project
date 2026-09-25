@@ -104,10 +104,10 @@ class RequestorProfileCard extends StatelessWidget {
                     children: [
                       SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: AppColors.primaryDark,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           _getInitials(
@@ -123,13 +123,17 @@ class RequestorProfileCard extends StatelessWidget {
                       SizedBox(height: 8),
                       Text(
                         '${ticketDetails?.raisedByUser}',
+                        textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(
                               color: AppColors.primaryDark,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      SizedBox(height: 8),
                       LabelText(label: 'Ticket Creator', fontSize: 10),
                       SizedBox(height: 8),
                     ],

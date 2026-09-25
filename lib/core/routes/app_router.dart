@@ -68,7 +68,14 @@ class AppRouter {
             path: AppRoutes.myTickets,
             name: 'my-tickets',
             builder: (context, state) {
-              return TicketingMyRequestPage();
+              return const TicketingMyRequestPage(pageTag: 'my-tickets');
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.myActions,
+            name: 'my-actions',
+            builder: (context, state) {
+              return const TicketingMyRequestPage(pageTag: 'my-actions');
             },
           ),
           GoRoute(

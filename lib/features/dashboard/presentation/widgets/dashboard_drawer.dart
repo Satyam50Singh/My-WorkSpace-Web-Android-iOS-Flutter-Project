@@ -29,12 +29,26 @@ class DashboardDrawer extends StatelessWidget {
       for (final subModule in module.subModules ?? []) {
         subItems.add(
           SubMenuItems(
-            title: subModule.menu ?? '',
+            title: subModule.menu == 'My Tickets' ? 'My Request' : subModule.menu ?? '',
             icon: Icons.arrow_right,
             route: _getModuleRoute(subModule.menu),
             isDivider: false,
           ),
         );
+      }
+
+      if (module.moduleName == 'Ticketing') {
+        final myActionsItem = SubMenuItems(
+          title: 'My Actions',
+          icon: Icons.arrow_right,
+          route: _getModuleRoute('My Actions'),
+          isDivider: false,
+        );
+        if (subItems.isNotEmpty) {
+          subItems.insert(1, myActionsItem);
+        } else {
+          subItems.add(myActionsItem);
+        }
       }
 
       menuItems.add(
@@ -99,7 +113,7 @@ class DashboardDrawer extends StatelessWidget {
                         title: Text(
                           item.title,
                           style: const TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 14.0,
                             color: AppColors.textPrimary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -110,12 +124,16 @@ class DashboardDrawer extends StatelessWidget {
                         ),
                         children: item.subItems.map((subItem) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 48.0),
+                            padding: const EdgeInsets.only(
+                              left: 48.0,
+                              top: 0,
+                              bottom: 0,
+                            ),
                             child: ListTile(
                               title: Text(
                                 subItem.title,
                                 style: const TextStyle(
-                                  fontSize: 12.0,
+                                  fontSize: 14.0,
                                   color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -213,6 +231,8 @@ class DashboardDrawer extends StatelessWidget {
         return AppRoutes.ticketing;
       case 'my tickets':
         return AppRoutes.myTickets;
+      case 'my actions':
+        return AppRoutes.myActions;
       case 'checklist':
         return AppRoutes.checklist;
       case 'workpermit':

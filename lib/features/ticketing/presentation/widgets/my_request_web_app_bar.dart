@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class TicketingMyRequestWebAppBar extends StatelessWidget {
+  final String title;
   final int totalRecordsCount;
   final void Function() onTapExportToExcel;
   final void Function() onTapAddNewRequest;
 
   const TicketingMyRequestWebAppBar({
     super.key,
+    this.title = "My Request",
     required this.totalRecordsCount,
     required this.onTapExportToExcel,
     required this.onTapAddNewRequest,
@@ -37,7 +39,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
               children: [
                 if (!isVeryCompact)
                   Text(
-                    "My Request",
+                    title,
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       fontSize: maxWidth < 1000 ? 18 : 24,
                       color: AppColors.primaryDark,
@@ -47,35 +49,36 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (isCompact)
-                        IconButton.filled(
-                          onPressed: onTapAddNewRequest,
-                          icon: const Icon(Icons.add, color: AppColors.white),
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            backgroundColor: AppColors.primaryDark,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      if (title != 'My Action')
+                        if (isCompact)
+                          IconButton.filled(
+                            onPressed: onTapAddNewRequest,
+                            icon: const Icon(Icons.add, color: AppColors.white),
+                            style: IconButton.styleFrom(
+                              minimumSize: const Size(36, 36),
+                              backgroundColor: AppColors.primaryDark,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          )
+                        else
+                          ElevatedButton.icon(
+                            onPressed: onTapAddNewRequest,
+                            label: const Text("New Request"),
+                            icon: const Icon(Icons.add),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryDark,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 16,
+                              ),
+                              foregroundColor: AppColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                           ),
-                        )
-                      else
-                        ElevatedButton.icon(
-                          onPressed: onTapAddNewRequest,
-                          label: const Text("New Request"),
-                          icon: const Icon(Icons.add),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryDark,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 16,
-                            ),
-                            foregroundColor: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
                       if (totalRecordsCount > 0) ...[
                         const SizedBox(width: 8),
                         if (isCompact)

@@ -8,6 +8,7 @@ class AppRoutes {
   static const myTickets = '/my-tickets';
   static const viewTicketDetailsPath = '/view-ticket-details/:ticketId';
   static const addNewRequest = '/add-new-request';
+  static const myActions = '/my-actions';
 
   static const checklist = '/checklist';
   static const workpermit = '/workpermit';

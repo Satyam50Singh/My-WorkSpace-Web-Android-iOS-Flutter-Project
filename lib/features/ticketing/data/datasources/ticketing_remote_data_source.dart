@@ -24,8 +24,12 @@ class TicketingRemoteDataSourceImpl extends TicketingRemoteDataSource {
     TicketMyRequestRequest payload,
   ) async {
     try {
+      final endpoint = payload.pageTag == 'my-actions'
+          ? ApiEndpoints.fetchTicketMyActionableDetails
+          : ApiEndpoints.fetchTicketMyRequestDetails;
+
       final json = await apiClient.get(
-        ApiEndpoints.fetchTicketMyRequestDetails,
+        endpoint,
         queryParameters: {
           'CompanyID': payload.companyId,
           'EmpCD': payload.empCd,

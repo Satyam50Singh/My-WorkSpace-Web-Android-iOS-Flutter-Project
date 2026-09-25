@@ -10,8 +10,9 @@ class TicketMyRequestRequest {
   final int? departmentId;
   final int? categoryId;
   final String? ticketType;
+  final String? pageTag;
 
-TicketMyRequestRequest({
+  TicketMyRequestRequest({
     this.companyId,
     this.empCd,
     this.fromDate,
@@ -23,6 +24,7 @@ TicketMyRequestRequest({
     this.departmentId,
     this.categoryId,
     this.ticketType,
+    this.pageTag,
   });
 
   Map<String, dynamic> toJson() {
