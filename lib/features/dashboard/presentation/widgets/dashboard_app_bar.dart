@@ -18,7 +18,10 @@ class _MobileDashboardAppBarState extends State<MobileDashboardAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(widget.title ?? '', style: const TextStyle(fontSize: 18)),
+      title: Text(
+        widget.title ?? '',
+        style: Theme.of(context).textTheme.headlineSmall,
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),

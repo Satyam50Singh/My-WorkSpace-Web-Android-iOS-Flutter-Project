@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/submit_reopen_review_entity.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_v6.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/submit_reopen_review_usecase.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_action_history_usecase.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/submit_reopen_review_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/submit_reopen_review_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_action_history_usecase.dart';
 
-import '../../../domain/entities/ticket_history_entity.dart';
-import '../../../domain/entities/ticket_workflow_entity.dart';
-import '../../../domain/usecases/view_ticket_detail_v6_usecase.dart';
+import '../../../domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
+import '../../../domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
+import '../../../domain/usecases/view_ticket_details_usecases/ticket_workflow_usecase.dart';
+import '../../../domain/usecases/view_ticket_details_usecases/view_ticket_detail_v6_usecase.dart';
 
 part 'view_ticket_details_event.dart';
 part 'view_ticket_details_state.dart';

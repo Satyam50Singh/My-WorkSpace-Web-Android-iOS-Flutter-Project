@@ -1,4 +1,4 @@
-import '../../../domain/entities/ticket_history_entity.dart';
+import '../../../domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
 
 class ViewTicketActionHistoryResponseModel {
   final int? status;

@@ -1,10 +1,10 @@
 class TicketWorkflowDetailsEntity {
-  List<TicketWorkflowEntity>? workFlowDetailList;
+  List<AddNewTicketWorkFlowEntity>? workFlowDetailList;
 
   TicketWorkflowDetailsEntity({this.workFlowDetailList});
 }
 
-class TicketWorkflowEntity {
+class AddNewTicketWorkFlowEntity {
   final int? level;
   final String? userName;
   final String? groupName;
@@ -15,7 +15,7 @@ class TicketWorkflowEntity {
   final int? totalUsers;
   final List<WorkflowUserEntity>? workflowUsers;
 
-  TicketWorkflowEntity({
+  AddNewTicketWorkFlowEntity({
     this.level,
     this.userName,
     this.groupName,

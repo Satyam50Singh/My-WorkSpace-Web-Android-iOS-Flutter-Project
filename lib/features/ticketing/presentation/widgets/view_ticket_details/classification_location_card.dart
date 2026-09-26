@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
-import '../../../domain/entities/view_ticket_detail_v6.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import 'label_text.dart';
 
 class ClassificationLocationCard extends StatelessWidget {

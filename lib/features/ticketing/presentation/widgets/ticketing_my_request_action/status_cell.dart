@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/ticket_status_utils.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/ticket_status_utils.dart';
 
 class StatusCell extends StatelessWidget {
   final String text;

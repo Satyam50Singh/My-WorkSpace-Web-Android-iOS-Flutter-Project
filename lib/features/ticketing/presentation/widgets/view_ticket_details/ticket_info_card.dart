@@ -3,7 +3,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 
 import '../../../../../core/common/widgets/custom_chip.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../domain/entities/view_ticket_detail_v6.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 
 class TicketInfoCard extends StatelessWidget {
   final ViewTicketDetailV6Entity? ticketDetails;

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,8 +9,12 @@ class LoggingInterceptor extends Interceptor {
       if (options.data != null) {
         if (options.data is FormData) {
           final formData = options.data as FormData;
-          final fields = formData.fields.map((e) => '${e.key}: ${e.value}').toList();
-          final files = formData.files.map((e) => '${e.key}: ${e.value.filename}').toList();
+          final fields = formData.fields
+              .map((e) => '${e.key}: ${e.value}')
+              .toList();
+          final files = formData.files
+              .map((e) => '${e.key}: ${e.value.filename}')
+              .toList();
           debugPrint('   Body (FormData):');
           if (fields.isNotEmpty) debugPrint('     Fields: $fields');
           if (files.isNotEmpty) debugPrint('     Files: $files');

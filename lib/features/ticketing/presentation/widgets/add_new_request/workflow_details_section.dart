@@ -6,7 +6,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_card.dart';
 
 class WorkflowDetailsSection extends StatefulWidget {
-  final List<TicketWorkflowEntity> workFlowList;
+  final List<AddNewTicketWorkFlowEntity> workFlowList;
   final bool initialExpanded;
 
   const WorkflowDetailsSection({

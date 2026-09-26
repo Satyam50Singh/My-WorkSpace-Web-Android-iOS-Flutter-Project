@@ -4,7 +4,7 @@ import 'package:my_worksphere_web/core/error/exceptions.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/ticketing_remote_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_my_request/ticket_my_request_request.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticketing_repository.dart';
 
 class TicketingRepositoryImpl extends TicketingRepository {
@@ -13,7 +13,7 @@ class TicketingRepositoryImpl extends TicketingRepository {
   TicketingRepositoryImpl(this.ticketingRemoteDataSource);
 
   @override
-  Future<Either<Failure, TicketDetail>> getMyRequestDetails({
+  Future<Either<Failure, TicketDetailEntity>> getMyRequestDetails({
     required TicketMyRequestRequest request,
   }) async {
     try {

@@ -1,4 +1,4 @@
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
 
 class TicketWorkflowResponseModel {
   final int? status;

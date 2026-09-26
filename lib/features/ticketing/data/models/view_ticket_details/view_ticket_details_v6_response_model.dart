@@ -1,4 +1,5 @@
-import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_v6.dart';
+
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 
 class ViewTicketDetailsV6ResponseModel {
   final int? status;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/custom_dialog_utils.dart';
-import '../../../domain/entities/view_ticket_detail_v6.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 
 class TicketImagesBottomCard extends StatelessWidget {
   final ViewTicketDetailV6Entity? ticketDetails;

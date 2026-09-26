@@ -3,8 +3,8 @@ import 'package:my_worksphere_web/core/common/widgets/custom_chip.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_search_bar.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 
-import '../../../domain/entities/ticket_history_entity.dart';
-import '../../../domain/entities/view_ticket_detail_v6.dart';
+import '../../../domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import 'manage_ticket_card.dart';
 
 class TicketDetailActionHistory extends StatefulWidget {

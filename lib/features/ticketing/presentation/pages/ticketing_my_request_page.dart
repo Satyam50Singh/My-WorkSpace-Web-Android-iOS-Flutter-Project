@@ -8,16 +8,16 @@ import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_count_horizontal_list.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_list_table_view.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticketing_my_request_action/ticket_count_horizontal_list.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticketing_my_request_action/ticket_list_table_view.dart';
 
 import '../../../../core/common/widgets/custom_search_bar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ticket_my_request/ticket_my_request_request.dart';
 import '../blocs/my_ticket_request_bloc/ticketing_bloc.dart';
-import '../widgets/my_request_web_app_bar.dart';
+import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 
 class TicketingMyRequestPage extends StatefulWidget {
   final String pageTag;
@@ -418,10 +418,18 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
               debugPrint('UI Rebuilding started...');
               if (state is TicketingMyRequestDetailSuccess) {
                 final ticketingDetailList = state.ticketDetail.ticketDetailList;
-                final ticketRequestCount =
-                    state.ticketDetail.ticketRequestCount?.isNotEmpty == true
-                    ? state.ticketDetail.ticketRequestCount![0]
-                    : null;
+                TicketRequestCount? ticketRequestCount;
+                if (pageTitle == "My Action") {
+                  ticketRequestCount =
+                      state.ticketDetail.ticketActionCount?.isNotEmpty == true
+                      ? state.ticketDetail.ticketActionCount![0]
+                      : null;
+                } else {
+                  ticketRequestCount =
+                      state.ticketDetail.ticketRequestCount?.isNotEmpty == true
+                      ? state.ticketDetail.ticketRequestCount![0]
+                      : null;
+                }
                 final totalRecords = state.ticketDetail.totalRecords ?? 0;
                 return Padding(
                   padding: const EdgeInsets.all(16),

@@ -15,11 +15,9 @@ import 'package:my_worksphere_web/features/ticketing/domain/repositories/view_ti
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/add_new_ticket_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/ticket_location_category_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/ticket_workflow_details_usecase.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/submit_reopen_review_usecase.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_action_history_usecase.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/submit_reopen_review_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_action_history_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_request_usecase.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_detail_v6_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +28,8 @@ import '../../features/ticketing/data/repositories/add_new_request_repository_im
 import '../../features/ticketing/data/repositories/ticketing_repository_impl.dart';
 import '../../features/ticketing/data/repositories/view_ticket_detail_repository_impl.dart';
 import '../../features/ticketing/domain/usecases/add_new_request/ticket_sub_category_usecase.dart';
+import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_workflow_usecase.dart';
+import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/view_ticket_detail_v6_usecase.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
 import '../network/api_client.dart';
 

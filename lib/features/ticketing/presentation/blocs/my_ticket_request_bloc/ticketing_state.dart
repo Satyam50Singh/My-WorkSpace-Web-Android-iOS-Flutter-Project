@@ -13,13 +13,13 @@ final class TicketingFailure extends TicketingState {
 }
 
 final class TicketingMyRequestDetailSuccess extends TicketingState {
-  final TicketDetail ticketDetail;
+  final TicketDetailEntity ticketDetail;
 
   TicketingMyRequestDetailSuccess(this.ticketDetail);
 }
 
 final class TicketingExportSuccess extends TicketingState {
-  final TicketDetail ticketDetail;
+  final TicketDetailEntity ticketDetail;
 
   TicketingExportSuccess(this.ticketDetail);
 }

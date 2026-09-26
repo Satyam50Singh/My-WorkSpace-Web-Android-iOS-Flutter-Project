@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_worksphere_web/core/utils/ticket_status_utils.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_colors.dart';
 
 class TicketCountCard extends StatelessWidget {
   final String title;

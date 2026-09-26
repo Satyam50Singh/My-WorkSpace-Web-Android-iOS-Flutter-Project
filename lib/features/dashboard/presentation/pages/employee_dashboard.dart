@@ -24,11 +24,13 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     if (location.startsWith(AppRoutes.dashboardPath)) {
       return 'Dashboard';
     } else if (location.startsWith(AppRoutes.myTickets)) {
-      return 'My Tickets';
+      return 'My Request';
     } else if (location.contains('/view-ticket-details')) {
       return 'View Ticket Details';
     } else if (location.startsWith(AppRoutes.addNewRequest)) {
       return 'Add New Request';
+    } else if (location.startsWith(AppRoutes.myActions)) {
+      return 'My Action';
     }
     return 'My Worksphere';
   }

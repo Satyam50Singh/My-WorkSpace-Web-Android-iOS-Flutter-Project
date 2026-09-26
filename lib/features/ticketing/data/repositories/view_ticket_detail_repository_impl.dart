@@ -3,12 +3,12 @@ import 'package:my_worksphere_web/core/error/exceptions.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/submit_reopen_review_entity.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_history_entity.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_v6.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/submit_reopen_review_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/view_ticket_detail_repository.dart';
 
+import '../../domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
+import '../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import '../datasources/view_ticket_detail_remote_data_source.dart';
 
 class ViewTicketDetailRepositoryImpl extends ViewTicketDetailRepository {

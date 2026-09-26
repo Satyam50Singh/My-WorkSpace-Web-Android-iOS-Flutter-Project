@@ -1,14 +1,16 @@
-class TicketDetail {
+class TicketDetailEntity {
   final int? totalRecords;
   final int? totalPages;
   final List<TicketDetailList>? ticketDetailList;
   final List<TicketRequestCount>? ticketRequestCount;
+  final List<TicketRequestCount>? ticketActionCount;
 
-  TicketDetail({
+  TicketDetailEntity({
     this.totalRecords,
     this.totalPages,
     this.ticketDetailList,
     this.ticketRequestCount,
+    this.ticketActionCount,
   });
 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/ticket_detail.dart';
+import '../../../domain/entities/ticket_detail_entity.dart';
 import 'scroll_button.dart';
 import 'ticket_count_card.dart';
 

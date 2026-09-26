@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 
-import '../../../domain/entities/ticket_workflow_entity.dart';
-import '../../../domain/entities/view_ticket_detail_v6.dart';
+import '../../../domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import 'manage_ticket_card.dart';
 
 class TicketDetailWorkflow extends StatelessWidget {

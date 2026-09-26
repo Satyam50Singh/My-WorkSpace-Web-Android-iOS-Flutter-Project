@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_history_entity.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_action_history.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
@@ -12,7 +12,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
-import '../../domain/entities/view_ticket_detail_v6.dart';
+import '../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import '../widgets/view_ticket_details/ticket_detail_over_view.dart';
 import '../widgets/view_ticket_details/ticket_detail_tab_bar.dart';
 

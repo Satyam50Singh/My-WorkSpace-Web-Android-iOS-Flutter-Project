@@ -43,7 +43,7 @@ class TicketWorkFlowModel extends TicketWorkflowDetailsEntity {
   }
 }
 
-class TicketWorkflowModel extends TicketWorkflowEntity {
+class TicketWorkflowModel extends AddNewTicketWorkFlowEntity {
   TicketWorkflowModel({
     super.level,
     super.userName,

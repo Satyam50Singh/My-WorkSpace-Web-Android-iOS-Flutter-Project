@@ -4,7 +4,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_images_bottom_card.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_info_card.dart';
 
-import '../../../domain/entities/view_ticket_detail_v6.dart';
+import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import 'manage_ticket_card.dart';
 
 class TicketDetailOverView extends StatelessWidget {

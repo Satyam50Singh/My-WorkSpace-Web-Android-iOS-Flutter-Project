@@ -43,7 +43,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   List<SubCategoryEntity>? subCategories;
   TicketLocationCategoryEntity? _locationCategoryData;
   List<LocationEntity> _finalLocationList = [];
-  List<TicketWorkflowEntity> workFlowList = [];
+  List<AddNewTicketWorkFlowEntity> workFlowList = [];
 
   LocationEntity? _selectedLocation;
   CategoryEntity? _selectedCategory;

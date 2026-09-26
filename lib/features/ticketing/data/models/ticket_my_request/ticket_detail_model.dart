@@ -1,11 +1,12 @@
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail_entity.dart';
 
-class TicketDetailModel extends TicketDetail {
+class TicketDetailModel extends TicketDetailEntity {
   TicketDetailModel({
     super.totalRecords,
     super.totalPages,
     super.ticketDetailList,
     super.ticketRequestCount,
+    super.ticketActionCount
   });
 
   factory TicketDetailModel.fromJson(Map<String, dynamic> json) {
@@ -22,15 +23,21 @@ class TicketDetailModel extends TicketDetail {
               .map((i) => TicketRequestCountModel.fromJson(i as Map<String, dynamic>))
               .toList()
           : null,
+        ticketActionCount: json['TicketActionCount'] != null
+          ? (json['TicketActionCount'] as List)
+              .map((i) => TicketRequestCountModel.fromJson(i as Map<String, dynamic>))
+              .toList()
+          : null,
     );
   }
 
-  TicketDetail toEntity() {
-    return TicketDetail(
+  TicketDetailEntity toEntity() {
+    return TicketDetailEntity(
       totalRecords: totalRecords,
       totalPages: totalPages,
       ticketDetailList: ticketDetailList,
       ticketRequestCount: ticketRequestCount,
+      ticketActionCount: ticketActionCount
     );
   }
 }

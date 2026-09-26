@@ -11,8 +11,13 @@ class AppTextTheme {
       fontWeight: FontWeight.bold,
       color: AppColors.textPrimary,
     ),
-    headlineMedium: GoogleFonts.roboto(
-      fontSize: 24,
+    headlineSmall: GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: AppColors.textPrimary,
+    ),
+    headlineMedium: GoogleFonts.poppins(
+      fontSize: 20,
       fontWeight: FontWeight.w600,
       color: AppColors.textPrimary,
     ),

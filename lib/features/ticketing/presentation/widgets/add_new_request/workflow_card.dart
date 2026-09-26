@@ -3,7 +3,7 @@ import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_request/ticket_workflow_details_entity.dart';
 
 class WorkflowCard extends StatelessWidget {
-  final TicketWorkflowEntity workflow;
+  final AddNewTicketWorkFlowEntity workflow;
 
   const WorkflowCard({super.key, required this.workflow});
 

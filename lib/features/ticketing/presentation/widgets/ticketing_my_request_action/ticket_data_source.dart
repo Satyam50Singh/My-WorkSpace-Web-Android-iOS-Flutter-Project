@@ -1,8 +1,8 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../domain/entities/ticket_detail.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../domain/entities/ticket_detail_entity.dart';
 import 'status_cell.dart';
 
 class TicketDataSource extends DataTableSource {

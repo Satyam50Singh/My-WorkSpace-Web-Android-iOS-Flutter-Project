@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_my_request/ticket_my_request_request.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_request_usecase.dart';
 
-import '../../../domain/entities/ticket_detail.dart';
+import '../../../domain/entities/ticket_detail_entity.dart';
 
 part 'ticketing_event.dart';
 part 'ticketing_state.dart';
