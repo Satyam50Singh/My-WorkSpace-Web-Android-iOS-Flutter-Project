@@ -24,13 +24,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/ticketing/data/datasources/ticketing_my_action_remote_data_source.dart';
 import '../../features/ticketing/data/repositories/add_new_request_repository_impl.dart';
+import '../../features/ticketing/data/repositories/ticketing_my_action_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticketing_repository_impl.dart';
 import '../../features/ticketing/data/repositories/view_ticket_detail_repository_impl.dart';
+import '../../features/ticketing/domain/repositories/ticketing_my_action_repository.dart';
 import '../../features/ticketing/domain/usecases/add_new_request/ticket_sub_category_usecase.dart';
+import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/accept_web_ticket_usecase.dart';
 import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_workflow_usecase.dart';
 import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/view_ticket_detail_v6_usecase.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
+import '../../features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 import '../network/api_client.dart';
 
 final sl = GetIt.instance;
@@ -61,6 +66,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<AddNewRequestDataSource>(
     () => AddNewRequestDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<TicketingMyActionRemoteDataSource>(
+    () => TicketingMyActionRemoteDataSourceImpl(sl()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<AuthRepository>(
@@ -74,6 +82,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<AddNewRequestRepository>(
     () => AddNewRequestRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<TicketingMyActionRepository>(
+    () => TicketingMyActionRepositoryImpl(sl()),
   );
 
   // ---------- Use cases ----------
@@ -110,6 +121,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<AddNewTicketUseCase>(
     () => AddNewTicketUseCase(sl()),
   );
+  sl.registerLazySingleton<AcceptWebTicketUseCase>(
+    () => AcceptWebTicketUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
@@ -117,4 +131,5 @@ Future<void> configureDependencies() async {
   sl.registerFactory(() => TicketingBloc(sl()));
   sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddNewTicketBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => TicketingMyActionBloc(sl()));
 }

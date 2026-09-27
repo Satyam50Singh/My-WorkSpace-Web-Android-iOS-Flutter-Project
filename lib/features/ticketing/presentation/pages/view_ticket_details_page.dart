@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_action_history.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
@@ -100,17 +105,49 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
   void _apiCallForAcceptWebTicket() {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
-      final employee = state.employeeDetail;
-      final companyId = employee.companyId;
-      final empCd = employee.empCd;
       if (viewTicketDetailV6Response != null) {
-        final isAcceptedByAnotherUser =
-            viewTicketDetailV6Response?.isAcceptedByAnotherUser;
-        final ticketId = viewTicketDetailV6Response?.ticketID;
-        debugPrint(
-          'isAcceptedByAnotherUser: $isAcceptedByAnotherUser, ticketId: $ticketId, companyId: $companyId, empCd: $empCd',
-        );
+        final bool isAcceptedByAnotherUser =
+            viewTicketDetailV6Response?.isAcceptedByAnotherUser ?? false;
+        final employee = state.employeeDetail;
+        final platform = kIsWeb
+            ? "Web"
+            : Platform.isAndroid
+            ? "Android"
+            : "iOS";
+
+        if (!isAcceptedByAnotherUser) {
+          final payload = AcceptWebTicketRequestModel(
+            empCD: employee.empCd,
+            companyID: employee.companyId,
+            platformType: platform,
+            ticketId: viewTicketDetailV6Response?.ticketID.toString(),
+            isAcceptedByAnotherUser: isAcceptedByAnotherUser,
+          );
+          debugPrint('Payload: ${payload.toString()}');
+          context.read<TicketingMyActionBloc>().add(
+            AcceptWebTicketRequested(payload: payload),
+          );
+        } else {
+          SnackBarUtils.showFloatingSnackBar(
+            context,
+            "Ticket is already accepted by another user",
+          );
+        }
       }
+    }
+  }
+
+  void reloadPage() {
+    final employeeState = context.read<EmployeeDetailCubit>().state;
+    if (employeeState is EmployeeDetailFetched) {
+      final payload = ViewTicketDetailRequest(
+        companyId: employeeState.employeeDetail.companyId,
+        empCd: employeeState.employeeDetail.empCd,
+        ticketId: widget.ticketId.toLowerCase().replaceFirst("tkt", ""),
+      );
+      _fetchViewTicketDetailV6Api(payload);
+      _fetchViewTicketActionHistory(payload);
+      _fetchViewTicketWorkFlowDetails(payload);
     }
   }
 
@@ -137,17 +174,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
             state.submitReopenReviewEntity.message ?? "Action successful",
           );
           // Refresh data
-          final employeeState = context.read<EmployeeDetailCubit>().state;
-          if (employeeState is EmployeeDetailFetched) {
-            final payload = ViewTicketDetailRequest(
-              companyId: employeeState.employeeDetail.companyId,
-              empCd: employeeState.employeeDetail.empCd,
-              ticketId: widget.ticketId.toLowerCase().replaceFirst("tkt", ""),
-            );
-            _fetchViewTicketDetailV6Api(payload);
-            _fetchViewTicketActionHistory(payload);
-            _fetchViewTicketWorkFlowDetails(payload);
-          }
+          reloadPage();
         }
 
         if (state is SubmitReopenReviewFailure) {
@@ -166,90 +193,107 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         }
       },
       builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (viewTicketDetailV6Response != null)
-              ViewTicketDetailHeader(
-                ticketId: widget.ticketId,
-                ticketStatus: viewTicketDetailV6Response?.ticketStatus,
-                pageTag: widget.pageTag,
-              ),
-
-            SizedBox(height: 16.0),
-
-            if (viewTicketDetailV6Response != null)
-              TicketDetailTabBar(
-                onSelectedTab: (String tabName) {
-                  setState(() {
-                    _selectedTab = tabName;
-                  });
-                },
-              ),
-
-            SizedBox(height: 16.0),
-
-            // Conditional Rendering based on selected tab
-            if (_selectedTab == 'Ticket Details' &&
-                viewTicketDetailV6Response != null)
-              Expanded(
-                child: SingleChildScrollView(
-                  child: TicketDetailOverView(
-                    ticketDetails: viewTicketDetailV6Response,
-                    onActionSubmit: (remarks, isReview) {
-                      _submitReOpenReviewTicket(remarks, isReview);
-                    },
-                    onTransferTicket: () {},
-                    onAcceptTicket: () {
-                      _apiCallForAcceptWebTicket();
-                    },
-                    onInProgressTicket: () {},
-                    onHoldTicket: () {},
-                    onCloseTicket: () {},
+        return BlocConsumer<TicketingMyActionBloc, TicketingMyActionState>(
+          listener: (context, state) {
+            if (state is TicketingMyActionLoading) {
+              LoaderUtils.showLoader(context);
+            } else if (state is TicketingMyActionFailure) {
+              LoaderUtils.hideLoader(context);
+              SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
+            }
+            if (state is AcceptTicketSuccess) {
+              LoaderUtils.hideLoader(context);
+              SnackBarUtils.showFloatingSnackBar(context, state.message);
+              reloadPage();
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (viewTicketDetailV6Response != null)
+                  ViewTicketDetailHeader(
+                    ticketId: widget.ticketId,
+                    ticketStatus: viewTicketDetailV6Response?.ticketStatus,
+                    pageTag: widget.pageTag,
                   ),
-                ),
-              ),
 
-            if (_selectedTab == 'Workflow')
-              Expanded(
-                child: SingleChildScrollView(
-                  child: TicketDetailWorkflow(
-                    workFlowDetail: viewTicketWorkflowResponse,
-                    ticketDetails: viewTicketDetailV6Response,
-                    onActionSubmit: (remarks, isReview) {
-                      _submitReOpenReviewTicket(remarks, isReview);
-                    },
-                    onTransferTicket: () {},
-                    onAcceptTicket: () {
-                      _apiCallForAcceptWebTicket();
-                    },
-                    onInProgressTicket: () {},
-                    onHoldTicket: () {},
-                    onCloseTicket: () {},
-                  ),
-                ),
-              ),
+                SizedBox(height: 16.0),
 
-            if (_selectedTab == 'Action History')
-              Expanded(
-                child: SingleChildScrollView(
-                  child: TicketDetailActionHistory(
-                    actionHistoryList: viewTicketActionHistoryResponse,
-                    ticketDetails: viewTicketDetailV6Response,
-                    onActionSubmit: (remarks, isReview) {
-                      _submitReOpenReviewTicket(remarks, isReview);
+                if (viewTicketDetailV6Response != null)
+                  TicketDetailTabBar(
+                    onSelectedTab: (String tabName) {
+                      setState(() {
+                        _selectedTab = tabName;
+                      });
                     },
-                    onTransferTicket: () {},
-                    onAcceptTicket: () {
-                      _apiCallForAcceptWebTicket();
-                    },
-                    onInProgressTicket: () {},
-                    onHoldTicket: () {},
-                    onCloseTicket: () {},
                   ),
-                ),
-              ),
-          ],
+
+                SizedBox(height: 16.0),
+
+                // Conditional Rendering based on selected tab
+                if (_selectedTab == 'Ticket Details' &&
+                    viewTicketDetailV6Response != null)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: TicketDetailOverView(
+                        ticketDetails: viewTicketDetailV6Response,
+                        onActionSubmit: (remarks, isReview) {
+                          _submitReOpenReviewTicket(remarks, isReview);
+                        },
+                        onTransferTicket: () {},
+                        onAcceptTicket: () {
+                          _apiCallForAcceptWebTicket();
+                        },
+                        onInProgressTicket: () {},
+                        onHoldTicket: () {},
+                        onCloseTicket: () {},
+                      ),
+                    ),
+                  ),
+
+                if (_selectedTab == 'Workflow')
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: TicketDetailWorkflow(
+                        workFlowDetail: viewTicketWorkflowResponse,
+                        ticketDetails: viewTicketDetailV6Response,
+                        onActionSubmit: (remarks, isReview) {
+                          _submitReOpenReviewTicket(remarks, isReview);
+                        },
+                        onTransferTicket: () {},
+                        onAcceptTicket: () {
+                          _apiCallForAcceptWebTicket();
+                        },
+                        onInProgressTicket: () {},
+                        onHoldTicket: () {},
+                        onCloseTicket: () {},
+                      ),
+                    ),
+                  ),
+
+                if (_selectedTab == 'Action History')
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: TicketDetailActionHistory(
+                        actionHistoryList: viewTicketActionHistoryResponse,
+                        ticketDetails: viewTicketDetailV6Response,
+                        onActionSubmit: (remarks, isReview) {
+                          _submitReOpenReviewTicket(remarks, isReview);
+                        },
+                        onTransferTicket: () {},
+                        onAcceptTicket: () {
+                          _apiCallForAcceptWebTicket();
+                        },
+                        onInProgressTicket: () {},
+                        onHoldTicket: () {},
+                        onCloseTicket: () {},
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         );
       },
     );

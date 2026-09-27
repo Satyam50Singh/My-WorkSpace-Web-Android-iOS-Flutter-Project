@@ -54,55 +54,39 @@ class ManageActionTicketCard extends StatelessWidget {
               SizedBox(height: 4),
               Divider(color: Colors.grey.shade200, thickness: 1),
               SizedBox(height: 16),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (isAcceptAllowed)
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.check_circle_outline),
-                      onPressed: onAcceptTicket,
-                      label: Text(
-                        'Accept Ticket',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.white, fontSize: 14),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.orange,
-                        foregroundColor: AppColors.background,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isAcceptAllowed)
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.check_circle_outline),
+                        onPressed: onAcceptTicket,
+                        label: Text(
+                          'Accept Ticket',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(color: AppColors.white, fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.orange,
+                          foregroundColor: AppColors.background,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
-                  SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.account_tree),
-                    onPressed: onTransferTicket,
-                    label: Text(
-                      'Transfer',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(color: AppColors.white, fontSize: 14),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error,
-                      foregroundColor: AppColors.background,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  if (isActionAllowed) ...[
+                    SizedBox(width: 16),
                     ElevatedButton.icon(
-                      icon: Icon(Icons.play_circle_outline),
-                      onPressed: onInProgressTicket,
+                      icon: Icon(Icons.account_tree),
+                      onPressed: onTransferTicket,
                       label: Text(
-                        'In Progress',
+                        'Transfer',
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(color: AppColors.white, fontSize: 14),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: AppColors.error,
                         foregroundColor: AppColors.background,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -110,41 +94,60 @@ class ManageActionTicketCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.pause_circle_outline),
-                      onPressed: onHoldTicket,
-                      label: Text(
-                        'Hold',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.white, fontSize: 14),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.orange,
-                        foregroundColor: AppColors.background,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    if (isActionAllowed) ...[
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.play_circle_outline),
+                        onPressed: onInProgressTicket,
+                        label: Text(
+                          'In Progress',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(color: AppColors.white, fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: AppColors.background,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.check_circle_outline),
-                      onPressed: onCloseTicket,
-                      label: Text(
-                        'Close',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.white, fontSize: 14),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.success,
-                        foregroundColor: AppColors.background,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.pause_circle_outline),
+                        onPressed: onHoldTicket,
+                        label: Text(
+                          'Hold',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(color: AppColors.white, fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.orange,
+                          foregroundColor: AppColors.background,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.check_circle_outline),
+                        onPressed: onCloseTicket,
+                        label: Text(
+                          'Close',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(color: AppColors.white, fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.success,
+                          foregroundColor: AppColors.background,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
               SizedBox(height: 16),
             ],
