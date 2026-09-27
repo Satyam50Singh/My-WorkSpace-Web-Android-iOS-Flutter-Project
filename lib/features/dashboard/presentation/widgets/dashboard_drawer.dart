@@ -113,7 +113,7 @@ class DashboardDrawer extends StatelessWidget {
                         title: Text(
                           item.title,
                           style: const TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 13.0,
                             color: AppColors.textPrimary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -133,7 +133,7 @@ class DashboardDrawer extends StatelessWidget {
                               title: Text(
                                 subItem.title,
                                 style: const TextStyle(
-                                  fontSize: 14.0,
+                                  fontSize: 13.0,
                                   color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -157,7 +157,7 @@ class DashboardDrawer extends StatelessWidget {
                     title: Text(
                       item.title,
                       style: const TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 13.0,
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),

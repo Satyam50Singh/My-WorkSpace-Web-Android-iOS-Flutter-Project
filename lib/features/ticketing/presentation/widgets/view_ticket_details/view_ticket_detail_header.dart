@@ -8,11 +8,13 @@ import '../../../../../core/theme/app_colors.dart';
 class ViewTicketDetailHeader extends StatelessWidget {
   final String ticketId;
   final String? ticketStatus;
+  final String? pageTag;
 
   const ViewTicketDetailHeader({
     super.key,
     required this.ticketId,
     this.ticketStatus,
+    this.pageTag,
   });
 
   @override
@@ -39,7 +41,11 @@ class ViewTicketDetailHeader extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                context.go(AppRoutes.myTickets);
+                if (pageTag == 'my-actions') {
+                  context.go(AppRoutes.myActions);
+                } else {
+                  context.go(AppRoutes.myTickets);
+                }
               },
               icon: const Icon(
                 Icons.arrow_back_ios_new_rounded,

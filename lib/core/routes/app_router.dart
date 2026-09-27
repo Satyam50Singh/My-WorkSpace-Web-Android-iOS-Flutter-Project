@@ -83,7 +83,11 @@ class AppRouter {
             name: 'view-ticket-details',
             builder: (context, state) {
               final ticketId = state.pathParameters['ticketId'] ?? '';
-              return ViewTicketDetailsPage(ticketId: ticketId);
+              final pageTag = state.uri.queryParameters['pageTag'] ?? '';
+              return ViewTicketDetailsPage(
+                ticketId: ticketId,
+                pageTag: pageTag,
+              );
             },
           ),
           GoRoute(

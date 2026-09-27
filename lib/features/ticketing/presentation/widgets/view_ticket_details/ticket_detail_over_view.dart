@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_action_details/manage_action_ticket_card.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/classification_location_card.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/requestor_profile_card.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_images_bottom_card.dart';
@@ -10,11 +11,21 @@ import 'manage_ticket_card.dart';
 class TicketDetailOverView extends StatelessWidget {
   final ViewTicketDetailV6Entity? ticketDetails;
   final Function(String remarks, int isReview) onActionSubmit;
+  final Function() onTransferTicket;
+  final Function() onAcceptTicket;
+  final Function() onInProgressTicket;
+  final Function() onHoldTicket;
+  final Function() onCloseTicket;
 
   const TicketDetailOverView({
     super.key,
     required this.ticketDetails,
     required this.onActionSubmit,
+    required this.onTransferTicket,
+    required this.onAcceptTicket,
+    required this.onInProgressTicket,
+    required this.onHoldTicket,
+    required this.onCloseTicket,
   });
 
   @override
@@ -30,6 +41,16 @@ class TicketDetailOverView extends StatelessWidget {
           const SizedBox(height: 16),
           if (ticketDetails?.isReopenReviewAllowed == true)
             ManageTicketCard(onActionSubmit: onActionSubmit),
+          if (ticketDetails?.isAcceptAllowed == true || ticketDetails?.isActionAllowed == true)
+            ManageActionTicketCard(
+              isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
+              isActionAllowed: ticketDetails?.isActionAllowed ?? false,
+              onAcceptTicket: onAcceptTicket,
+              onTransferTicket: onTransferTicket,
+              onInProgressTicket: onInProgressTicket,
+              onHoldTicket: onHoldTicket,
+              onCloseTicket: onCloseTicket,
+            ),
           const SizedBox(height: 48), // Bottom spacing
         ],
       );
@@ -56,6 +77,16 @@ class TicketDetailOverView extends StatelessWidget {
           const SizedBox(height: 16),
           if (ticketDetails?.isReopenReviewAllowed == true)
             ManageTicketCard(onActionSubmit: onActionSubmit),
+          if (ticketDetails?.isAcceptAllowed == true || ticketDetails?.isActionAllowed == true)
+            ManageActionTicketCard(
+              isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
+              isActionAllowed: ticketDetails?.isActionAllowed ?? false,
+              onAcceptTicket: onAcceptTicket,
+              onTransferTicket: onTransferTicket,
+              onInProgressTicket: onInProgressTicket,
+              onHoldTicket: onHoldTicket,
+              onCloseTicket: onCloseTicket,
+            ),
           const SizedBox(height: 48), // Bottom spacing
         ],
       );

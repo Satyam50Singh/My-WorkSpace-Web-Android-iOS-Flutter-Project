@@ -475,7 +475,12 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                             debugPrint('Selected Ticket ID: $selectedTicketId');
                             context.goNamed(
                               'view-ticket-details',
-                              pathParameters: {'ticketId': selectedTicketId},
+                              pathParameters: {
+                                'ticketId': selectedTicketId,
+                              },
+                              queryParameters: {
+                                'pageTag': widget.pageTag,
+                              },
                             );
                           },
                         ),

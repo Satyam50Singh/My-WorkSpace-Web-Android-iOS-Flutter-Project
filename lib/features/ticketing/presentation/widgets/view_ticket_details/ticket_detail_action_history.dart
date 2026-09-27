@@ -5,18 +5,29 @@ import 'package:my_worksphere_web/core/theme/app_colors.dart';
 
 import '../../../domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
 import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
+import '../view_ticket_action_details/manage_action_ticket_card.dart';
 import 'manage_ticket_card.dart';
 
 class TicketDetailActionHistory extends StatefulWidget {
   final List<TicketHistoryEntity>? actionHistoryList;
   final ViewTicketDetailV6Entity? ticketDetails;
   final Function(String remarks, int isReview) onActionSubmit;
+  final Function() onTransferTicket;
+  final Function() onAcceptTicket;
+  final Function() onInProgressTicket;
+  final Function() onHoldTicket;
+  final Function() onCloseTicket;
 
   const TicketDetailActionHistory({
     super.key,
     required this.actionHistoryList,
     required this.ticketDetails,
     required this.onActionSubmit,
+    required this.onTransferTicket,
+    required this.onAcceptTicket,
+    required this.onInProgressTicket,
+    required this.onHoldTicket,
+    required this.onCloseTicket,
   });
 
   @override
@@ -79,6 +90,8 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
         widget.actionHistoryList as Iterable<TicketHistoryEntity>,
       );
     }
+
+    final ticketDetails = widget.ticketDetails;
 
     return Column(
       children: [
@@ -380,6 +393,18 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
 
         if (widget.ticketDetails?.isReopenReviewAllowed == true)
           ManageTicketCard(onActionSubmit: widget.onActionSubmit),
+        if (ticketDetails?.isAcceptAllowed == true ||
+            ticketDetails?.isActionAllowed == true)
+          ManageActionTicketCard(
+            isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
+            isActionAllowed: ticketDetails?.isActionAllowed ?? false,
+            onAcceptTicket: widget.onAcceptTicket,
+            onTransferTicket: widget.onTransferTicket,
+            onInProgressTicket: widget.onInProgressTicket,
+            onHoldTicket: widget.onHoldTicket,
+            onCloseTicket: widget.onCloseTicket,
+          ),
+        SizedBox(height: 32),
       ],
     );
   }

@@ -18,8 +18,13 @@ import '../widgets/view_ticket_details/ticket_detail_tab_bar.dart';
 
 class ViewTicketDetailsPage extends StatefulWidget {
   final String ticketId;
+  final String pageTag;
 
-  const ViewTicketDetailsPage({super.key, required this.ticketId});
+  const ViewTicketDetailsPage({
+    super.key,
+    required this.ticketId,
+    required this.pageTag,
+  });
 
   @override
   State<ViewTicketDetailsPage> createState() => _ViewTicketDetailsPageState();
@@ -92,6 +97,23 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
+  void _apiCallForAcceptWebTicket() {
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final companyId = employee.companyId;
+      final empCd = employee.empCd;
+      if (viewTicketDetailV6Response != null) {
+        final isAcceptedByAnotherUser =
+            viewTicketDetailV6Response?.isAcceptedByAnotherUser;
+        final ticketId = viewTicketDetailV6Response?.ticketID;
+        debugPrint(
+          'isAcceptedByAnotherUser: $isAcceptedByAnotherUser, ticketId: $ticketId, companyId: $companyId, empCd: $empCd',
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ViewTicketDetailsBloc, ViewTicketDetailsState>(
@@ -151,6 +173,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
               ViewTicketDetailHeader(
                 ticketId: widget.ticketId,
                 ticketStatus: viewTicketDetailV6Response?.ticketStatus,
+                pageTag: widget.pageTag,
               ),
 
             SizedBox(height: 16.0),
@@ -176,6 +199,13 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: (remarks, isReview) {
                       _submitReOpenReviewTicket(remarks, isReview);
                     },
+                    onTransferTicket: () {},
+                    onAcceptTicket: () {
+                      _apiCallForAcceptWebTicket();
+                    },
+                    onInProgressTicket: () {},
+                    onHoldTicket: () {},
+                    onCloseTicket: () {},
                   ),
                 ),
               ),
@@ -189,6 +219,13 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: (remarks, isReview) {
                       _submitReOpenReviewTicket(remarks, isReview);
                     },
+                    onTransferTicket: () {},
+                    onAcceptTicket: () {
+                      _apiCallForAcceptWebTicket();
+                    },
+                    onInProgressTicket: () {},
+                    onHoldTicket: () {},
+                    onCloseTicket: () {},
                   ),
                 ),
               ),
@@ -202,6 +239,13 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: (remarks, isReview) {
                       _submitReOpenReviewTicket(remarks, isReview);
                     },
+                    onTransferTicket: () {},
+                    onAcceptTicket: () {
+                      _apiCallForAcceptWebTicket();
+                    },
+                    onInProgressTicket: () {},
+                    onHoldTicket: () {},
+                    onCloseTicket: () {},
                   ),
                 ),
               ),
