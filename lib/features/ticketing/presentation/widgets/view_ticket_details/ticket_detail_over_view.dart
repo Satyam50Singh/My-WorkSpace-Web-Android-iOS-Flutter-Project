@@ -9,6 +9,7 @@ import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_
 import 'manage_ticket_card.dart';
 
 class TicketDetailOverView extends StatelessWidget {
+  final String pageTag;
   final ViewTicketDetailV6Entity? ticketDetails;
   final Function(String remarks, int isReview) onActionSubmit;
   final Function() onTransferTicket;
@@ -19,6 +20,7 @@ class TicketDetailOverView extends StatelessWidget {
 
   const TicketDetailOverView({
     super.key,
+    required this.pageTag,
     required this.ticketDetails,
     required this.onActionSubmit,
     required this.onTransferTicket,
@@ -39,9 +41,14 @@ class TicketDetailOverView extends StatelessWidget {
           RequestorProfileCard(ticketDetails: ticketDetails),
           TicketImagesBottomCard(ticketDetails: ticketDetails),
           const SizedBox(height: 16),
-          if (ticketDetails?.isReopenReviewAllowed == true)
+          if (ticketDetails?.isReopenReviewAllowed == true &&
+              pageTag.isNotEmpty &&
+              pageTag == 'my-request')
             ManageTicketCard(onActionSubmit: onActionSubmit),
-          if (ticketDetails?.isAcceptAllowed == true || ticketDetails?.isActionAllowed == true)
+          if (pageTag.isNotEmpty &&
+              pageTag == 'my-action' &&
+              (ticketDetails?.isAcceptAllowed == true ||
+                  ticketDetails?.isActionAllowed == true))
             ManageActionTicketCard(
               isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
               isActionAllowed: ticketDetails?.isActionAllowed ?? false,
@@ -75,9 +82,14 @@ class TicketDetailOverView extends StatelessWidget {
           ),
           TicketImagesBottomCard(ticketDetails: ticketDetails),
           const SizedBox(height: 16),
-          if (ticketDetails?.isReopenReviewAllowed == true)
+          if (ticketDetails?.isReopenReviewAllowed == true &&
+              pageTag.isNotEmpty &&
+              pageTag == 'my-request')
             ManageTicketCard(onActionSubmit: onActionSubmit),
-          if (ticketDetails?.isAcceptAllowed == true || ticketDetails?.isActionAllowed == true)
+          if (pageTag.isNotEmpty &&
+              pageTag == 'my-action' &&
+              (ticketDetails?.isAcceptAllowed == true ||
+                  ticketDetails?.isActionAllowed == true))
             ManageActionTicketCard(
               isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
               isActionAllowed: ticketDetails?.isActionAllowed ?? false,

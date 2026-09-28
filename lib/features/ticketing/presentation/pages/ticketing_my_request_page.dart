@@ -22,7 +22,7 @@ import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 class TicketingMyRequestPage extends StatefulWidget {
   final String pageTag;
 
-  const TicketingMyRequestPage({super.key, this.pageTag = 'my-tickets'});
+  const TicketingMyRequestPage({super.key, this.pageTag = 'my-request'});
 
   @override
   State<TicketingMyRequestPage> createState() => _TicketingMyRequestPageState();

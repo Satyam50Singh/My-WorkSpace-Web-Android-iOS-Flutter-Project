@@ -7,6 +7,7 @@ import '../view_ticket_action_details/manage_action_ticket_card.dart';
 import 'manage_ticket_card.dart';
 
 class TicketDetailWorkflow extends StatelessWidget {
+  final String pageTag;
   final List<TicketWorkflowEntity>? workFlowDetail;
   final ViewTicketDetailV6Entity? ticketDetails;
   final Function(String remarks, int isReview) onActionSubmit;
@@ -18,6 +19,7 @@ class TicketDetailWorkflow extends StatelessWidget {
 
   const TicketDetailWorkflow({
     super.key,
+    required this.pageTag,
     required this.workFlowDetail,
     required this.ticketDetails,
     required this.onActionSubmit,
@@ -110,10 +112,14 @@ class TicketDetailWorkflow extends StatelessWidget {
           },
         ),
 
-        if (ticketDetails?.isReopenReviewAllowed == true)
+        if (ticketDetails?.isReopenReviewAllowed == true &&
+            pageTag.isNotEmpty &&
+            pageTag == 'my-request')
           ManageTicketCard(onActionSubmit: onActionSubmit),
-        if (ticketDetails?.isAcceptAllowed == true ||
-            ticketDetails?.isActionAllowed == true)
+        if (pageTag.isNotEmpty &&
+            pageTag == 'my-action' &&
+            (ticketDetails?.isAcceptAllowed == true ||
+                ticketDetails?.isActionAllowed == true))
           ManageActionTicketCard(
             isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
             isActionAllowed: ticketDetails?.isActionAllowed ?? false,

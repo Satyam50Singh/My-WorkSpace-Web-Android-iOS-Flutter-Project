@@ -9,6 +9,7 @@ import '../view_ticket_action_details/manage_action_ticket_card.dart';
 import 'manage_ticket_card.dart';
 
 class TicketDetailActionHistory extends StatefulWidget {
+  final String pageTag;
   final List<TicketHistoryEntity>? actionHistoryList;
   final ViewTicketDetailV6Entity? ticketDetails;
   final Function(String remarks, int isReview) onActionSubmit;
@@ -20,6 +21,7 @@ class TicketDetailActionHistory extends StatefulWidget {
 
   const TicketDetailActionHistory({
     super.key,
+    required this.pageTag,
     required this.actionHistoryList,
     required this.ticketDetails,
     required this.onActionSubmit,
@@ -391,10 +393,14 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
 
         SizedBox(height: 16),
 
-        if (widget.ticketDetails?.isReopenReviewAllowed == true)
+        if (ticketDetails?.isReopenReviewAllowed == true &&
+            widget.pageTag.isNotEmpty &&
+            widget.pageTag == 'my-request')
           ManageTicketCard(onActionSubmit: widget.onActionSubmit),
-        if (ticketDetails?.isAcceptAllowed == true ||
-            ticketDetails?.isActionAllowed == true)
+        if (widget.pageTag.isNotEmpty &&
+            widget.pageTag == 'my-action' &&
+            (ticketDetails?.isAcceptAllowed == true ||
+                ticketDetails?.isActionAllowed == true))
           ManageActionTicketCard(
             isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
             isActionAllowed: ticketDetails?.isActionAllowed ?? false,

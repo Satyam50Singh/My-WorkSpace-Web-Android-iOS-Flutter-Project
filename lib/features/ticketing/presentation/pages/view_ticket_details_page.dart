@@ -239,6 +239,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
             Expanded(
               child: SingleChildScrollView(
                 child: TicketDetailOverView(
+                  pageTag: widget.pageTag,
                   ticketDetails: viewTicketDetailV6Response,
                   onActionSubmit: _submitReOpenReviewTicket,
                   onTransferTicket: () {},
@@ -254,6 +255,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
             Expanded(
               child: SingleChildScrollView(
                 child: TicketDetailWorkflow(
+                  pageTag: widget.pageTag,
                   workFlowDetail: viewTicketWorkflowResponse,
                   ticketDetails: viewTicketDetailV6Response,
                   onActionSubmit: _submitReOpenReviewTicket,
@@ -270,6 +272,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
             Expanded(
               child: SingleChildScrollView(
                 child: TicketDetailActionHistory(
+                  pageTag: widget.pageTag,
                   actionHistoryList: viewTicketActionHistoryResponse,
                   ticketDetails: viewTicketDetailV6Response,
                   onActionSubmit: _submitReOpenReviewTicket,
