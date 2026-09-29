@@ -49,7 +49,7 @@ class TicketDataSource extends DataTableSource {
             ),
           ),
         ),
-        DataCell(Text(ticket.level ?? '-')),
+        DataCell(Center(child: Text(ticket.level ?? '-'))),
         DataCell(
           Text(
             ticket.ticketDate ?? '-',
@@ -60,8 +60,8 @@ class TicketDataSource extends DataTableSource {
         ),
         DataCell(StatusCell(text: ticket.ticketStatus ?? '-')),
         DataCell(StatusCell(text: ticket.ticketActionStatus ?? '-')),
-        DataCell(Text(ticket.raisedByUser ?? '-')),
-        DataCell(Text(ticket.ticketType ?? '-')),
+        DataCell(Text(ticket.raisedByUser ?? '-', maxLines: 2, overflow: TextOverflow.ellipsis,)),
+        DataCell(Text(ticket.ticketType ?? '-', textAlign: TextAlign.center,)),
         DataCell(
           Text(
             ticket.subCategory ?? '-',

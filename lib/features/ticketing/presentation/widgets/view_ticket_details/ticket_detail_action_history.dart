@@ -398,7 +398,7 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
             widget.pageTag == 'my-request')
           ManageTicketCard(onActionSubmit: widget.onActionSubmit),
         if (widget.pageTag.isNotEmpty &&
-            widget.pageTag == 'my-action' &&
+            widget.pageTag == 'my-actions' &&
             (ticketDetails?.isAcceptAllowed == true ||
                 ticketDetails?.isActionAllowed == true))
           ManageActionTicketCard(

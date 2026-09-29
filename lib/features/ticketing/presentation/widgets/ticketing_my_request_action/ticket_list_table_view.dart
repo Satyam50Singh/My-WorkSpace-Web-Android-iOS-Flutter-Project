@@ -111,7 +111,7 @@ class _TicketListTableViewState extends State<TicketListTableView> {
         label: Text(
           header,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontSize: 16,
+            fontSize: 14,
             color: AppColors.white,
             fontWeight: FontWeight.w400,
           ),
@@ -128,9 +128,13 @@ class _TicketListTableViewState extends State<TicketListTableView> {
       case "Ticket Date & Time":
         return 200;
       case "Level":
-        return 80;
+        return 64;
+      case "Ticket Type":
+        return 120;
       case "Location":
         return 300;
+      case "Raised By":
+        return 180;
       default:
         return null;
     }

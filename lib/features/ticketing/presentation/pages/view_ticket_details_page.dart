@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
@@ -150,11 +151,8 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     _fetchAllDetails();
   }
 
-  int times = 0;
-
   @override
   Widget build(BuildContext context) {
-    debugPrint('Page Build: ${times++} times');
     return MultiBlocListener(
       listeners: [
         BlocListener<ViewTicketDetailsBloc, ViewTicketDetailsState>(
@@ -210,81 +208,96 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
           },
         ),
       ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (viewTicketDetailV6Response != null)
-            ViewTicketDetailHeader(
-              ticketId: widget.ticketId,
-              ticketStatus: viewTicketDetailV6Response?.ticketStatus,
-              pageTag: widget.pageTag,
-            ),
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            if (widget.pageTag == 'my-actions') {
+              context.goNamed('my-actions');
+            } else {
+              context.goNamed('my-tickets');
+            }
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (viewTicketDetailV6Response != null)
+              ViewTicketDetailHeader(
+                ticketId: widget.ticketId,
+                ticketStatus: viewTicketDetailV6Response?.ticketStatus,
+                pageTag: widget.pageTag,
+              ),
 
-          const SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
 
-          if (viewTicketDetailV6Response != null)
-            TicketDetailTabBar(
-              onSelectedTab: (String tabName) {
-                setState(() {
-                  _selectedTab = tabName;
-                });
-              },
-            ),
+            if (viewTicketDetailV6Response != null)
+              TicketDetailTabBar(
+                onSelectedTab: (String tabName) {
+                  setState(() {
+                    _selectedTab = tabName;
+                  });
+                },
+              ),
 
-          const SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
 
-          // Conditional Rendering based on selected tab
-          if (_selectedTab == 'Ticket Details' &&
-              viewTicketDetailV6Response != null)
-            Expanded(
-              child: SingleChildScrollView(
-                child: TicketDetailOverView(
-                  pageTag: widget.pageTag,
-                  ticketDetails: viewTicketDetailV6Response,
-                  onActionSubmit: _submitReOpenReviewTicket,
-                  onTransferTicket: () {},
-                  onAcceptTicket: _apiCallForAcceptWebTicket,
-                  onInProgressTicket: () {},
-                  onHoldTicket: () {},
-                  onCloseTicket: () {},
+            // Conditional Rendering based on selected tab
+            if (_selectedTab == 'Ticket Details' &&
+                viewTicketDetailV6Response != null)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TicketDetailOverView(
+                    pageTag: widget.pageTag,
+                    ticketDetails: viewTicketDetailV6Response,
+                    onActionSubmit: _submitReOpenReviewTicket,
+                    onTransferTicket: () {},
+                    onAcceptTicket: _apiCallForAcceptWebTicket,
+                    onInProgressTicket: () {},
+                    onHoldTicket: () {},
+                    onCloseTicket: () {},
+                  ),
                 ),
               ),
-            ),
 
-          if (_selectedTab == 'Workflow')
-            Expanded(
-              child: SingleChildScrollView(
-                child: TicketDetailWorkflow(
-                  pageTag: widget.pageTag,
-                  workFlowDetail: viewTicketWorkflowResponse,
-                  ticketDetails: viewTicketDetailV6Response,
-                  onActionSubmit: _submitReOpenReviewTicket,
-                  onTransferTicket: () {},
-                  onAcceptTicket: _apiCallForAcceptWebTicket,
-                  onInProgressTicket: () {},
-                  onHoldTicket: () {},
-                  onCloseTicket: () {},
+            if (_selectedTab == 'Workflow')
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TicketDetailWorkflow(
+                    pageTag: widget.pageTag,
+                    workFlowDetail: viewTicketWorkflowResponse,
+                    ticketDetails: viewTicketDetailV6Response,
+                    onActionSubmit: _submitReOpenReviewTicket,
+                    onTransferTicket: () {},
+                    onAcceptTicket: _apiCallForAcceptWebTicket,
+                    onInProgressTicket: () {},
+                    onHoldTicket: () {},
+                    onCloseTicket: () {},
+                  ),
                 ),
               ),
-            ),
 
-          if (_selectedTab == 'Action History')
-            Expanded(
-              child: SingleChildScrollView(
-                child: TicketDetailActionHistory(
-                  pageTag: widget.pageTag,
-                  actionHistoryList: viewTicketActionHistoryResponse,
-                  ticketDetails: viewTicketDetailV6Response,
-                  onActionSubmit: _submitReOpenReviewTicket,
-                  onTransferTicket: () {},
-                  onAcceptTicket: _apiCallForAcceptWebTicket,
-                  onInProgressTicket: () {},
-                  onHoldTicket: () {},
-                  onCloseTicket: () {},
+            if (_selectedTab == 'Action History')
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TicketDetailActionHistory(
+                    pageTag: widget.pageTag,
+                    actionHistoryList: viewTicketActionHistoryResponse,
+                    ticketDetails: viewTicketDetailV6Response,
+                    onActionSubmit: _submitReOpenReviewTicket,
+                    onTransferTicket: () {},
+                    onAcceptTicket: _apiCallForAcceptWebTicket,
+                    onInProgressTicket: () {},
+                    onHoldTicket: () {},
+                    onCloseTicket: () {},
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -473,7 +473,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           },
                           onTapViewTicketDetail: (selectedTicketId) {
                             debugPrint('Selected Ticket ID: $selectedTicketId');
-                            context.goNamed(
+                            context.pushNamed(
                               'view-ticket-details',
                               pathParameters: {
                                 'ticketId': selectedTicketId,
@@ -525,7 +525,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     final isMobile = width < 600;
 
     if (isMobile) {
-      context.go(AppRoutes.addNewRequest);
+      context.push(AppRoutes.addNewRequest);
     } else {
       final dialogWidth = isTablet
           ? 440.0

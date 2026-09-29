@@ -46,7 +46,7 @@ class TicketDetailOverView extends StatelessWidget {
               pageTag == 'my-request')
             ManageTicketCard(onActionSubmit: onActionSubmit),
           if (pageTag.isNotEmpty &&
-              pageTag == 'my-action' &&
+              pageTag == 'my-actions' &&
               (ticketDetails?.isAcceptAllowed == true ||
                   ticketDetails?.isActionAllowed == true))
             ManageActionTicketCard(
@@ -87,7 +87,7 @@ class TicketDetailOverView extends StatelessWidget {
               pageTag == 'my-request')
             ManageTicketCard(onActionSubmit: onActionSubmit),
           if (pageTag.isNotEmpty &&
-              pageTag == 'my-action' &&
+              pageTag == 'my-actions' &&
               (ticketDetails?.isAcceptAllowed == true ||
                   ticketDetails?.isActionAllowed == true))
             ManageActionTicketCard(

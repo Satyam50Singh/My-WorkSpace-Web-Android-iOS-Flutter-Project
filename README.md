@@ -20,3 +20,9 @@ samples, guidance on mobile development, and a full API reference.
 ```
 open -na "Google Chrome" --args --disable-web-security --user-data-dir="/tmp/chrome-dev"
 ```
+
+
+## Questions or Concepts
+
+- Future vs Stream - where to use ?
+- goNamed vs pushNamed with GoRouter
