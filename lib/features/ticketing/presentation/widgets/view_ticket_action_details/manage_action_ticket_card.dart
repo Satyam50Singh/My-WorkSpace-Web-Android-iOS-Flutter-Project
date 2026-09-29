@@ -5,6 +5,7 @@ import '../../../../../core/theme/app_colors.dart';
 class ManageActionTicketCard extends StatelessWidget {
   final bool isAcceptAllowed;
   final bool isActionAllowed;
+  final bool isTransferAllowed;
   final Function() onAcceptTicket;
   final Function() onTransferTicket;
   final Function() onInProgressTicket;
@@ -15,6 +16,7 @@ class ManageActionTicketCard extends StatelessWidget {
     super.key,
     required this.isAcceptAllowed,
     required this.isActionAllowed,
+    required this.isTransferAllowed,
     required this.onAcceptTicket,
     required this.onTransferTicket,
     required this.onInProgressTicket,
@@ -76,23 +78,25 @@ class ManageActionTicketCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                    SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.account_tree),
-                      onPressed: onTransferTicket,
-                      label: Text(
-                        'Transfer',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.white, fontSize: 14),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.error,
-                        foregroundColor: AppColors.background,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    if (!isTransferAllowed || isActionAllowed) ...[
+                      SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.account_tree),
+                        onPressed: onTransferTicket,
+                        label: Text(
+                          'Transfer',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(color: AppColors.white, fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.error,
+                          foregroundColor: AppColors.background,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                     SizedBox(width: 16),
                     if (isActionAllowed) ...[
                       ElevatedButton.icon(

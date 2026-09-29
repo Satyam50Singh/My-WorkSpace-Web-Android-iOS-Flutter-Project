@@ -9,6 +9,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket
 import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_action_details/action_dialogs.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_action_history.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
@@ -119,13 +120,13 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
-  void _apiCallForAcceptWebTicket() {
+  void _apiCallForAcceptWebTicket({bool forceAccept = false}) {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched && viewTicketDetailV6Response != null) {
       final bool isAcceptedByAnotherUser =
           viewTicketDetailV6Response?.isAcceptedByAnotherUser ?? false;
 
-      if (!isAcceptedByAnotherUser) {
+      if (!isAcceptedByAnotherUser || forceAccept) {
         final employee = state.employeeDetail;
         final payload = AcceptWebTicketRequestModel(
           empCD: employee.empCd,
@@ -139,10 +140,16 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
           AcceptWebTicketRequested(payload: payload),
         );
       } else {
-        SnackBarUtils.showFloatingSnackBar(
-          context,
-          "Ticket is already accepted by another user",
-        );
+        if (viewTicketDetailV6Response != null) {
+          ActionDialogs.showAlreadyAcceptedDialog(
+            context: context,
+            ticket: viewTicketDetailV6Response!,
+            onAcceptTicketPressed: (BuildContext ctx) {
+              Navigator.of(ctx).pop();
+              _apiCallForAcceptWebTicket(forceAccept: true);
+            },
+          );
+        }
       }
     }
   }

@@ -52,6 +52,7 @@ class TicketDetailOverView extends StatelessWidget {
             ManageActionTicketCard(
               isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
               isActionAllowed: ticketDetails?.isActionAllowed ?? false,
+              isTransferAllowed: ticketDetails?.isAcceptedByAnotherUser ?? true,
               onAcceptTicket: onAcceptTicket,
               onTransferTicket: onTransferTicket,
               onInProgressTicket: onInProgressTicket,
@@ -93,6 +94,7 @@ class TicketDetailOverView extends StatelessWidget {
             ManageActionTicketCard(
               isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
               isActionAllowed: ticketDetails?.isActionAllowed ?? false,
+              isTransferAllowed: ticketDetails?.isAcceptedByAnotherUser ?? true,
               onAcceptTicket: onAcceptTicket,
               onTransferTicket: onTransferTicket,
               onInProgressTicket: onInProgressTicket,
