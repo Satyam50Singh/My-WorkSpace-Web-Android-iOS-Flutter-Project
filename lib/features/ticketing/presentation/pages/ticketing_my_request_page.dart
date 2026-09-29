@@ -326,20 +326,21 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                         ),
                       ),
                     if (!isMobile) SizedBox(width: 4),
-                    SizedBox(
-                      height: 42,
-                      child: IconButton.filled(
-                        onPressed: _addNewTicketRequest,
-                        icon: const Icon(Icons.add, color: AppColors.white),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(24, 24),
-                          backgroundColor: AppColors.primaryDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    if (widget.pageTag == 'my-request')
+                      SizedBox(
+                        height: 42,
+                        child: IconButton.filled(
+                          onPressed: _addNewTicketRequest,
+                          icon: const Icon(Icons.add, color: AppColors.white),
+                          style: IconButton.styleFrom(
+                            minimumSize: const Size(24, 24),
+                            backgroundColor: AppColors.primaryDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -475,12 +476,8 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                             debugPrint('Selected Ticket ID: $selectedTicketId');
                             context.pushNamed(
                               'view-ticket-details',
-                              pathParameters: {
-                                'ticketId': selectedTicketId,
-                              },
-                              queryParameters: {
-                                'pageTag': widget.pageTag,
-                              },
+                              pathParameters: {'ticketId': selectedTicketId},
+                              queryParameters: {'pageTag': widget.pageTag},
                             );
                           },
                         ),

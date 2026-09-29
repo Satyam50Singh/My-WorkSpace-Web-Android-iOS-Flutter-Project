@@ -49,7 +49,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (title != 'My Action')
+                      if (title.toLowerCase() == 'my request')
                         if (isCompact)
                           IconButton.filled(
                             onPressed: onTapAddNewRequest,
