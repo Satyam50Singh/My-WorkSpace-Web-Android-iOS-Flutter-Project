@@ -17,3 +17,9 @@ final class AcceptTicketSuccess extends TicketingMyActionState {
 
   AcceptTicketSuccess({required this.message});
 }
+
+final class UpdateTicketActionSuccess extends TicketingMyActionState {
+  final String message;
+
+  UpdateTicketActionSuccess({required this.message});
+}

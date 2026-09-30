@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_history_entity.dart';
@@ -154,6 +155,41 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
+  void _showInProgressTicketDialog() {
+    ActionDialogs.showUpdateTicketActionDialog(
+      context,
+      "In Progress Ticket",
+      Icons.play_circle_outline,
+      'Submit',
+      'Enter remarks...',
+      (remarks) {
+        _apiCallForInProgressTicket(remarks);
+      },
+    );
+  }
+
+  void _apiCallForInProgressTicket(String remarks) {
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final payload = UpdateTicketActionRequestModel(
+        ticketId: _cleanedTicketId,
+        closeTicketDesc: remarks,
+        ticketAction: "In Progress",
+        empCD: employee.empCd,
+        companyID: employee.companyId,
+        platformType: _currentPlatform,
+        holdTillDatetime: "",
+        isImageUploaded: 0,
+        imageCount: 0,
+        currentLevel: viewTicketDetailV6Response?.level,
+      );
+      context.read<TicketingMyActionBloc>().add(
+        UpdateTicketActionRequested(payload: payload),
+      );
+    }
+  }
+
   void reloadPage() {
     _fetchAllDetails();
   }
@@ -211,6 +247,11 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
               LoaderUtils.hideLoader(context);
               SnackBarUtils.showFloatingSnackBar(context, state.message);
               reloadPage();
+            } else if (state is UpdateTicketActionSuccess) {
+              Navigator.of(context, rootNavigator: true).pop();
+              LoaderUtils.hideLoader(context);
+              SnackBarUtils.showFloatingSnackBar(context, state.message);
+              reloadPage();
             }
           },
         ),
@@ -263,7 +304,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: _submitReOpenReviewTicket,
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
-                    onInProgressTicket: () {},
+                    onInProgressTicket: _showInProgressTicketDialog,
                     onHoldTicket: () {},
                     onCloseTicket: () {},
                   ),
@@ -280,7 +321,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: _submitReOpenReviewTicket,
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
-                    onInProgressTicket: () {},
+                    onInProgressTicket: _showInProgressTicketDialog,
                     onHoldTicket: () {},
                     onCloseTicket: () {},
                   ),
@@ -297,7 +338,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: _submitReOpenReviewTicket,
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
-                    onInProgressTicket: () {},
+                    onInProgressTicket: _showInProgressTicketDialog,
                     onHoldTicket: () {},
                     onCloseTicket: () {},
                   ),

@@ -167,7 +167,6 @@ class CustomDialogUtils {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Spacer(),
                       IconButton(
                         iconSize: 18,
                         icon: const Icon(Icons.close),

@@ -7,3 +7,9 @@ class AcceptWebTicketRequested extends TicketingMyActionEvent {
 
   AcceptWebTicketRequested({required this.payload});
 }
+
+class UpdateTicketActionRequested extends TicketingMyActionEvent {
+  UpdateTicketActionRequestModel payload;
+
+  UpdateTicketActionRequested({required this.payload});
+}
