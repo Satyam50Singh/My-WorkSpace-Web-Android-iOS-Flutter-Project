@@ -402,9 +402,7 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
             (ticketDetails?.isAcceptAllowed == true ||
                 ticketDetails?.isActionAllowed == true))
           ManageActionTicketCard(
-            isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
-            isActionAllowed: ticketDetails?.isActionAllowed ?? false,
-            isTransferAllowed: ticketDetails?.isAcceptedByAnotherUser ?? true,
+            ticketDetails: ticketDetails,
             onAcceptTicket: widget.onAcceptTicket,
             onTransferTicket: widget.onTransferTicket,
             onInProgressTicket: widget.onInProgressTicket,

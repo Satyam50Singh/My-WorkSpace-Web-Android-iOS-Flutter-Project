@@ -121,9 +121,7 @@ class TicketDetailWorkflow extends StatelessWidget {
             (ticketDetails?.isAcceptAllowed == true ||
                 ticketDetails?.isActionAllowed == true))
           ManageActionTicketCard(
-            isAcceptAllowed: ticketDetails?.isAcceptAllowed ?? false,
-            isActionAllowed: ticketDetails?.isActionAllowed ?? false,
-            isTransferAllowed: ticketDetails?.isAcceptedByAnotherUser ?? true,
+            ticketDetails: ticketDetails,
             onAcceptTicket: onAcceptTicket,
             onTransferTicket: onTransferTicket,
             onInProgressTicket: onInProgressTicket,
