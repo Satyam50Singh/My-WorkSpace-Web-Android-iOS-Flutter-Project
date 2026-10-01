@@ -98,8 +98,9 @@ class ActionDialogs {
     IconData headerIcon,
     String btnText,
     String hintText,
-    void Function(String) onSubmit,
-  ) {
+    void Function(String) onSubmit, {
+    Color? color,
+  }) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     TextEditingController remarksController = TextEditingController();
@@ -128,18 +129,10 @@ class ActionDialogs {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          size: 18,
-                          headerIcon,
-                          color: AppColors.primaryDark,
-                        ),
+                      Icon(
+                        size: 24,
+                        headerIcon,
+                        color: color ?? AppColors.primaryDark,
                       ),
                       SizedBox(width: 8),
                       Expanded(
@@ -147,7 +140,7 @@ class ActionDialogs {
                           heading,
                           style: Theme.of(context).textTheme.headlineLarge
                               ?.copyWith(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                               ),
@@ -156,7 +149,7 @@ class ActionDialogs {
                       ),
                       //Spacer(),
                       IconButton(
-                        iconSize: 18,
+                        iconSize: 20,
                         icon: const Icon(Icons.close),
                         onPressed: () =>
                             Navigator.of(context, rootNavigator: true).pop(),
@@ -164,21 +157,79 @@ class ActionDialogs {
                     ],
                   ),
                   SizedBox(height: 16),
-                  Text(
-                    'Remarks*',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textSecondary,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Text(
+                        'Remarks',
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textSecondary,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '*',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.rose,
+                            ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 8),
-                  TextField(
-                    controller: remarksController,
-                    maxLines: 4,
-                    decoration: InputDecoration(hint: Text(hintText)),
+                  Flexible(
+                    child: TextField(
+                      controller: remarksController,
+                      maxLines: 4,
+                      decoration: InputDecoration(hint: Text(hintText)),
+                    ),
                   ),
+                  if (heading.contains("Hold")) ...[
+                    SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text(
+                          'Hold Until',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textSecondary,
+                              ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          '*',
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.rose,
+                              ),
+                        ),
+                      ],
+                    ),
+                    // SizedBox(height: 8),
+                    // date picker with time
+                    SizedBox(height: 8),
+                    Expanded(
+                      child: Text(
+                        'Select the date and time until which this ticket should be on hold.',
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textSecondary,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
                   SizedBox(height: 8),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -201,7 +252,7 @@ class ActionDialogs {
                         builder: (context, loading, child) {
                           return ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryDark,
+                              backgroundColor: color ?? AppColors.primaryDark,
                               foregroundColor: AppColors.background,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -209,14 +260,14 @@ class ActionDialogs {
                             ),
                             icon: loading
                                 ? SizedBox(
-                                    height: 16,
-                                    width: 16,
+                                    height: 18,
+                                    width: 18,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       color: AppColors.background,
                                     ),
                                   )
-                                : Icon(headerIcon, size: 16),
+                                : Icon(headerIcon, size: 18),
                             onPressed: () {
                               if (remarksController.text.trim().isNotEmpty) {
                                 isSubmitted.value = true;
@@ -228,7 +279,10 @@ class ActionDialogs {
                                 );
                               }
                             },
-                            label: Text(loading ? 'Submitting...' : btnText),
+                            label: Text(
+                              loading ? 'Submitting...' : btnText,
+                              style: TextStyle(fontSize: 14),
+                            ),
                           );
                         },
                       ),

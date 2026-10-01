@@ -25,9 +25,11 @@ class ManageActionTicketCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAcceptAllowed = ticketDetails?.isAcceptAllowed ?? false;
     final isActionAllowed = ticketDetails?.isActionAllowed ?? false;
-    final isAcceptedByAnotherUser = ticketDetails?.isAcceptedByAnotherUser ?? true;
+    final isAcceptedByAnotherUser =
+        ticketDetails?.isAcceptedByAnotherUser ?? true;
 
-    final status = ticketDetails?.ticketActionStatus?.trim().toLowerCase() ?? '';
+    final status =
+        ticketDetails?.ticketActionStatus?.trim().toLowerCase() ?? '';
     debugPrint('Status: $status');
     final isHoldStatus = status.contains('hold');
     final isInProgressStatus = status.contains('progress');
@@ -41,8 +43,10 @@ class ManageActionTicketCard extends StatelessWidget {
           onPressed: onAcceptTicket,
           label: Text(
             'Accept Ticket',
-            style: Theme.of(context).textTheme.headlineSmall
-                ?.copyWith(color: AppColors.white, fontSize: 14),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppColors.white,
+              fontSize: 14,
+            ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.orange,
@@ -55,18 +59,20 @@ class ManageActionTicketCard extends StatelessWidget {
       );
     }
 
-    if ((!isAcceptedByAnotherUser || isActionAllowed) && !isHoldStatus){
+    if ((!isAcceptedByAnotherUser || isActionAllowed) && !isHoldStatus) {
       buttons.add(
         ElevatedButton.icon(
           icon: const Icon(Icons.account_tree),
           onPressed: onTransferTicket,
           label: Text(
             'Transfer',
-            style: Theme.of(context).textTheme.headlineSmall
-                ?.copyWith(color: AppColors.white, fontSize: 14),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppColors.white,
+              fontSize: 14,
+            ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
+            backgroundColor: AppColors.btnBgRed,
             foregroundColor: AppColors.background,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -84,8 +90,10 @@ class ManageActionTicketCard extends StatelessWidget {
             onPressed: onInProgressTicket,
             label: Text(
               'In Progress',
-              style: Theme.of(context).textTheme.headlineSmall
-                  ?.copyWith(color: AppColors.white, fontSize: 14),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: AppColors.white,
+                fontSize: 14,
+              ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
@@ -105,11 +113,13 @@ class ManageActionTicketCard extends StatelessWidget {
             onPressed: onHoldTicket,
             label: Text(
               'Hold',
-              style: Theme.of(context).textTheme.headlineSmall
-                  ?.copyWith(color: AppColors.white, fontSize: 14),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: AppColors.white,
+                fontSize: 14,
+              ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.orange,
+              backgroundColor: AppColors.amberDark,
               foregroundColor: AppColors.background,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -125,11 +135,13 @@ class ManageActionTicketCard extends StatelessWidget {
           onPressed: onCloseTicket,
           label: Text(
             'Close',
-            style: Theme.of(context).textTheme.headlineSmall
-                ?.copyWith(color: AppColors.white, fontSize: 14),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppColors.white,
+              fontSize: 14,
+            ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.success,
+            backgroundColor: AppColors.btnBgGreen,
             foregroundColor: AppColors.background,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -169,18 +181,7 @@ class ManageActionTicketCard extends StatelessWidget {
               const SizedBox(height: 4),
               Divider(color: Colors.grey.shade200, thickness: 1),
               const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (int i = 0; i < buttons.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 16),
-                      buttons[i],
-                    ],
-                  ],
-                ),
-              ),
+              Wrap(spacing: 16, runSpacing: 12, children: buttons),
               const SizedBox(height: 16),
             ],
           ),

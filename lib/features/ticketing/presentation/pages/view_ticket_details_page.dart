@@ -15,6 +15,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
@@ -190,6 +191,20 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
+  void _showHoldTicketDialog() {
+    ActionDialogs.showUpdateTicketActionDialog(
+      context,
+      "Hold Ticket",
+      Icons.pause_circle_outline,
+      'Submit Hold',
+      'Enter hold remarks...',
+      (remarks) {
+        _apiCallForInProgressTicket(remarks);
+      },
+      color: AppColors.amberDark,
+    );
+  }
+
   void reloadPage() {
     _fetchAllDetails();
   }
@@ -305,7 +320,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onInProgressTicket: _showInProgressTicketDialog,
-                    onHoldTicket: () {},
+                    onHoldTicket: _showHoldTicketDialog,
                     onCloseTicket: () {},
                   ),
                 ),
@@ -322,7 +337,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onInProgressTicket: _showInProgressTicketDialog,
-                    onHoldTicket: () {},
+                    onHoldTicket: _showHoldTicketDialog,
                     onCloseTicket: () {},
                   ),
                 ),
@@ -339,7 +354,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onInProgressTicket: _showInProgressTicketDialog,
-                    onHoldTicket: () {},
+                    onHoldTicket: _showHoldTicketDialog,
                     onCloseTicket: () {},
                   ),
                 ),

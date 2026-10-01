@@ -34,4 +34,7 @@ class AppColors {
   static const Color fuchsia = Color(0xFFD946EF);
   static const Color pink = Color(0xFFEC4899);
   static const Color slate = Color(0xFF64748B);
+  static const Color amberDark = Color(0xFFF59E0B);
+  static const Color btnBgGreen = Color(0xFF059669);
+  static const Color btnBgRed = Color(0xFFDC2626);
 }
