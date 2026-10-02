@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_chip.dart';
 
-import '../../../../../core/routes/app_routes.dart';
 import '../../../../../core/theme/app_colors.dart';
 
 class ViewTicketDetailHeader extends StatelessWidget {
   final String ticketId;
   final String? ticketStatus;
-  final String? pageTag;
+  final VoidCallback onBack;
 
   const ViewTicketDetailHeader({
     super.key,
     required this.ticketId,
     this.ticketStatus,
-    this.pageTag,
+    required this.onBack,
   });
 
   @override
@@ -40,13 +38,7 @@ class ViewTicketDetailHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () {
-                if (pageTag == 'my-actions') {
-                  context.go(AppRoutes.myActions);
-                } else {
-                  context.go(AppRoutes.myTickets);
-                }
-              },
+              onPressed: onBack,
               icon: const Icon(
                 Icons.arrow_back_ios_new_rounded,
                 color: AppColors.slate,

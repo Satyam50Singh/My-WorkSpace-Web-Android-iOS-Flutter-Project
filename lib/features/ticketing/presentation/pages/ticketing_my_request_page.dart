@@ -472,13 +472,18 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                             });
                             _fetchTicketDetails(pageCount: pageCount);
                           },
-                          onTapViewTicketDetail: (selectedTicketId) {
+                          onTapViewTicketDetail: (selectedTicketId) async {
                             debugPrint('Selected Ticket ID: $selectedTicketId');
-                            context.pushNamed(
+                            final shouldRefresh =  await context.pushNamed<bool>(
                               'view-ticket-details',
                               pathParameters: {'ticketId': selectedTicketId},
                               queryParameters: {'pageTag': widget.pageTag},
                             );
+                            if (shouldRefresh == true && mounted) {
+                              _fetchTicketDetails(
+                                pageSize: _currentPageSize ?? 10,
+                              );
+                            }
                           },
                         ),
                       ),

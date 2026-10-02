@@ -46,6 +46,10 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
   String get _cleanedTicketId =>
       widget.ticketId.toLowerCase().replaceFirst("tkt", "");
 
+  String performedAction = "";
+
+  bool _shouldRefreshParent = false;
+
   String get _currentPlatform {
     if (kIsWeb) return "Web";
     switch (defaultTargetPlatform) {
@@ -157,6 +161,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
   }
 
   void _showInProgressTicketDialog() {
+    performedAction = "In Progress";
     ActionDialogs.showUpdateTicketActionDialog(
       context,
       "In Progress Ticket",
@@ -196,6 +201,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
   }
 
   void _showHoldTicketDialog() {
+    performedAction = "Hold";
     ActionDialogs.showUpdateTicketActionDialog(
       context,
       "Hold Ticket",
@@ -212,6 +218,10 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
 
   void reloadPage() {
     _fetchAllDetails();
+  }
+
+  void _handleBack() {
+    context.pop(_shouldRefreshParent);
   }
 
   @override
@@ -243,6 +253,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                 viewTicketActionHistoryResponse = state.ticketHistory;
               });
             } else if (state is SubmitReopenReviewSuccess) {
+              _shouldRefreshParent = true;
               LoaderUtils.hideLoader(context);
               Navigator.of(context, rootNavigator: true).pop();
               SnackBarUtils.showFloatingSnackBar(
@@ -265,12 +276,20 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
               SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
             } else if (state is AcceptTicketSuccess) {
               LoaderUtils.hideLoader(context);
-              SnackBarUtils.showFloatingSnackBar(context, state.message);
+              SnackBarUtils.showFloatingSnackBar(
+                context,
+                'Ticket Accepted Successfully.',
+              );
+              _shouldRefreshParent = true;
               reloadPage();
             } else if (state is UpdateTicketActionSuccess) {
               Navigator.of(context, rootNavigator: true).pop();
               LoaderUtils.hideLoader(context);
-              SnackBarUtils.showFloatingSnackBar(context, state.message);
+              SnackBarUtils.showFloatingSnackBar(
+                context,
+                '$performedAction Action performed successfully.',
+              );
+              _shouldRefreshParent = true;
               reloadPage();
             }
           },
@@ -280,15 +299,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            if (widget.pageTag == 'my-actions') {
-              context.goNamed('my-actions');
-            } else {
-              context.goNamed('my-tickets');
-            }
-          }
+          _handleBack();
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -297,7 +308,9 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
               ViewTicketDetailHeader(
                 ticketId: widget.ticketId,
                 ticketStatus: viewTicketDetailV6Response?.ticketStatus,
-                pageTag: widget.pageTag,
+                onBack: () {
+                  _handleBack();
+                },
               ),
 
             const SizedBox(height: 16.0),
