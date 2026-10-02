@@ -163,24 +163,28 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
       Icons.play_circle_outline,
       'Submit',
       'Enter remarks...',
-      (remarks) {
-        _apiCallForInProgressTicket(remarks);
+      (remarks, holdUntil) {
+        _apiCallForUpdateTicketAction(remarks, "In Progress");
       },
     );
   }
 
-  void _apiCallForInProgressTicket(String remarks) {
+  void _apiCallForUpdateTicketAction(
+    String remarks,
+    String action, {
+    String? holdUntil,
+  }) {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
       final employee = state.employeeDetail;
       final payload = UpdateTicketActionRequestModel(
         ticketId: _cleanedTicketId,
         closeTicketDesc: remarks,
-        ticketAction: "In Progress",
+        ticketAction: action.toLowerCase(),
         empCD: employee.empCd,
         companyID: employee.companyId,
         platformType: _currentPlatform,
-        holdTillDatetime: "",
+        holdTillDatetime: holdUntil ?? "",
         isImageUploaded: 0,
         imageCount: 0,
         currentLevel: viewTicketDetailV6Response?.level,
@@ -197,9 +201,10 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
       "Hold Ticket",
       Icons.pause_circle_outline,
       'Submit Hold',
-      'Enter hold remarks...',
-      (remarks) {
-        _apiCallForInProgressTicket(remarks);
+      'Enter hold remarks... ',
+      (remarks, holdUntil) {
+        debugPrint('holdUntil: $holdUntil');
+        _apiCallForUpdateTicketAction(remarks, "Hold", holdUntil: holdUntil);
       },
       color: AppColors.amberDark,
     );
