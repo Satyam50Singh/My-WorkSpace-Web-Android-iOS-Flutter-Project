@@ -260,7 +260,7 @@ class ActionDialogs {
                               color: AppColors.textSecondary,
                             ),
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+                        maxLines: 3,
                       ),
                     ],
                     SizedBox(height: 8),
