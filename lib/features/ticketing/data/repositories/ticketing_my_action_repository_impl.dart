@@ -6,6 +6,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_ac
 
 import '../../../../core/error/exceptions.dart';
 import '../../domain/repositories/ticketing_my_action_repository.dart';
+import '../models/add_new_request/app_multipart_file.dart';
 import '../models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
 
 class TicketingMyActionRepositoryImpl extends TicketingMyActionRepository {
@@ -42,10 +43,12 @@ class TicketingMyActionRepositoryImpl extends TicketingMyActionRepository {
   @override
   Future<Either<Failure, String>> updateTicketActionRequested({
     required UpdateTicketActionRequestModel payload,
+    List<AppMultipartFile>? images,
   }) async {
     try {
       final response = await _dataSource.updateTicketActionRequested(
         payload: payload,
+        images: images,
       );
       if (response.status == 1 || response.status == 2) {
         return Right(response.message ?? '');

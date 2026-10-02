@@ -50,7 +50,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
   SubCategoryEntity? _selectedSubCategory;
   final TextEditingController _descriptionController = TextEditingController();
   bool isSaveBtnEnabled = false;
-  ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {

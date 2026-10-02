@@ -5,6 +5,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_ac
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_action_usecases/update_ticket_action_usecase.dart';
 
+import '../../../data/models/add_new_request/app_multipart_file.dart';
 import '../../../domain/usecases/ticketing_my_action_usecases/accept_web_ticket_usecase.dart';
 
 part 'ticketing_my_action_event.dart';
@@ -48,6 +49,7 @@ class TicketingMyActionBloc
       // emit(TicketingMyActionLoading());
       final result = await _updateTicketActionUseCase.call(
         payload: event.payload,
+        images: event.images ?? [],
       );
       result.fold(
         (failure) =>

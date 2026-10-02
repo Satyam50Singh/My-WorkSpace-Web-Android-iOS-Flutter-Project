@@ -10,6 +10,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_ac
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/api_exceptions.dart';
+import '../models/add_new_request/app_multipart_file.dart';
 
 abstract class TicketingMyActionRemoteDataSource {
   Future<AcceptWebTicketResponseModel> acceptWebTicketRequested({
@@ -18,6 +19,7 @@ abstract class TicketingMyActionRemoteDataSource {
 
   Future<CommonResponseModel> updateTicketActionRequested({
     required UpdateTicketActionRequestModel payload,
+    List<AppMultipartFile>? images,
   });
 }
 
@@ -48,14 +50,38 @@ class TicketingMyActionRemoteDataSourceImpl
   @override
   Future<CommonResponseModel> updateTicketActionRequested({
     required UpdateTicketActionRequestModel payload,
+    List<AppMultipartFile>? images,
   }) async {
     try {
-      final json = await _apiClient.post(
-        ApiEndpoints.updateTicketActionV4,
-        data: FormData.fromMap({'0': jsonEncode(payload.toJson())}),
-      );
+      if (images != null && images.isNotEmpty) {
+        final multipartFiles = await Future.wait(
+          images.map((file) async {
+            if (file.bytes != null) {
+              return MultipartFile.fromBytes(file.bytes!, filename: file.name);
+            } else {
+              return await MultipartFile.fromFile(
+                file.path!,
+                filename: file.name,
+              );
+            }
+          }),
+        );
 
-      return CommonResponseModel.fromJson(json);
+        final json = await _apiClient.post(
+          ApiEndpoints.updateTicketActionV4,
+          data: FormData.fromMap({
+            '0': jsonEncode(payload.toJson()),
+            '1': multipartFiles,
+          }),
+        );
+        return CommonResponseModel.fromJson(json);
+      } else {
+        final json = await _apiClient.post(
+          ApiEndpoints.updateTicketActionV4,
+          data: FormData.fromMap({'0': jsonEncode(payload.toJson())}),
+        );
+        return CommonResponseModel.fromJson(json);
+      }
     } on ApiException catch (e) {
       throw ServerException(message: e.message);
     } on DioException catch (e) {

@@ -14,11 +14,13 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_action_history.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
+import 'package:path/path.dart' as p;
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
+import '../../data/models/add_new_request/app_multipart_file.dart';
 import '../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 import '../widgets/view_ticket_details/ticket_detail_over_view.dart';
 import '../widgets/view_ticket_details/ticket_detail_tab_bar.dart';
@@ -164,6 +166,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     String remarks,
     String action, {
     String? holdUntil,
+    List<AppMultipartFile>? images,
   }) {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
@@ -176,12 +179,12 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         companyID: employee.companyId,
         platformType: _currentPlatform,
         holdTillDatetime: holdUntil ?? "",
-        isImageUploaded: 0,
-        imageCount: 0,
+        isImageUploaded: (images != null && images.isNotEmpty) ? 1 : 0,
+        imageCount: images != null ? images.length : 0,
         currentLevel: viewTicketDetailV6Response?.level,
       );
       context.read<TicketingMyActionBloc>().add(
-        UpdateTicketActionRequested(payload: payload),
+        UpdateTicketActionRequested(payload: payload, images: images),
       );
     }
   }
@@ -213,7 +216,43 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         color: AppColors.amberDark,
       );
     } else if (action == "Close") {
-      performedAction = "Close";
+      ActionDialogs.showCloseTicketActionDialog(
+        context,
+        "Close Ticket",
+        Icons.check_circle_outline,
+        'Submit & Close',
+        'Enter closure remarks... ',
+        (remarks, selectedWebFiles, selectedFiles) {
+          performedAction = "Close";
+          final List<AppMultipartFile> imageFiles = [];
+          if (kIsWeb) {
+            if (selectedWebFiles == null) return;
+            for (var file in selectedWebFiles) {
+              imageFiles.add(
+                AppMultipartFile(
+                  name: file.keys.first,
+                  bytes: file.values.first,
+                ),
+              );
+            }
+          } else {
+            if (selectedFiles == null) return;
+            for (var file in selectedFiles) {
+              final ioFile = file.values.first!;
+              imageFiles.add(
+                AppMultipartFile(
+                  name: p.basename(file.keys.first),
+                  path: ioFile.path,
+                ),
+              );
+            }
+          }
+          debugPrint('imageFiles = ${selectedFiles?.length}');
+          debugPrint('imageFiles = ${selectedFiles?.length}');
+          _apiCallForUpdateTicketAction(remarks, "Close", images: imageFiles);
+        },
+        color: AppColors.btnBgGreen,
+      );
     }
   }
 

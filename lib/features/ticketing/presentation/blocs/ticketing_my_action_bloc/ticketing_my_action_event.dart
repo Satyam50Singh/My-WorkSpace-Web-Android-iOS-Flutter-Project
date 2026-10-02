@@ -10,6 +10,7 @@ class AcceptWebTicketRequested extends TicketingMyActionEvent {
 
 class UpdateTicketActionRequested extends TicketingMyActionEvent {
   UpdateTicketActionRequestModel payload;
+  List<AppMultipartFile>? images;
 
-  UpdateTicketActionRequested({required this.payload});
+  UpdateTicketActionRequested({required this.payload, this.images});
 }
