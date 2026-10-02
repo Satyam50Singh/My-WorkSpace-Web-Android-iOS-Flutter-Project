@@ -26,7 +26,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_ne
 import 'package:my_worksphere_web/core/utils/permission_utils.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../../core/routes/app_routes.dart';
+import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
 
 class AddNewRequestPage extends StatefulWidget {
@@ -373,10 +373,14 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
                       setState(() {});
                     }
                     if (state is AddNewTicketSubmitSuccess) {
-                      if (kIsWeb) {
-                        Navigator.of(context, rootNavigator: true).pop(true);
-                      } else {
-                        context.go(AppRoutes.myTickets);
+                      LoaderUtils.hideLoader(context);
+                      debugPrint('Ticket added successfully');
+                      if (context.mounted) {
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop(true);
+                        } else {
+                          context.go(AppRoutes.myTickets);
+                        }
                       }
                     }
                   },

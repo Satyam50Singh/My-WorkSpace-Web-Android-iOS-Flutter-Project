@@ -38,7 +38,11 @@ class AddNewRequestHeader extends StatelessWidget {
                 width: 48,
                 child: InkWell(
                   onTap: () {
-                    context.go(AppRoutes.myTickets);
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      context.go(AppRoutes.myTickets);
+                    }
                   },
                   child: const Icon(
                     Icons.arrow_back,

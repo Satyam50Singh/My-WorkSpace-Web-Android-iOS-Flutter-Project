@@ -474,7 +474,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           },
                           onTapViewTicketDetail: (selectedTicketId) async {
                             debugPrint('Selected Ticket ID: $selectedTicketId');
-                            final shouldRefresh =  await context.pushNamed<bool>(
+                            final shouldRefresh = await context.pushNamed<bool>(
                               'view-ticket-details',
                               pathParameters: {'ticketId': selectedTicketId},
                               queryParameters: {'pageTag': widget.pageTag},
@@ -527,7 +527,10 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     final isMobile = width < 600;
 
     if (isMobile) {
-      context.push(AppRoutes.addNewRequest);
+      final result = await context.push<bool>(AppRoutes.addNewRequest);
+      if (result == true) {
+        _fetchTicketDetails(pageCount: 1);
+      }
     } else {
       final dialogWidth = isTablet
           ? 440.0
@@ -551,7 +554,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       );
 
       if (result == true) {
-        _fetchTicketDetails();
+        _fetchTicketDetails(pageCount: 1);
       }
     }
   }
