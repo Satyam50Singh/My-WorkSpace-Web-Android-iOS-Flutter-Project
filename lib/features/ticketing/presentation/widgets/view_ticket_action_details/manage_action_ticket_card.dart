@@ -7,18 +7,14 @@ class ManageActionTicketCard extends StatelessWidget {
   final ViewTicketDetailV6Entity? ticketDetails;
   final Function() onAcceptTicket;
   final Function() onTransferTicket;
-  final Function() onInProgressTicket;
-  final Function() onHoldTicket;
-  final Function() onCloseTicket;
+  final Function(String) onUpdateTicketAction;
 
   const ManageActionTicketCard({
     super.key,
     this.ticketDetails,
     required this.onAcceptTicket,
     required this.onTransferTicket,
-    required this.onInProgressTicket,
-    required this.onHoldTicket,
-    required this.onCloseTicket,
+    required this.onUpdateTicketAction,
   });
 
   @override
@@ -87,7 +83,7 @@ class ManageActionTicketCard extends StatelessWidget {
         buttons.add(
           ElevatedButton.icon(
             icon: const Icon(Icons.play_circle_outline),
-            onPressed: onInProgressTicket,
+            onPressed: () => onUpdateTicketAction('In Progress'),
             label: Text(
               'In Progress',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -110,7 +106,7 @@ class ManageActionTicketCard extends StatelessWidget {
         buttons.add(
           ElevatedButton.icon(
             icon: const Icon(Icons.pause_circle_outline),
-            onPressed: onHoldTicket,
+            onPressed: () => onUpdateTicketAction('Hold'),
             label: Text(
               'Hold',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -132,7 +128,7 @@ class ManageActionTicketCard extends StatelessWidget {
       buttons.add(
         ElevatedButton.icon(
           icon: const Icon(Icons.check_circle_outline),
-          onPressed: onCloseTicket,
+          onPressed: () => onUpdateTicketAction('Close'),
           label: Text(
             'Close',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(

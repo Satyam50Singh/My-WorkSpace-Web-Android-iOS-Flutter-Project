@@ -160,20 +160,6 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
-  void _showInProgressTicketDialog() {
-    performedAction = "In Progress";
-    ActionDialogs.showUpdateTicketActionDialog(
-      context,
-      "In Progress Ticket",
-      Icons.play_circle_outline,
-      'Submit',
-      'Enter remarks...',
-      (remarks, holdUntil) {
-        _apiCallForUpdateTicketAction(remarks, "In Progress");
-      },
-    );
-  }
-
   void _apiCallForUpdateTicketAction(
     String remarks,
     String action, {
@@ -200,20 +186,35 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
-  void _showHoldTicketDialog() {
-    performedAction = "Hold";
-    ActionDialogs.showUpdateTicketActionDialog(
-      context,
-      "Hold Ticket",
-      Icons.pause_circle_outline,
-      'Submit Hold',
-      'Enter hold remarks... ',
-      (remarks, holdUntil) {
-        debugPrint('holdUntil: $holdUntil');
-        _apiCallForUpdateTicketAction(remarks, "Hold", holdUntil: holdUntil);
-      },
-      color: AppColors.amberDark,
-    );
+  void _showUpdateTicketActionDialog(String action) {
+    if (action == "In Progress") {
+      ActionDialogs.showUpdateTicketActionDialog(
+        context,
+        "In Progress Ticket",
+        Icons.play_circle_outline,
+        'Submit',
+        'Enter remarks...',
+        (remarks, holdUntil) {
+          performedAction = "In Progress";
+          _apiCallForUpdateTicketAction(remarks, "In Progress");
+        },
+      );
+    } else if (action == "Hold") {
+      ActionDialogs.showUpdateTicketActionDialog(
+        context,
+        "Hold Ticket",
+        Icons.pause_circle_outline,
+        'Submit Hold',
+        'Enter hold remarks... ',
+        (remarks, holdUntil) {
+          performedAction = "Hold";
+          _apiCallForUpdateTicketAction(remarks, "Hold", holdUntil: holdUntil);
+        },
+        color: AppColors.amberDark,
+      );
+    } else if (action == "Close") {
+      performedAction = "Close";
+    }
   }
 
   void reloadPage() {
@@ -337,9 +338,8 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: _submitReOpenReviewTicket,
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
-                    onInProgressTicket: _showInProgressTicketDialog,
-                    onHoldTicket: _showHoldTicketDialog,
-                    onCloseTicket: () {},
+                    onUpdateTicketAction: (action) =>
+                        _showUpdateTicketActionDialog(action),
                   ),
                 ),
               ),
@@ -354,9 +354,8 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: _submitReOpenReviewTicket,
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
-                    onInProgressTicket: _showInProgressTicketDialog,
-                    onHoldTicket: _showHoldTicketDialog,
-                    onCloseTicket: () {},
+                    onUpdateTicketAction: (action) =>
+                        _showUpdateTicketActionDialog(action),
                   ),
                 ),
               ),
@@ -371,9 +370,8 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     onActionSubmit: _submitReOpenReviewTicket,
                     onTransferTicket: () {},
                     onAcceptTicket: _apiCallForAcceptWebTicket,
-                    onInProgressTicket: _showInProgressTicketDialog,
-                    onHoldTicket: _showHoldTicketDialog,
-                    onCloseTicket: () {},
+                    onUpdateTicketAction: (action) =>
+                        _showUpdateTicketActionDialog(action),
                   ),
                 ),
               ),

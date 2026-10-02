@@ -13,9 +13,7 @@ class TicketDetailWorkflow extends StatelessWidget {
   final Function(String remarks, int isReview) onActionSubmit;
   final Function() onTransferTicket;
   final Function() onAcceptTicket;
-  final Function() onInProgressTicket;
-  final Function() onHoldTicket;
-  final Function() onCloseTicket;
+  final Function(String) onUpdateTicketAction;
 
   const TicketDetailWorkflow({
     super.key,
@@ -25,9 +23,7 @@ class TicketDetailWorkflow extends StatelessWidget {
     required this.onActionSubmit,
     required this.onTransferTicket,
     required this.onAcceptTicket,
-    required this.onInProgressTicket,
-    required this.onHoldTicket,
-    required this.onCloseTicket,
+    required this.onUpdateTicketAction,
   });
 
   @override
@@ -124,9 +120,7 @@ class TicketDetailWorkflow extends StatelessWidget {
             ticketDetails: ticketDetails,
             onAcceptTicket: onAcceptTicket,
             onTransferTicket: onTransferTicket,
-            onInProgressTicket: onInProgressTicket,
-            onHoldTicket: onHoldTicket,
-            onCloseTicket: onCloseTicket,
+            onUpdateTicketAction: onUpdateTicketAction,
           ),
       ],
     );
