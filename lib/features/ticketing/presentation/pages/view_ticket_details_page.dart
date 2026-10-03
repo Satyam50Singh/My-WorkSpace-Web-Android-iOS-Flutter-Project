@@ -256,6 +256,17 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
     }
   }
 
+  void _showTransferTicketActionDialog() {
+    if (viewTicketDetailV6Response?.isAcceptAllowed == true) {
+      if (kIsWeb) {
+        ActionDialogs.showTransferTicketActionDialog(
+          buildContext: context,
+          color: AppColors.btnBgRed,
+        );
+      }
+    } else if (viewTicketDetailV6Response?.isActionAllowed == true) {}
+  }
+
   void reloadPage() {
     _fetchAllDetails();
   }
@@ -375,7 +386,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     pageTag: widget.pageTag,
                     ticketDetails: viewTicketDetailV6Response,
                     onActionSubmit: _submitReOpenReviewTicket,
-                    onTransferTicket: () {},
+                    onTransferTicket: _showTransferTicketActionDialog,
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onUpdateTicketAction: (action) =>
                         _showUpdateTicketActionDialog(action),
