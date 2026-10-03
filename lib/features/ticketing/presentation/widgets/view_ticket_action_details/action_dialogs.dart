@@ -411,6 +411,33 @@ class ActionDialogs {
               }
             }
 
+            Future<void> openCamera() async {
+              final hasPermission =
+                  await PermissionUtils.requestCameraPermission(context);
+              if (!hasPermission) return;
+              debugPrint('hasCameraPermission: $hasPermission');
+
+              try {
+                final XFile? photo = await picker.pickImage(
+                  source: ImageSource.camera,
+                  imageQuality: 80,
+                  preferredCameraDevice: CameraDevice.rear,
+                );
+                if (photo != null) {
+                  final originalFile = File(photo.path);
+                  final compressedFile =
+                      await ImageCompressor.compressMobileFile(originalFile);
+                  if (compressedFile != null) {
+                    setState(() {
+                      selectedFiles.add({photo.path: compressedFile});
+                    });
+                  }
+                }
+              } catch (e) {
+                debugPrint('Could not open camera: $e');
+              }
+            }
+
             final galleryBtn = OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: AppColors.textHint, width: 1),
@@ -472,7 +499,9 @@ class ActionDialogs {
                   style: TextStyle(fontSize: 14, color: AppColors.textPrimary),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                openCamera();
+              },
             );
 
             return Dialog(
