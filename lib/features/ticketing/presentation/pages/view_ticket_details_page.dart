@@ -174,7 +174,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
       final payload = UpdateTicketActionRequestModel(
         ticketId: _cleanedTicketId,
         closeTicketDesc: remarks,
-        ticketAction: action.toLowerCase(),
+        ticketAction: action,
         empCD: employee.empCd,
         companyID: employee.companyId,
         platformType: _currentPlatform,
@@ -249,7 +249,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
           }
           debugPrint('imageFiles = ${selectedFiles?.length}');
           debugPrint('imageFiles = ${selectedFiles?.length}');
-          _apiCallForUpdateTicketAction(remarks, "Close", images: imageFiles);
+          _apiCallForUpdateTicketAction(remarks, "Closed", images: imageFiles);
         },
         color: AppColors.btnBgGreen,
       );
