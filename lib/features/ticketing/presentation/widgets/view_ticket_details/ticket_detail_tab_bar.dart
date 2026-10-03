@@ -22,9 +22,7 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
         constraints: BoxConstraints(maxHeight: 160, maxWidth: double.infinity),
         child: Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -37,10 +35,12 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
                       backgroundColor: selectedTab == 'Ticket Details'
                           ? AppColors.primaryDark
                           : AppColors.white,
+                      padding: const EdgeInsets.all(12.0),
                     ),
                     label: Text(
                       'Ticket Details',
                       style: TextStyle(
+                        fontSize: 14,
                         color: selectedTab == 'Ticket Details'
                             ? AppColors.white
                             : AppColors.primaryDark,
@@ -60,16 +60,18 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
                       widget.onSelectedTab('Ticket Details');
                     },
                   ),
-                  SizedBox(width: 16.0),
+                  SizedBox(width: 8.0),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: selectedTab == 'Workflow'
                           ? AppColors.primaryDark
                           : AppColors.white,
+                      padding: const EdgeInsets.all(12.0),
                     ),
                     label: Text(
                       'Workflow',
                       style: TextStyle(
+                        fontSize: 14,
                         color: selectedTab == 'Workflow'
                             ? AppColors.white
                             : AppColors.primaryDark,
@@ -89,16 +91,18 @@ class _TicketDetailTabBarState extends State<TicketDetailTabBar> {
                       widget.onSelectedTab('Workflow');
                     },
                   ),
-                  SizedBox(width: 16.0),
+                  SizedBox(width: 8.0),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: selectedTab == 'Action History'
                           ? AppColors.primaryDark
                           : AppColors.white,
+                      padding: const EdgeInsets.all(12.0),
                     ),
                     label: Text(
                       'Action History',
                       style: TextStyle(
+                        fontSize: 14,
                         color: selectedTab == 'Action History'
                             ? AppColors.white
                             : AppColors.primaryDark,

@@ -109,11 +109,23 @@ class DashboardDrawer extends StatelessWidget {
                         context,
                       ).copyWith(dividerColor: Colors.transparent),
                       child: ExpansionTile(
-                        leading: Icon(item.icon, color: AppColors.primaryDark),
+                        dense: true,
+                        visualDensity: const VisualDensity(vertical: 1),
+                        tilePadding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                        ),
+                        childrenPadding: const EdgeInsets.only(bottom: 4.0),
+                        shape: const Border(),
+                        collapsedShape: const Border(),
+                        leading: Icon(
+                          item.icon,
+                          color: AppColors.primaryDark,
+                          size: 22,
+                        ),
                         title: Text(
                           item.title,
                           style: const TextStyle(
-                            fontSize: 13.0,
+                            fontSize: 13.5,
                             color: AppColors.textPrimary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -121,19 +133,28 @@ class DashboardDrawer extends StatelessWidget {
                         trailing: const Icon(
                           Icons.keyboard_arrow_down_rounded,
                           color: AppColors.primary,
+                          size: 20,
                         ),
                         children: item.subItems.map((subItem) {
                           return Padding(
-                            padding: const EdgeInsets.only(
-                              left: 48.0,
-                              top: 0,
-                              bottom: 0,
-                            ),
+                            padding: const EdgeInsets.only(left: 32.0, right: 12.0),
                             child: ListTile(
+                              dense: true,
+                              visualDensity: const VisualDensity(vertical: -2),
+                              minVerticalPadding: 0,
+                              minLeadingWidth: 16,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 8.0,
+                              ),
+                              leading: Icon(
+                                Icons.circle,
+                                size: 8,
+                                color: AppColors.primary.withValues(alpha: 0.5),
+                              ),
                               title: Text(
                                 subItem.title,
                                 style: const TextStyle(
-                                  fontSize: 13.0,
+                                  fontSize: 12.5,
                                   color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -153,11 +174,18 @@ class DashboardDrawer extends StatelessWidget {
                   }
 
                   return ListTile(
-                    leading: Icon(item.icon, color: AppColors.primary),
+                    dense: true,
+                    visualDensity: const VisualDensity(vertical: 1),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    leading: Icon(
+                      item.icon,
+                      color: AppColors.primary,
+                      size: 22,
+                    ),
                     title: Text(
                       item.title,
                       style: const TextStyle(
-                        fontSize: 13.0,
+                        fontSize: 13.5,
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -179,10 +207,17 @@ class DashboardDrawer extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ListTile(
-            leading: const Icon(Icons.logout, color: AppColors.primaryDark),
+            dense: true,
+            visualDensity: const VisualDensity(vertical: 1),
+            leading: const Icon(
+              Icons.logout,
+              color: AppColors.primaryDark,
+              size: 22,
+            ),
             title: const Text(
               'LogOut',
               style: TextStyle(
+                fontSize: 13.5,
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
