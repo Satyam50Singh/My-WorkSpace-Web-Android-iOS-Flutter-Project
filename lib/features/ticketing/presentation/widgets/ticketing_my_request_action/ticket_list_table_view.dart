@@ -52,7 +52,16 @@ class _TicketListTableViewState extends State<TicketListTableView> {
 
     final availableRows = _getAvailableRows(effectiveRowsPerPage);
 
+    final offset = (widget.currentPage - 1) * effectiveRowsPerPage;
+
+    // A short page means we're on the last page, so trust the actual list.
+    final safeTotal = tickets.length < effectiveRowsPerPage
+        ? offset + tickets.length
+        : widget.totalRecordsCount;
+
+
     return PaginatedDataTable2(
+      key: ValueKey('${widget.currentPage}-$effectiveRowsPerPage'),
       minWidth: 1600,
       headingRowColor: WidgetStateColor.resolveWith(
         (states) => AppColors.primaryDark,
@@ -70,8 +79,8 @@ class _TicketListTableViewState extends State<TicketListTableView> {
       source: TicketDataSource(
         context,
         tickets,
-        widget.totalRecordsCount,
-        (widget.currentPage - 1) * effectiveRowsPerPage,
+        safeTotal,
+        offset,
         onTap: (selectedTicketId) {
           widget.onTapViewTicketDetail(selectedTicketId);
         },
