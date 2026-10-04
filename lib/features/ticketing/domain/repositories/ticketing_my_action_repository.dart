@@ -4,6 +4,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_ac
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 
 import '../../data/models/add_new_request/app_multipart_file.dart';
+import '../entities/ticketing_my_action_entities/ticket_transfer_user_list_entity.dart';
 
 abstract class TicketingMyActionRepository {
   Future<Either<Failure, String>> acceptWebTicketRequested({
@@ -13,5 +14,9 @@ abstract class TicketingMyActionRepository {
   Future<Either<Failure, String>> updateTicketActionRequested({
     required UpdateTicketActionRequestModel payload,
     List<AppMultipartFile>? images,
+  });
+
+  Future<Either<Failure, List<TicketTransferUserListEntity>>> ticketTransferUserListRequested({
+    required int ticketID,
   });
 }

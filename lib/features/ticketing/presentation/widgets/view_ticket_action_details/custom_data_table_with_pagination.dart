@@ -3,9 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../domain/entities/ticketing_my_action_entities/ticket_transfer_user_list_entity.dart';
 
 class CustomDataTableWithPagination extends StatefulWidget {
-  final List<Map<String, Object>> userList;
+  final List<TicketTransferUserListEntity> userList;
   final ValueChanged<String> onUserSelected;
 
   const CustomDataTableWithPagination({
@@ -23,7 +24,7 @@ class _CustomDataTableWithPaginationState
     extends State<CustomDataTableWithPagination> {
   String? _selectedUserCode;
 
-  final List<Map<String, Object>> filteredList = [];
+  final List<TicketTransferUserListEntity> filteredList = [];
 
   int totalPages = 0;
   int selectedPage = 1;
@@ -36,6 +37,8 @@ class _CustomDataTableWithPaginationState
 
     final endIndex = widget.userList.length > 5 ? 5 : widget.userList.length;
     filteredList.addAll(widget.userList.sublist(0, endIndex));
+
+    debugPrint(filteredList[0].toString());
   }
 
   @override
@@ -158,7 +161,7 @@ class _CustomDataTableWithPaginationState
                       itemCount: filteredList.length,
                       itemBuilder: (context, index) {
                         final user = filteredList[index];
-                        final userCode = user['code'] as String? ?? '';
+                        final String userCode = user.userID.toString();
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -167,15 +170,15 @@ class _CustomDataTableWithPaginationState
                               child: Radio<String>(value: userCode),
                             ),
                             _buildColumnHeaderCell(
-                              user['name'] as String,
+                              user.userName ?? '-',
                               flex: 2,
                             ),
                             _buildColumnHeaderCell(
-                              user['code'] as String,
+                              user.userCode ?? '-',
                               flex: 2,
                             ),
                             _buildColumnHeaderCell(
-                              user['department'] as String,
+                              user.department ?? '-',
                               flex: 3,
                             ),
                           ],
@@ -189,55 +192,59 @@ class _CustomDataTableWithPaginationState
           ),
         ),
         SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  'Showing $startEntry to $endEntry of ${widget.userList.length} entries',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondary,
+        if (filteredList.length > 1)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Showing $startEntry to $endEntry of ${widget.userList.length} entries',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 2,
                   ),
-                  maxLines: 2,
                 ),
-              ),
-              Row(
-                children: [
-                  IconButton.filled(
-                    onPressed: goToPreviousPage,
-                    icon: Icon(Icons.navigate_before),
-                    style: IconButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                Row(
+                  children: [
+                    IconButton.filled(
+                      onPressed: goToPreviousPage,
+                      icon: Icon(Icons.navigate_before),
+                      style: IconButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: AppColors.textHint,
                       ),
-                      backgroundColor: AppColors.textHint,
                     ),
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Page $selectedPage of $totalPages',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 8),
-                  IconButton.filled(
-                    onPressed: goToNextPage,
-                    icon: Icon(Icons.navigate_next_outlined),
-                    style: IconButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    SizedBox(width: 8),
+                    Text(
+                      'Page $selectedPage of $totalPages',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
-                      backgroundColor: AppColors.textHint,
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(width: 8),
+                    IconButton.filled(
+                      onPressed: goToNextPage,
+                      icon: Icon(Icons.navigate_next_outlined),
+                      style: IconButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: AppColors.textHint,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/transfer_ticket_web_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
@@ -262,6 +263,23 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         ActionDialogs.showTransferTicketActionDialog(
           buildContext: context,
           color: AppColors.btnBgRed,
+          ticketId: viewTicketDetailV6Response?.ticketID,
+          onTransferBtnPressed: (remarks, userCode) {
+            debugPrint('remark = $remarks, userCode = $userCode');
+            final state = context.read<EmployeeDetailCubit>().state;
+            if (state is EmployeeDetailFetched) {
+              final payload = TransferTicketWebRequestModel(
+                ticketId: viewTicketDetailV6Response?.ticketID,
+                remarks: remarks,
+                empCD: state.employeeDetail.empCd,
+                transferToUserId: userCode,
+                companyID: state.employeeDetail.companyId,
+                platformType: _currentPlatform,
+              );
+
+              debugPrint(payload.toString());
+            }
+          },
         );
       }
     } else if (viewTicketDetailV6Response?.isActionAllowed == true) {}

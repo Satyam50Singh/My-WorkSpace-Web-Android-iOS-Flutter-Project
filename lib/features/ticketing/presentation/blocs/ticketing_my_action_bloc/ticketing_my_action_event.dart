@@ -14,3 +14,9 @@ class UpdateTicketActionRequested extends TicketingMyActionEvent {
 
   UpdateTicketActionRequested({required this.payload, this.images});
 }
+
+class TicketTransferUserListRequested extends TicketingMyActionEvent {
+  int ticketId;
+
+  TicketTransferUserListRequested({required this.ticketId});
+}

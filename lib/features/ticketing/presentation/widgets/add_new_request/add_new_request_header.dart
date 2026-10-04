@@ -6,9 +6,9 @@ import '../../../../../core/routes/app_routes.dart';
 
 class AddNewRequestHeader extends StatelessWidget {
   final VoidCallback onSaveTap;
-  bool isSaveEnabled = false;
+  final bool isSaveEnabled;
 
-  AddNewRequestHeader({
+  const AddNewRequestHeader({
     super.key,
     required this.onSaveTap,
     required this.isSaveEnabled,
@@ -17,7 +17,6 @@ class AddNewRequestHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final isTablet = width >= 600 && width < 1200;
     final isMobile = width < 600;
     return Container(
       decoration: BoxDecoration(color: AppColors.primaryDark),

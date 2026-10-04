@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_date_time_picker.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_search_bar.dart';
+import 'package:my_worksphere_web/core/utils/loader_utils.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticketing_my_action_entities/ticket_transfer_user_list_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/file_picker_utils.dart';
@@ -58,7 +62,7 @@ class ActionDialogs {
               ),
               SizedBox(height: 24),
               Text(
-                'The ticket has already been accepted by ${ticket?.acceptedByUser}. Do you still want to accept it?',
+                'The ticket has already been accepted by ${ticket.acceptedByUser}. Do you still want to accept it?',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontSize: 14,
                   color: AppColors.textSecondary,
@@ -808,280 +812,206 @@ class ActionDialogs {
   static void showTransferTicketActionDialog({
     required BuildContext buildContext,
     required Color color,
+    required int? ticketId,
+    required Function(String, int) onTransferBtnPressed,
   }) {
-    SearchController _controller = SearchController();
+    SearchController controller = SearchController();
+    TextEditingController remarkController = TextEditingController();
+    int selectedUserCode = 0;
 
-    final sampleJson = [
-      {
-        "UserID": 3,
-        "User_Name": "Vinayak Kurri",
-        "User_Code": "F001",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 7,
-        "User_Name": "Karan Kapoor",
-        "User_Code": "Usr004",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 19,
-        "User_Name": "Sahil Nair",
-        "User_Code": "Usr016",
-        "Department": "Housekeeping, Finance",
-      },
-      {
-        "UserID": 21,
-        "User_Name": "Neha Kapoor",
-        "User_Code": "Usr018",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 23,
-        "User_Name": "Priya Verma",
-        "User_Code": "Usr020",
-        "Department": "Housekeeping, Operations, Hr",
-      },
-      {
-        "UserID": 19,
-        "User_Name": "Sahil Nair",
-        "User_Code": "Usr016",
-        "Department": "Housekeeping, Finance",
-      },
-      {
-        "UserID": 21,
-        "User_Name": "Neha Kapoor",
-        "User_Code": "Usr018",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 23,
-        "User_Name": "Priya Verma",
-        "User_Code": "Usr020",
-        "Department": "Housekeeping, Operations, Hr",
-      },
-      {
-        "UserID": 19,
-        "User_Name": "Sahil Nair",
-        "User_Code": "Usr016",
-        "Department": "Housekeeping, Finance",
-      },
-      {
-        "UserID": 21,
-        "User_Name": "Neha Kapoor",
-        "User_Code": "Usr018",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 23,
-        "User_Name": "Priya Verma",
-        "User_Code": "Usr020",
-        "Department": "Housekeeping, Operations, Hr",
-      },
-      {
-        "UserID": 19,
-        "User_Name": "Sahil Nair",
-        "User_Code": "Usr016",
-        "Department": "Housekeeping, Finance",
-      },
-      {
-        "UserID": 21,
-        "User_Name": "Neha Kapoor",
-        "User_Code": "Usr018",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 23,
-        "User_Name": "Priya Verma",
-        "User_Code": "Usr020",
-        "Department": "Housekeeping, Operations, Hr",
-      },
-      {
-        "UserID": 19,
-        "User_Name": "Sahil Nair",
-        "User_Code": "Usr016",
-        "Department": "Housekeeping, Finance",
-      },
-      {
-        "UserID": 21,
-        "User_Name": "Neha Kapoor",
-        "User_Code": "Usr018",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 23,
-        "User_Name": "Priya Verma",
-        "User_Code": "Usr020",
-        "Department": "Housekeeping, Operations, Hr",
-      },
-      {
-        "UserID": 19,
-        "User_Name": "Sahil Nair",
-        "User_Code": "Usr016",
-        "Department": "Housekeeping, Finance",
-      },
-      {
-        "UserID": 21,
-        "User_Name": "Neha Kapoor",
-        "User_Code": "Usr018",
-        "Department": "Housekeeping",
-      },
-      {
-        "UserID": 23,
-        "User_Name": "Priya Verma",
-        "User_Code": "Usr020",
-        "Department": "Housekeeping, Operations, Hr",
-      },
-      {
-        "UserID": 102,
-        "User_Name": "Sushant Singh",
-        "User_Code": "S001",
-        "Department": "Housekeeping, Security",
-      },
-    ];
+    if (ticketId != null) {
+      final bloc = buildContext.read<TicketingMyActionBloc>();
+      bloc.add(TicketTransferUserListRequested(ticketId: ticketId));
+    }
 
     showDialog(
       context: buildContext,
       builder: (_) {
-        List<Map<String, Object>> finalUserList = sampleJson.map((user) {
-          final name = user['User_Name'] as String;
-          final code = user['User_Code'] as String;
-          final department = user['Department'] as String;
-          return {'name': name, 'code': code, 'department': department};
-        }).toList();
+        List<TicketTransferUserListEntity> userList = [];
+
+        List<TicketTransferUserListEntity> finalUserList = userList;
 
         return StatefulBuilder(
           builder: (context, setState) {
             void searchUser(String query) {
               if (query.isEmpty) return;
-              final filteredList = finalUserList.where((user) {
-                final name = user['name'] as String;
-                final code = user['code'] as String;
-                final department = user['department'] as String;
+
+              final filteredList = userList.where((user) {
+                final name = user.userName ?? "";
+                final code = user.userID ?? 0;
+                final department = user.department ?? "";
                 return name.toLowerCase().contains(query.toLowerCase()) ||
-                    code.toLowerCase().contains(query.toLowerCase()) ||
+                    code.toString().contains(query.toLowerCase()) ||
                     department.toLowerCase().contains(query.toLowerCase());
               }).toList();
+
               setState(() {
                 finalUserList = filteredList;
               });
             }
 
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Container(
-                width: 720,
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Transfer User',
-                      style: Theme.of(context).textTheme.headlineLarge
-                          ?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
-                    ),
-                    Text(
-                      'Select a user to transfer this ticket',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textSecondary,
-                          ),
-                    ),
-                    Divider(color: AppColors.border, thickness: 1),
-                    SizedBox(height: 16),
-                    CustomSearchBar(
-                      hintText: 'Search User by name, code or department',
-                      onChanged: (value) {
-                        searchUser(value);
-                      },
-                      searchController: _controller,
-                      color: color,
-                    ),
-                    SizedBox(height: 16),
-                    CustomDataTableWithPagination(
-                      userList: finalUserList,
-                      onUserSelected: (selectedUserCode) {},
-                    ),
-                    SizedBox(height: 16),
-                    Row(
+            return BlocConsumer<TicketingMyActionBloc, TicketingMyActionState>(
+              listener: (context, state) {
+                if (state is TicketingMyActionLoading) {
+                  LoaderUtils.showLoader(context);
+                } else if (state is TicketTransferUserListSuccess) {
+                  final data = state.userList;
+                  setState(() {
+                    userList = data;
+                    finalUserList = data;
+                  });
+                }
+              },
+              builder: (context, state) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    width: 720,
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Remarks',
-                          style: Theme.of(context).textTheme.headlineSmall,
+                          'Transfer User',
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textPrimary,
+                              ),
                         ),
-                        SizedBox(width: 4),
                         Text(
-                          '*',
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(color: AppColors.rose),
+                          'Select a user to transfer this ticket',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textSecondary,
+                              ),
                         ),
-                      ],
-                    ),
-                    TextField(
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        hintText: 'Enter remarks for transferring..',
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: color, width: 2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Divider(color: AppColors.border, thickness: 1),
-                    SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton.icon(
-                          icon: Icon(Icons.check_circle_outline_rounded),
-                          onPressed: () {},
-                          label: Text('Transfer'),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              color,
-                            ),
-                            foregroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.background,
-                            ),
-                            shape:
-                                MaterialStateProperty.all<
-                                  RoundedRectangleBorder
-                                >(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                        Divider(color: AppColors.border, thickness: 1),
+                        SizedBox(height: 16),
+                        CustomSearchBar(
+                          hintText: 'Search User by name, code or department',
+                          onChanged: (value) {
+                            searchUser(value);
                           },
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: AppColors.textPrimary,
+                          searchController: controller,
+                          color: color,
+                        ),
+                        SizedBox(height: 16),
+                        if (state is TicketTransferUserListLoading)
+                          Center(
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              alignment: Alignment.center,
+                              child: CircularProgressIndicator(
+                                color: color,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          )
+                        else
+                          CustomDataTableWithPagination(
+                            userList: finalUserList,
+                            onUserSelected: (userCode) {
+                              selectedUserCode = int.parse(userCode);
+                              debugPrint(
+                                'selectedUserCode = $selectedUserCode',
+                              );
+                            },
+                          ),
+                        SizedBox(height: 16),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Remarks',
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '*',
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(color: AppColors.rose),
+                            ),
+                          ],
+                        ),
+                        TextField(
+                          controller: remarkController,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            hintText: 'Enter remarks for transferring..',
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: color, width: 2),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
+                          onChanged: (value) {
+                            setState(() {});
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        Divider(color: AppColors.border, thickness: 1),
+                        SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton.icon(
+                              icon: Icon(Icons.check_circle_outline_rounded),
+                              onPressed: () {
+                                debugPrint(
+                                  'selectedUserCode: $selectedUserCode && ',
+                                );
+                                if (selectedUserCode != 0 &&
+                                    remarkController.text
+                                        .toString()
+                                        .isNotEmpty) {
+                                  onTransferBtnPressed(
+                                    remarkController.text.toString(),
+                                    selectedUserCode,
+                                  );
+                                }
+                              },
+                              label: Text('Transfer'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    (selectedUserCode == 0 ||
+                                        remarkController.text
+                                            .toString()
+                                            .isEmpty)
+                                    ? color.withOpacity(0.5)
+                                    : color,
+                                foregroundColor: AppColors.background,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             );
           },
         );
