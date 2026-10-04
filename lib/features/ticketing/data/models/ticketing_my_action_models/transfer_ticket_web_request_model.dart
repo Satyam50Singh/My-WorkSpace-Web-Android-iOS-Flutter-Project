@@ -15,7 +15,19 @@ class TransferTicketWebRequestModel {
     required this.platformType,
   });
 
+  @override
   String toString() {
     return 'TransferTicketWebRequestModel(ticketId: $ticketId, remarks: $remarks, empCD: $empCD, transferToUserId: $transferToUserId, companyID: $companyID, platformType: $platformType)';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'TicketID': ticketId,
+      'Remarks': remarks,
+      'EmpCD': empCD,
+      'TransferToUserId': transferToUserId,
+      'CompanyID': companyID,
+      'Platform_Type': platformType,
+    };
   }
 }

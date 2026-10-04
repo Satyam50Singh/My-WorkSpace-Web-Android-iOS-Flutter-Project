@@ -278,6 +278,11 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
               );
 
               debugPrint(payload.toString());
+              performedAction = "Transferred";
+
+              context.read<TicketingMyActionBloc>().add(
+                TransferTicketWebRequested(payload: payload),
+              );
             }
           },
         );

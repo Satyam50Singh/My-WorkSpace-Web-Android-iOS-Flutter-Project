@@ -6,6 +6,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_ac
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/common_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/ticket_transfer_user_list_response_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/transfer_ticket_web_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -25,6 +26,10 @@ abstract class TicketingMyActionRemoteDataSource {
 
   Future<TicketTransferUserListResponseModel> ticketTransferUserListRequested({
     required int ticketID,
+  });
+
+  Future<CommonResponseModel> transferTicketWebRequested({
+    required TransferTicketWebRequestModel payload,
   });
 }
 
@@ -95,13 +100,33 @@ class TicketingMyActionRemoteDataSourceImpl
   }
 
   @override
-  Future<TicketTransferUserListResponseModel> ticketTransferUserListRequested({required int ticketID}) async {
+  Future<TicketTransferUserListResponseModel> ticketTransferUserListRequested({
+    required int ticketID,
+  }) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchTicketTransferUserList,
         queryParameters: {'TicketID': ticketID},
       );
       return TicketTransferUserListResponseModel.fromJson(json);
+    } on ApiException catch (e) {
+      throw ServerException(message: e.message);
+    } on DioException catch (e) {
+      throw ServerException(message: e.message ?? "Something went wrong!");
+    }
+  }
+
+  @override
+  Future<CommonResponseModel> transferTicketWebRequested({
+    required TransferTicketWebRequestModel payload,
+  })  async {
+    try {
+      final json = await _apiClient.post(
+        ApiEndpoints.transferTicketWeb,
+        data: FormData.fromMap({'0': jsonEncode(payload.toJson())}),
+      );
+
+      return CommonResponseModel.fromJson(json);
     } on ApiException catch (e) {
       throw ServerException(message: e.message);
     } on DioException catch (e) {

@@ -20,3 +20,10 @@ class TicketTransferUserListRequested extends TicketingMyActionEvent {
 
   TicketTransferUserListRequested({required this.ticketId});
 }
+
+
+class TransferTicketWebRequested extends TicketingMyActionEvent {
+  TransferTicketWebRequestModel payload;
+
+  TransferTicketWebRequested({required this.payload});
+}
