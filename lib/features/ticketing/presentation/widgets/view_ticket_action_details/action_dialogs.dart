@@ -27,6 +27,7 @@ class ActionDialogs {
   }) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => Dialog(
         child: Container(
           width: 400,
@@ -123,6 +124,7 @@ class ActionDialogs {
 
     showDialog(
       context: buildContext,
+      barrierDismissible: false,
       builder: (_) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -383,6 +385,7 @@ class ActionDialogs {
 
     showDialog(
       context: buildContext,
+      barrierDismissible: false,
       builder: (_) {
         List<Map<String, Uint8List?>> selectedWebFiles = [];
         List<Map<String, File?>> selectedFiles = [];
@@ -817,7 +820,7 @@ class ActionDialogs {
   }) {
     SearchController controller = SearchController();
     TextEditingController remarkController = TextEditingController();
-    int selectedUserCode = 0;
+    int selectedUserID = 0;
 
     if (ticketId != null) {
       final bloc = buildContext.read<TicketingMyActionBloc>();
@@ -826,6 +829,8 @@ class ActionDialogs {
 
     showDialog(
       context: buildContext,
+      barrierDismissible: false,
+      fullscreenDialog: true,
       builder: (_) {
         List<TicketTransferUserListEntity> userList = [];
 
@@ -834,15 +839,22 @@ class ActionDialogs {
         return StatefulBuilder(
           builder: (context, setState) {
             void searchUser(String query) {
-              if (query.isEmpty) return;
+              if (query.trim().isEmpty) {
+                setState(() {
+                  finalUserList = userList;
+                });
+                return;
+              }
+
+              final lowerQuery = query.trim().toLowerCase();
 
               final filteredList = userList.where((user) {
-                final name = user.userName ?? "";
-                final code = user.userID ?? 0;
-                final department = user.department ?? "";
-                return name.toLowerCase().contains(query.toLowerCase()) ||
-                    code.toString().contains(query.toLowerCase()) ||
-                    department.toLowerCase().contains(query.toLowerCase());
+                final name = (user.userName ?? "").toLowerCase();
+                final code = (user.userCode ?? "").toLowerCase();
+                final department = (user.department ?? "").toLowerCase();
+                return name.contains(lowerQuery) ||
+                    code.contains(lowerQuery) ||
+                    department.contains(lowerQuery);
               }).toList();
 
               setState(() {
@@ -868,7 +880,6 @@ class ActionDialogs {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Container(
-                    width: 720,
                     padding: EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -918,11 +929,8 @@ class ActionDialogs {
                         else
                           CustomDataTableWithPagination(
                             userList: finalUserList,
-                            onUserSelected: (userCode) {
-                              selectedUserCode = int.parse(userCode);
-                              debugPrint(
-                                'selectedUserCode = $selectedUserCode',
-                              );
+                            onUserSelected: (userID) {
+                              selectedUserID = userID;
                             },
                           ),
                         SizedBox(height: 16),
@@ -964,23 +972,20 @@ class ActionDialogs {
                             ElevatedButton.icon(
                               icon: Icon(Icons.check_circle_outline_rounded),
                               onPressed: () {
-                                debugPrint(
-                                  'selectedUserCode: $selectedUserCode && ',
-                                );
-                                if (selectedUserCode != 0 &&
+                                if (selectedUserID != 0 &&
                                     remarkController.text
                                         .toString()
                                         .isNotEmpty) {
                                   onTransferBtnPressed(
                                     remarkController.text.toString(),
-                                    selectedUserCode,
+                                    selectedUserID,
                                   );
                                 }
                               },
                               label: Text('Transfer'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    (selectedUserCode == 0 ||
+                                    (selectedUserID == 0 ||
                                         remarkController.text
                                             .toString()
                                             .isEmpty)

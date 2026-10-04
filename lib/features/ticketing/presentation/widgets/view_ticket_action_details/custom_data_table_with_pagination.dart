@@ -7,7 +7,7 @@ import '../../../domain/entities/ticketing_my_action_entities/ticket_transfer_us
 
 class CustomDataTableWithPagination extends StatefulWidget {
   final List<TicketTransferUserListEntity> userList;
-  final ValueChanged<String> onUserSelected;
+  final ValueChanged<int> onUserSelected;
 
   const CustomDataTableWithPagination({
     super.key,
@@ -22,7 +22,7 @@ class CustomDataTableWithPagination extends StatefulWidget {
 
 class _CustomDataTableWithPaginationState
     extends State<CustomDataTableWithPagination> {
-  String? _selectedUserCode;
+  int _selectedUserID = 0;
 
   final List<TicketTransferUserListEntity> filteredList = [];
 
@@ -37,8 +37,6 @@ class _CustomDataTableWithPaginationState
 
     final endIndex = widget.userList.length > 5 ? 5 : widget.userList.length;
     filteredList.addAll(widget.userList.sublist(0, endIndex));
-
-    debugPrint(filteredList[0].toString());
   }
 
   @override
@@ -55,7 +53,7 @@ class _CustomDataTableWithPaginationState
         ..clear()
         ..addAll(widget.userList.sublist(0, endIndex));
 
-      _selectedUserCode = null;
+      _selectedUserID = 0;
     }
   }
 
@@ -84,14 +82,23 @@ class _CustomDataTableWithPaginationState
     });
   }
 
-  Widget _buildColumnHeaderCell(String title, {int flex = 1}) {
+  Widget _buildColumnHeaderCell(
+    String title, {
+    int flex = 1,
+    Color color = AppColors.textSecondary,
+    bool isBold = false,
+  }) {
     return Expanded(
       flex: flex,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Text(
-          title.toUpperCase(),
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          title,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            fontSize: 12.5,
+            color: color,
+          ),
         ),
       ),
     );
@@ -131,29 +138,46 @@ class _CustomDataTableWithPaginationState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 60,
                         child: Text(
                           'SELECT',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: AppColors.textPrimary,
+                              ),
                         ),
                       ),
-                      _buildColumnHeaderCell('User Name', flex: 2),
-                      _buildColumnHeaderCell('User Code', flex: 2),
-                      _buildColumnHeaderCell('Department', flex: 3),
+                      _buildColumnHeaderCell(
+                        'User Name'.toUpperCase(),
+                        flex: 2,
+                        color: AppColors.textPrimary,
+                        isBold: true,
+                      ),
+                      _buildColumnHeaderCell(
+                        'User Code'.toUpperCase(),
+                        color: AppColors.textPrimary,
+                        flex: 2,
+                        isBold: true,
+                      ),
+                      _buildColumnHeaderCell(
+                        'Department'.toUpperCase(),
+                        color: AppColors.textPrimary,
+                        flex: 3,
+                        isBold: true,
+                      ),
                     ],
                   ),
                 ),
                 Expanded(
-                  child: RadioGroup<String>(
-                    groupValue: _selectedUserCode,
+                  child: RadioGroup<int>(
+                    groupValue: _selectedUserID,
                     onChanged: (value) {
                       setState(() {
-                        _selectedUserCode = value;
-                        widget.onUserSelected(_selectedUserCode ?? '');
+                        _selectedUserID = value ?? 0;
+                        widget.onUserSelected(_selectedUserID);
                       });
                     },
                     child: ListView.builder(
@@ -161,27 +185,37 @@ class _CustomDataTableWithPaginationState
                       itemCount: filteredList.length,
                       itemBuilder: (context, index) {
                         final user = filteredList[index];
-                        final String userCode = user.userID.toString();
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 60,
-                              child: Radio<String>(value: userCode),
-                            ),
-                            _buildColumnHeaderCell(
-                              user.userName ?? '-',
-                              flex: 2,
-                            ),
-                            _buildColumnHeaderCell(
-                              user.userCode ?? '-',
-                              flex: 2,
-                            ),
-                            _buildColumnHeaderCell(
-                              user.department ?? '-',
-                              flex: 3,
-                            ),
-                          ],
+                        final userID = user.userID ?? 0;
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedUserID = userID;
+                              widget.onUserSelected(_selectedUserID);
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 72,
+                                child: Radio<int>(value: userID),
+                              ),
+                              _buildColumnHeaderCell(
+                                color: AppColors.textPrimary,
+                                user.userName ?? '-',
+                                flex: 2,
+                                isBold: true,
+                              ),
+                              _buildColumnHeaderCell(
+                                user.userCode ?? '-',
+                                flex: 2,
+                              ),
+                              _buildColumnHeaderCell(
+                                user.department ?? '-',
+                                flex: 3,
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -192,59 +226,59 @@ class _CustomDataTableWithPaginationState
           ),
         ),
         SizedBox(height: 16),
-        if (filteredList.length > 1)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    'Showing $startEntry to $endEntry of ${widget.userList.length} entries',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textSecondary,
-                    ),
-                    maxLines: 2,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  'Showing $startEntry to $endEntry of ${widget.userList.length} entries',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textSecondary,
                   ),
+                  maxLines: 2,
                 ),
-                Row(
-                  children: [
-                    IconButton.filled(
-                      onPressed: goToPreviousPage,
-                      icon: Icon(Icons.navigate_before),
-                      style: IconButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        backgroundColor: AppColors.textHint,
+              ),
+              Row(
+                children: [
+                  IconButton.filled(
+                    onPressed: selectedPage > 1 ? goToPreviousPage : null,
+                    icon: Icon(Icons.navigate_before),
+                    style: IconButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      backgroundColor: selectedPage > 1
+                          ? AppColors.textHint
+                          : AppColors.border,
                     ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Page $selectedPage of $totalPages',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Page $selectedPage of $totalPages',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 8),
+                  IconButton.filled(
+                    onPressed: selectedPage < totalPages ? goToNextPage : null,
+                    icon: Icon(Icons.navigate_next_outlined),
+                    style: IconButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      backgroundColor: selectedPage < totalPages
+                          ? AppColors.textHint
+                          : AppColors.border,
                     ),
-                    SizedBox(width: 8),
-                    IconButton.filled(
-                      onPressed: goToNextPage,
-                      icon: Icon(Icons.navigate_next_outlined),
-                      style: IconButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        backgroundColor: AppColors.textHint,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
+        ),
       ],
     );
   }

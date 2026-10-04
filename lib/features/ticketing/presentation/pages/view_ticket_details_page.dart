@@ -258,7 +258,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
   }
 
   void _showTransferTicketActionDialog() {
-    if (viewTicketDetailV6Response?.isAcceptAllowed == true) {
+    if (viewTicketDetailV6Response?.isActionAllowed == true) {
       if (kIsWeb) {
         ActionDialogs.showTransferTicketActionDialog(
           buildContext: context,
