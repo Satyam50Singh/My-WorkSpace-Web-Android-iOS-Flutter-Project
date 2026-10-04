@@ -259,7 +259,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
 
   void _showTransferTicketActionDialog() {
     if (viewTicketDetailV6Response?.isActionAllowed == true) {
-      if (kIsWeb) {
+      // if (kIsWeb) {
         ActionDialogs.showTransferTicketActionDialog(
           buildContext: context,
           color: AppColors.btnBgRed,
@@ -286,7 +286,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
             }
           },
         );
-      }
+      // }
     } else if (viewTicketDetailV6Response?.isActionAllowed == true) {}
   }
 

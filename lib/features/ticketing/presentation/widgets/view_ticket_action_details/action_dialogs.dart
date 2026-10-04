@@ -136,6 +136,7 @@ class ActionDialogs {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
+              insetPadding: EdgeInsets.symmetric(horizontal: 16),
               child: Container(
                 width: 400,
                 padding: const EdgeInsets.all(20.0),
@@ -302,6 +303,7 @@ class ActionDialogs {
                               ),
                             ),
                           ),
+                          SizedBox(width: 12),
                           ValueListenableBuilder(
                             valueListenable: isSubmitted,
                             builder: (context, loading, child) {
@@ -517,6 +519,7 @@ class ActionDialogs {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
+              insetPadding: EdgeInsets.symmetric(horizontal: 16),
               child: Container(
                 width: 560,
                 padding: const EdgeInsets.all(20.0),
@@ -876,6 +879,7 @@ class ActionDialogs {
               },
               builder: (context, state) {
                 return Dialog(
+                  insetPadding: EdgeInsets.symmetric(horizontal: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -905,34 +909,158 @@ class ActionDialogs {
                         ),
                         Divider(color: AppColors.border, thickness: 1),
                         SizedBox(height: 16),
-                        CustomSearchBar(
-                          hintText: 'Search User by name, code or department',
-                          onChanged: (value) {
-                            searchUser(value);
-                          },
-                          searchController: controller,
-                          color: color,
-                        ),
-                        SizedBox(height: 16),
-                        if (state is TicketTransferUserListLoading)
-                          Center(
-                            child: Container(
-                              width: 24,
-                              height: 24,
-                              alignment: Alignment.center,
-                              child: CircularProgressIndicator(
-                                color: color,
-                                strokeWidth: 2,
+                        if (finalUserList.isNotEmpty) ...[
+                          if (kIsWeb) ...[
+                            CustomSearchBar(
+                              hintText:
+                                  'Search User by name, code or department',
+                              onChanged: (value) {
+                                searchUser(value);
+                              },
+                              searchController: controller,
+                              color: color,
+                            ),
+                            SizedBox(height: 16),
+                            if (state is TicketTransferUserListLoading)
+                              Center(
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(
+                                    color: color,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              )
+                            else
+                              CustomDataTableWithPagination(
+                                userList: finalUserList,
+                                onUserSelected: (userID) {
+                                  selectedUserID = userID;
+                                },
+                              ),
+                          ] else ...[
+                            if (state is TicketTransferUserListLoading)
+                              Center(
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(
+                                    color: color,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              )
+                            else
+                              SizedBox(
+                                height: 280,
+                                child: ListView.separated(
+                                  itemCount: finalUserList.length,
+                                  separatorBuilder: (_, _) {
+                                    return const SizedBox(height: 4);
+                                  },
+                                  itemBuilder: (context, index) {
+                                    final user = finalUserList[index];
+                                    final isSelected =
+                                        selectedUserID ==
+                                        finalUserList[index].userID;
+                                    return Card(
+                                      elevation: 1,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          splashColor: AppColors.amber
+                                              .withValues(alpha: 0.25),
+                                          highlightColor: AppColors.amber
+                                              .withValues(alpha: 0.15),
+                                          onTap: () {
+                                            setState(() {
+                                              selectedUserID =
+                                                  finalUserList[index].userID ??
+                                                  0;
+                                            });
+                                          },
+                                          child: ListTile(
+                                            selected: isSelected,
+                                            selectedColor: AppColors.amberDark,
+                                            title: Text(
+                                              user.userName?.toString() ?? "-",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineSmall
+                                                  ?.copyWith(
+                                                    fontSize: 14,
+                                                    color:
+                                                        AppColors.textPrimary,
+                                                  ),
+                                            ),
+                                            trailing: isSelected
+                                                ? Icon(
+                                                    Icons.check_circle,
+                                                    color: AppColors.amberDark,
+                                                    size: 20,
+                                                  )
+                                                : null,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                          ],
+                        ],
+                        if (finalUserList.isEmpty) ...[
+                          Card(
+                            elevation: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      size: 24,
+                                      color: AppColors.textHint,
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      'No users found',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall
+                                          ?.copyWith(
+                                            fontSize: 16,
+                                            color: AppColors.textPrimary,
+                                          ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      'Try refining your search query or check back later.',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall
+                                          ?.copyWith(
+                                            fontSize: 12,
+                                            color: AppColors.textHint,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          )
-                        else
-                          CustomDataTableWithPagination(
-                            userList: finalUserList,
-                            onUserSelected: (userID) {
-                              selectedUserID = userID;
-                            },
                           ),
+                        ],
                         SizedBox(height: 16),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -969,6 +1097,19 @@ class ActionDialogs {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
                             ElevatedButton.icon(
                               icon: Icon(Icons.check_circle_outline_rounded),
                               onPressed: () {
@@ -994,19 +1135,6 @@ class ActionDialogs {
                                 foregroundColor: AppColors.background,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: AppColors.textPrimary,
                                 ),
                               ),
                             ),
