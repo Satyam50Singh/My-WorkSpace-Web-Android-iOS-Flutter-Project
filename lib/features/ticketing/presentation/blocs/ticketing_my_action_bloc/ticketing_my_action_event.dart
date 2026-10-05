@@ -14,3 +14,16 @@ class UpdateTicketActionRequested extends TicketingMyActionEvent {
 
   UpdateTicketActionRequested({required this.payload, this.images});
 }
+
+class TicketTransferUserListRequested extends TicketingMyActionEvent {
+  int ticketId;
+
+  TicketTransferUserListRequested({required this.ticketId});
+}
+
+
+class TransferTicketWebRequested extends TicketingMyActionEvent {
+  TransferTicketWebRequestModel payload;
+
+  TransferTicketWebRequested({required this.payload});
+}

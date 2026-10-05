@@ -33,6 +33,8 @@ import '../../features/ticketing/data/repositories/view_ticket_detail_repository
 import '../../features/ticketing/domain/repositories/ticketing_my_action_repository.dart';
 import '../../features/ticketing/domain/usecases/add_new_request/ticket_sub_category_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/accept_web_ticket_usecase.dart';
+import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/ticket_transfer_user_list_usecase.dart';
+import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/transfer_ticket_web_usecase.dart';
 import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_workflow_usecase.dart';
 import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/view_ticket_detail_v6_usecase.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
@@ -128,6 +130,13 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<UpdateTicketActionUseCase>(
     () => UpdateTicketActionUseCase(sl()),
   );
+  sl.registerLazySingleton<TicketTransferUserListUseCase>(
+    () => TicketTransferUserListUseCase(sl()),
+  );
+  sl.registerLazySingleton<TransferTicketWebUseCase>(
+    () => TransferTicketWebUseCase(sl()),
+  );
+
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
@@ -135,5 +144,5 @@ Future<void> configureDependencies() async {
   sl.registerFactory(() => TicketingBloc(sl()));
   sl.registerFactory(() => ViewTicketDetailsBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddNewTicketBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => TicketingMyActionBloc(sl(), sl()));
+  sl.registerFactory(() => TicketingMyActionBloc(sl(), sl(), sl(), sl()));
 }

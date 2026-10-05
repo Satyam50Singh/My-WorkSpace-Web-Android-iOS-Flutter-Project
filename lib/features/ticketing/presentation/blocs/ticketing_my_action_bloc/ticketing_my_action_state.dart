@@ -5,6 +5,7 @@ abstract class TicketingMyActionState {}
 final class TicketingMyActionInitial extends TicketingMyActionState {}
 
 final class TicketingMyActionLoading extends TicketingMyActionState {}
+final class TicketTransferUserListLoading extends TicketingMyActionState {}
 
 final class TicketingMyActionFailure extends TicketingMyActionState {
   final String errorMessage;
@@ -22,4 +23,10 @@ final class UpdateTicketActionSuccess extends TicketingMyActionState {
   final String message;
 
   UpdateTicketActionSuccess({required this.message});
+}
+
+final class TicketTransferUserListSuccess extends TicketingMyActionState {
+  final List<TicketTransferUserListEntity> userList;
+
+  TicketTransferUserListSuccess({required this.userList});
 }

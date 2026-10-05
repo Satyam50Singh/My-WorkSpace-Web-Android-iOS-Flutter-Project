@@ -15,11 +15,11 @@ class CustomDialogUtils {
       context: context,
       builder: (_) {
         return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 16.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           child: SizedBox(
-            width: size.width * 0.6,
             height: size.height * 0.6,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -123,6 +123,7 @@ class CustomDialogUtils {
       context: context,
       builder: (_) {
         return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -186,10 +187,12 @@ class CustomDialogUtils {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 8),
-                  TextField(
-                    controller: remarksController,
-                    maxLines: 4,
-                    decoration: InputDecoration(hint: Text(hintText)),
+                  Expanded(
+                    child: TextField(
+                      controller: remarksController,
+                      maxLines: 4,
+                      decoration: InputDecoration(hint: Text(hintText)),
+                    ),
                   ),
                   SizedBox(height: 8),
                   Row(

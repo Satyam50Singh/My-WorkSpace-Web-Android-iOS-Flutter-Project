@@ -37,4 +37,5 @@ class AppColors {
   static const Color amberDark = Color(0xFFF59E0B);
   static const Color btnBgGreen = Color(0xFF059669);
   static const Color btnBgRed = Color(0xFFDC2626);
+  static const Color black = Color(0xFF000000);
 }

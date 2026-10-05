@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/transfer_ticket_web_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/submit_reopen_review_request.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/view_ticket_details/view_ticket_detail_request.dart';
@@ -10,7 +11,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket
 import 'package:my_worksphere_web/features/ticketing/domain/entities/view_ticket_detail_entities/ticket_workflow_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_action_details/action_dialogs.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_action_details/ticket_action_dialog_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_action_history.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/ticket_detail_workflow.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_details/view_ticket_detail_header.dart';
@@ -149,9 +150,9 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         );
       } else {
         if (viewTicketDetailV6Response != null) {
-          ActionDialogs.showAlreadyAcceptedDialog(
+          TicketActionDialogUtils.showAlreadyAcceptedDialog(
             context: context,
-            ticket: viewTicketDetailV6Response!,
+            ticketDetail: viewTicketDetailV6Response!,
             onAcceptTicketPressed: (BuildContext ctx) {
               Navigator.of(ctx).pop();
               _apiCallForAcceptWebTicket(forceAccept: true);
@@ -191,7 +192,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
 
   void _showUpdateTicketActionDialog(String action) {
     if (action == "In Progress") {
-      ActionDialogs.showUpdateTicketActionDialog(
+      TicketActionDialogUtils.showUpdateTicketActionDialog(
         context,
         "In Progress Ticket",
         Icons.play_circle_outline,
@@ -203,7 +204,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         },
       );
     } else if (action == "Hold") {
-      ActionDialogs.showUpdateTicketActionDialog(
+      TicketActionDialogUtils.showUpdateTicketActionDialog(
         context,
         "Hold Ticket",
         Icons.pause_circle_outline,
@@ -216,7 +217,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         color: AppColors.amberDark,
       );
     } else if (action == "Close") {
-      ActionDialogs.showCloseTicketActionDialog(
+      TicketActionDialogUtils.showCloseTicketActionDialog(
         context,
         "Close Ticket",
         Icons.check_circle_outline,
@@ -254,6 +255,39 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         color: AppColors.btnBgGreen,
       );
     }
+  }
+
+  void _showTransferTicketActionDialog() {
+    if (viewTicketDetailV6Response?.isActionAllowed == true) {
+      // if (kIsWeb) {
+        TicketActionDialogUtils.showTransferTicketActionDialog(
+          buildContext: context,
+          color: AppColors.btnBgRed,
+          ticketId: viewTicketDetailV6Response?.ticketID,
+          onTransferBtnPressed: (remarks, userCode) {
+            debugPrint('remark = $remarks, userCode = $userCode');
+            final state = context.read<EmployeeDetailCubit>().state;
+            if (state is EmployeeDetailFetched) {
+              final payload = TransferTicketWebRequestModel(
+                ticketId: viewTicketDetailV6Response?.ticketID,
+                remarks: remarks,
+                empCD: state.employeeDetail.empCd,
+                transferToUserId: userCode,
+                companyID: state.employeeDetail.companyId,
+                platformType: _currentPlatform,
+              );
+
+              debugPrint(payload.toString());
+              performedAction = "Transferred";
+
+              context.read<TicketingMyActionBloc>().add(
+                TransferTicketWebRequested(payload: payload),
+              );
+            }
+          },
+        );
+      // }
+    } else if (viewTicketDetailV6Response?.isActionAllowed == true) {}
   }
 
   void reloadPage() {
@@ -375,7 +409,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     pageTag: widget.pageTag,
                     ticketDetails: viewTicketDetailV6Response,
                     onActionSubmit: _submitReOpenReviewTicket,
-                    onTransferTicket: () {},
+                    onTransferTicket: _showTransferTicketActionDialog,
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onUpdateTicketAction: (action) =>
                         _showUpdateTicketActionDialog(action),
@@ -391,7 +425,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     workFlowDetail: viewTicketWorkflowResponse,
                     ticketDetails: viewTicketDetailV6Response,
                     onActionSubmit: _submitReOpenReviewTicket,
-                    onTransferTicket: () {},
+                    onTransferTicket: _showTransferTicketActionDialog,
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onUpdateTicketAction: (action) =>
                         _showUpdateTicketActionDialog(action),
@@ -407,7 +441,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
                     actionHistoryList: viewTicketActionHistoryResponse,
                     ticketDetails: viewTicketDetailV6Response,
                     onActionSubmit: _submitReOpenReviewTicket,
-                    onTransferTicket: () {},
+                    onTransferTicket: _showTransferTicketActionDialog,
                     onAcceptTicket: _apiCallForAcceptWebTicket,
                     onUpdateTicketAction: (action) =>
                         _showUpdateTicketActionDialog(action),
