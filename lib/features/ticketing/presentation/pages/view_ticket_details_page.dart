@@ -259,35 +259,41 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
 
   void _showTransferTicketActionDialog() {
     if (viewTicketDetailV6Response?.isActionAllowed == true) {
-      // if (kIsWeb) {
-        TicketActionDialogUtils.showTransferTicketActionDialog(
-          buildContext: context,
-          color: AppColors.btnBgRed,
-          ticketId: viewTicketDetailV6Response?.ticketID,
-          onTransferBtnPressed: (remarks, userCode) {
-            debugPrint('remark = $remarks, userCode = $userCode');
-            final state = context.read<EmployeeDetailCubit>().state;
-            if (state is EmployeeDetailFetched) {
-              final payload = TransferTicketWebRequestModel(
-                ticketId: viewTicketDetailV6Response?.ticketID,
-                remarks: remarks,
-                empCD: state.employeeDetail.empCd,
-                transferToUserId: userCode,
-                companyID: state.employeeDetail.companyId,
-                platformType: _currentPlatform,
-              );
+      TicketActionDialogUtils.showTransferTicketActionDialog(
+        buildContext: context,
+        color: AppColors.btnBgRed,
+        ticketId: viewTicketDetailV6Response?.ticketID,
+        onTransferBtnPressed: (remarks, userCode) {
+          debugPrint('remark = $remarks, userCode = $userCode');
+          final state = context.read<EmployeeDetailCubit>().state;
+          if (state is EmployeeDetailFetched) {
+            final payload = TransferTicketWebRequestModel(
+              ticketId: viewTicketDetailV6Response?.ticketID,
+              remarks: remarks,
+              empCD: state.employeeDetail.empCd,
+              transferToUserId: userCode,
+              companyID: state.employeeDetail.companyId,
+              platformType: _currentPlatform,
+            );
 
-              debugPrint(payload.toString());
-              performedAction = "Transferred";
+            debugPrint(payload.toString());
+            performedAction = "Transferred";
 
-              context.read<TicketingMyActionBloc>().add(
-                TransferTicketWebRequested(payload: payload),
-              );
-            }
-          },
-        );
+            context.read<TicketingMyActionBloc>().add(
+              TransferTicketWebRequested(payload: payload),
+            );
+          }
+        },
+      );
       // }
-    } else if (viewTicketDetailV6Response?.isActionAllowed == true) {}
+    } else if (viewTicketDetailV6Response?.isAcceptAllowed == true) {
+      TicketActionDialogUtils.showTicketExternalTransferDialog(
+        buildContext: context,
+        color: AppColors.btnBgRed,
+        ticketId: viewTicketDetailV6Response?.ticketID,
+        onTransferBtnPressed: (remarks, userCode) {},
+      );
+    }
   }
 
   void reloadPage() {

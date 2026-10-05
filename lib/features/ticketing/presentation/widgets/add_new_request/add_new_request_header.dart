@@ -5,11 +5,15 @@ import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import '../../../../../core/routes/app_routes.dart';
 
 class AddNewRequestHeader extends StatelessWidget {
+  final String headingText;
+  final String btnText;
   final VoidCallback onSaveTap;
   final bool isSaveEnabled;
 
   const AddNewRequestHeader({
     super.key,
+    required this.headingText,
+    required this.btnText,
     required this.onSaveTap,
     required this.isSaveEnabled,
   });
@@ -53,7 +57,7 @@ class AddNewRequestHeader extends StatelessWidget {
             SizedBox(width: 8),
 
             Text(
-              'New Request',
+              headingText,
               style: TextStyle(
                 fontSize: 18,
                 color: AppColors.white,
@@ -77,8 +81,8 @@ class AddNewRequestHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Save',
+                child: Text(
+                  btnText,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),

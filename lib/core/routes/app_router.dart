@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/external_transfer_ticket_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details_page.dart';
 
@@ -95,6 +96,13 @@ class AppRouter {
             name: 'add-new-request',
             builder: (context, state) {
               return AddNewRequestPage();
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.externalTransferTicket,
+            name: 'external-transfer-ticket',
+            builder: (context, state) {
+              return ExternalTransferTicketPage();
             },
           ),
         ],
