@@ -99,9 +99,12 @@ class _ExternalTransferTicketPageState
                         state.errorMessage,
                       );
                       LoaderUtils.hideLoader(context);
-                    } else if (state is UpdateTicketActionSuccess) {
+                    } else if (state is TransferToOtherWorkflowSuccess) {
                       LoaderUtils.hideLoader(context);
-                      debugPrint('Ticket transferred successfully');
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.message.isNotEmpty ? state.message : 'Ticket transferred successfully',
+                      );
                       if (context.mounted) {
                         if (Navigator.of(context).canPop()) {
                           Navigator.of(context).pop(true);

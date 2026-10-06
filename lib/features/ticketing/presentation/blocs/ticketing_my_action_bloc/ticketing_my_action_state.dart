@@ -31,6 +31,12 @@ final class UpdateTicketActionSuccess extends TicketingMyActionState {
   UpdateTicketActionSuccess({required this.message});
 }
 
+final class TransferToOtherWorkflowSuccess extends TicketingMyActionState {
+  final String message;
+
+  TransferToOtherWorkflowSuccess({required this.message});
+}
+
 final class TicketTransferUserListSuccess extends TicketingMyActionState {
   final List<TicketTransferUserListEntity> userList;
 

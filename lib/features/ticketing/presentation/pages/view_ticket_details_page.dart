@@ -292,6 +292,10 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         color: AppColors.btnBgRed,
         ticketId: viewTicketDetailV6Response?.ticketID,
         onTransferBtnPressed: (remarks, userCode) {},
+        onTransferSuccess: () {
+          _shouldRefreshParent = true;
+          reloadPage();
+        },
       );
     }
   }

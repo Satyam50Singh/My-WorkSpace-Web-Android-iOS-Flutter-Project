@@ -9,7 +9,6 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_t
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_action_details/ticket_internal_transfer_action_dialog.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/view_ticket_action_details/update_ticket_action_dialog.dart';
 
-import '../../../../../core/routes/app_routes.dart';
 import '../../../domain/entities/view_ticket_detail_entities/view_ticket_detail_v6_entity.dart';
 
 class TicketActionDialogUtils {
@@ -108,16 +107,20 @@ class TicketActionDialogUtils {
     required Color color,
     required int? ticketId,
     required Function(String, int) onTransferBtnPressed,
+    VoidCallback? onTransferSuccess,
   }) async {
     final width = MediaQuery.sizeOf(buildContext).width;
     final isTablet = width >= 600 && width < 1200;
     final isMobile = width < 600;
 
     if (isMobile) {
-      final result = await buildContext.push<bool>(AppRoutes.externalTransferTicket);
+      final result = await buildContext.pushNamed<bool>(
+        'external-transfer-ticket',
+        pathParameters: {'ticketId': '${ticketId ?? 0}'},
+      );
       if (result == true) {
         debugPrint('navigated with true');
-
+        onTransferSuccess?.call();
       }
     } else {
       final dialogWidth = isTablet
@@ -147,7 +150,7 @@ class TicketActionDialogUtils {
 
       if (result == true) {
         debugPrint('navigated with true');
-        // _fetchTicketDetails(pageCount: 1);
+        onTransferSuccess?.call();
       }
     }
   }

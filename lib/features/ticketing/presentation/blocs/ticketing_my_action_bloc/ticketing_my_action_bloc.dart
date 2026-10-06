@@ -125,7 +125,7 @@ class TicketingMyActionBloc
       result.fold(
             (failure) =>
             emit(TransferToOtherWorkflowFailure(errorMessage: failure.message)),
-            (data) => emit(UpdateTicketActionSuccess(message: data)),
+            (data) => emit(TransferToOtherWorkflowSuccess(message: data)),
       );
     } catch (e) {
       emit(TicketingMyActionFailure(errorMessage: e.toString()));

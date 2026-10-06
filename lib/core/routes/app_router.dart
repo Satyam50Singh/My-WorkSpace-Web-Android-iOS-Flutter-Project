@@ -99,10 +99,15 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: AppRoutes.externalTransferTicket,
+            path: '${AppRoutes.externalTransferTicket}/:ticketId',
             name: 'external-transfer-ticket',
             builder: (context, state) {
-              return ExternalTransferTicketPage(onTransferBtnPressed: () {  },);
+              final ticketIdStr = state.pathParameters['ticketId'];
+              final ticketId = int.tryParse(ticketIdStr ?? '') ?? 0;
+              return ExternalTransferTicketPage(
+                ticketId: ticketId,
+                onTransferBtnPressed: () {},
+              );
             },
           ),
         ],
