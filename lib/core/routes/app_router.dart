@@ -102,7 +102,7 @@ class AppRouter {
             path: AppRoutes.externalTransferTicket,
             name: 'external-transfer-ticket',
             builder: (context, state) {
-              return ExternalTransferTicketPage();
+              return ExternalTransferTicketPage(onTransferBtnPressed: () {  },);
             },
           ),
         ],
@@ -123,7 +123,7 @@ class AppRouter {
       return null;
     }
 
-    final isAuthPage = currentLocation == AppRoutes.onboarding || 
+    final isAuthPage = currentLocation == AppRoutes.onboarding ||
                        currentLocation.startsWith('/user-login');
 
     if (employeeState is EmployeeDetailFetched) {

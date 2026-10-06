@@ -21,9 +21,14 @@ class TicketTransferUserListRequested extends TicketingMyActionEvent {
   TicketTransferUserListRequested({required this.ticketId});
 }
 
-
 class TransferTicketWebRequested extends TicketingMyActionEvent {
   TransferTicketWebRequestModel payload;
 
   TransferTicketWebRequested({required this.payload});
+}
+
+class TransferToOtherWorkflowRequested extends TicketingMyActionEvent {
+  TransferToOtherWorkflowRequestBody payload;
+
+  TransferToOtherWorkflowRequested({required this.payload});
 }

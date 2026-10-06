@@ -13,6 +13,12 @@ final class TicketingMyActionFailure extends TicketingMyActionState {
   TicketingMyActionFailure({required this.errorMessage});
 }
 
+final class TransferToOtherWorkflowFailure extends TicketingMyActionState {
+  final String errorMessage;
+
+  TransferToOtherWorkflowFailure({required this.errorMessage});
+}
+
 final class AcceptTicketSuccess extends TicketingMyActionState {
   final String message;
 

@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:my_worksphere_web/core/network/api_client.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/add_new_request/add_new_ticket_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/accept_web_ticket_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/common_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/ticket_transfer_user_list_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/transfer_ticket_web_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/transfer_to_other_workflow_request_body.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -30,6 +32,10 @@ abstract class TicketingMyActionRemoteDataSource {
 
   Future<CommonResponseModel> transferTicketWebRequested({
     required TransferTicketWebRequestModel payload,
+  });
+
+  Future<AddNewTicketResponseModel> transferToOtherWorkflow({
+    required TransferToOtherWorkflowRequestBody payload,
   });
 }
 
@@ -119,7 +125,7 @@ class TicketingMyActionRemoteDataSourceImpl
   @override
   Future<CommonResponseModel> transferTicketWebRequested({
     required TransferTicketWebRequestModel payload,
-  })  async {
+  }) async {
     try {
       final json = await _apiClient.post(
         ApiEndpoints.transferTicketWeb,
@@ -127,6 +133,24 @@ class TicketingMyActionRemoteDataSourceImpl
       );
 
       return CommonResponseModel.fromJson(json);
+    } on ApiException catch (e) {
+      throw ServerException(message: e.message);
+    } on DioException catch (e) {
+      throw ServerException(message: e.message ?? "Something went wrong!");
+    }
+  }
+
+  @override
+  Future<AddNewTicketResponseModel> transferToOtherWorkflow({
+    required TransferToOtherWorkflowRequestBody payload,
+  }) async {
+    try {
+      final json = await _apiClient.post(
+        ApiEndpoints.transferToOtherWorkflow,
+        data: FormData.fromMap({'0': jsonEncode(payload.toJson())}),
+      );
+
+      return AddNewTicketResponseModel.fromJson(json);
     } on ApiException catch (e) {
       throw ServerException(message: e.message);
     } on DioException catch (e) {

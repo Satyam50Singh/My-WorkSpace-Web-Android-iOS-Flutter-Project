@@ -116,6 +116,7 @@ class TicketActionDialogUtils {
     if (isMobile) {
       final result = await buildContext.push<bool>(AppRoutes.externalTransferTicket);
       if (result == true) {
+        debugPrint('navigated with true');
 
       }
     } else {
@@ -135,13 +136,17 @@ class TicketActionDialogUtils {
             child: SizedBox(
               width: dialogWidth,
               height: double.infinity,
-              child: ExternalTransferTicketPage(),
+              child: ExternalTransferTicketPage(
+                ticketId: ticketId ?? 0,
+                onTransferBtnPressed: () {},
+              ),
             ),
           );
         },
       );
 
       if (result == true) {
+        debugPrint('navigated with true');
         // _fetchTicketDetails(pageCount: 1);
       }
     }

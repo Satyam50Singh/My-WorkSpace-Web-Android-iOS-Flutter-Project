@@ -29,6 +29,7 @@ class ManageActionTicketCard extends StatelessWidget {
     debugPrint('Status: $status');
     final isHoldStatus = status.contains('hold');
     final isInProgressStatus = status.contains('progress');
+    final isTransferredStatus = status == 'transferred';
 
     final List<Widget> buttons = [];
 
@@ -78,7 +79,7 @@ class ManageActionTicketCard extends StatelessWidget {
       );
     }
 
-    if (isActionAllowed) {
+    if (isActionAllowed && !isTransferredStatus) {
       if (!isInProgressStatus && !isHoldStatus) {
         buttons.add(
           ElevatedButton.icon(

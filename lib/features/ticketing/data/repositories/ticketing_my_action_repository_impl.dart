@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/ticketing_my_action_remote_data_source.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/transfer_to_other_workflow_request_body.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/update_ticket_action_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticketing_my_action_entities/ticket_transfer_user_list_entity.dart';
 
@@ -103,6 +104,32 @@ class TicketingMyActionRepositoryImpl extends TicketingMyActionRepository {
   }) async {
     try {
       final response = await _dataSource.transferTicketWebRequested(
+        payload: payload,
+      );
+      if (response.status == 1 || response.status == 2) {
+        return Right(response.message ?? '');
+      } else {
+        final message = response.message?.trim();
+        return Left(
+          ServerFailure(
+            message?.isNotEmpty == true
+                ? message ?? "Something went wrong!"
+                : "Something went wrong!",
+          ),
+        );
+      }
+    } on ServerException catch (e) {
+      debugPrint('ServerException: ${e.message}');
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> transferToOtherWorkflow({
+    required TransferToOtherWorkflowRequestBody payload,
+  }) async {
+    try {
+      final response = await _dataSource.transferToOtherWorkflow(
         payload: payload,
       );
       if (response.status == 1 || response.status == 2) {

@@ -28,4 +28,5 @@ class ApiEndpoints {
   static const updateTicketActionV4 = "/Ticketing/Update_Ticket_Action_V4";
   static const fetchTicketTransferUserList = "/Ticketing/Fetch_Ticket_TransferUser_List";
   static const transferTicketWeb = "/Ticketing/Transfer_Ticket_Web";
+  static const transferToOtherWorkflow = "/Ticketing/Ticket_Transfer_To_Other_Workflow_Web";
 }
