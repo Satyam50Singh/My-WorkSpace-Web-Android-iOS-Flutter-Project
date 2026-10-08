@@ -14,11 +14,11 @@ class TicketListEmptyView extends StatelessWidget {
           children: [
             const Icon(Icons.info, color: AppColors.slate, size: 48),
             Text(
-              'No tickets found matching current filters',
+              'No records found matching current filters',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: AppColors.primaryDark,
                     fontWeight: FontWeight.w600,
-                    fontSize: 13,
+                    fontSize: 14,
                   ),
             ),
             Text(
@@ -26,7 +26,7 @@ class TicketListEmptyView extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: AppColors.slate,
                     fontWeight: FontWeight.w600,
-                    fontSize: 11,
+                    fontSize: 12,
                   ),
             ),
           ],
