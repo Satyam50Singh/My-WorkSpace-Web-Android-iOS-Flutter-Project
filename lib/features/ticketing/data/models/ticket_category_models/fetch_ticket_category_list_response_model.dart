@@ -36,7 +36,7 @@ class CategoryModel extends TicketCategoryEntity {
 
   CategoryModel.fromJson(Map<String, dynamic> json)
     : super(
-        json['CategoryID'] as int?,
+        json['Category_ID'] as int?,
         json['Category'] as String?,
         json['DepartmentID'] as int?,
         json['Department'] as String?,

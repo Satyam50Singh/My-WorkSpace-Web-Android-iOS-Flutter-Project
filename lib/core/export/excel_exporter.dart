@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/core/export/excel_style.dart';
 import 'package:my_worksphere_web/core/export/export_file_helper.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
@@ -28,16 +29,23 @@ class ExcelExporter {
       final ticket = dataList[i];
       final int row = i + 2;
 
-      sheet.getRangeByIndex(row, 1).setText(ticket.ticketCode ?? '');
-      sheet.getRangeByIndex(row, 2).setText(ticket.level ?? '');
-      sheet.getRangeByIndex(row, 3).setText(ticket.ticketDate ?? '');
-      sheet.getRangeByIndex(row, 4).setText(ticket.ticketStatus ?? '');
-      sheet.getRangeByIndex(row, 5).setText(ticket.ticketActionStatus ?? '');
-      sheet.getRangeByIndex(row, 6).setText(ticket.raisedByUser ?? '');
-      sheet.getRangeByIndex(row, 7).setText(ticket.ticketType ?? '');
-      sheet.getRangeByIndex(row, 8).setText(ticket.subCategory ?? '');
-      sheet.getRangeByIndex(row, 9).setText(ticket.lastActionBy ?? '');
-      sheet.getRangeByIndex(row, 10).setText(ticket.location ?? '');
+      if (sheetName.toLowerCase() == 'ticket records') {
+        sheet.getRangeByIndex(row, 1).setText(ticket.ticketCode ?? '');
+        sheet.getRangeByIndex(row, 2).setText(ticket.level ?? '');
+        sheet.getRangeByIndex(row, 3).setText(ticket.ticketDate ?? '');
+        sheet.getRangeByIndex(row, 4).setText(ticket.ticketStatus ?? '');
+        sheet.getRangeByIndex(row, 5).setText(ticket.ticketActionStatus ?? '');
+        sheet.getRangeByIndex(row, 6).setText(ticket.raisedByUser ?? '');
+        sheet.getRangeByIndex(row, 7).setText(ticket.ticketType ?? '');
+        sheet.getRangeByIndex(row, 8).setText(ticket.subCategory ?? '');
+        sheet.getRangeByIndex(row, 9).setText(ticket.lastActionBy ?? '');
+        sheet.getRangeByIndex(row, 10).setText(ticket.location ?? '');
+      } else if (sheetName.toLowerCase() == 'category records') {
+        sheet.getRangeByIndex(row, 1).setText(ticket.categoryID.toString());
+        sheet.getRangeByIndex(row, 2).setText(ticket.category ?? '');
+        sheet.getRangeByIndex(row, 3).setText(ticket.department ?? '');
+        sheet.getRangeByIndex(row, 4).setText('Active');
+      }
     }
 
     // 4. Apply data style to all rows at once and auto-fit
@@ -55,6 +63,7 @@ class ExcelExporter {
     // Also auto-fit headers
     sheet.getRangeByIndex(1, 1, 1, 10).autoFitColumns();
 
+    debugPrint('Exporting Excel file...');
     final List<int> bytes = workbook.saveAsStream();
     workbook.dispose();
 

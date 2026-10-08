@@ -515,8 +515,12 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       'Location',
     ];
 
+    final currentDate = DateTime.now();
+    final formattedDate =
+        '${currentDate.year}-${currentDate.month}-${currentDate.day}';
+
     ExcelExporter().export(
-      fileName: 'ticketing_export.xlsx',
+      fileName: 'ticketing_export_$formattedDate.xlsx',
       sheetName: 'Ticket Records',
       headers: headers,
       dataList: exportList,

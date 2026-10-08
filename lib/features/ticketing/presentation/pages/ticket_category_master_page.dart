@@ -9,6 +9,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_cate
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_data_source.dart';
 
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
@@ -75,7 +76,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -90,7 +90,21 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
             showExportToExcelBtn: true,
             addNewBtnTitleText: 'Add New Category',
             onTapExportToExcel: () {
-              // TODO: Export to Excel
+              if (categories.isNotEmpty) {
+                SnackBarUtils.showFloatingSnackBar(
+                  context,
+                  'Downloading excel file...',
+                );
+                final currentDate = DateTime.now();
+                final formattedDate =
+                    '${currentDate.year}-${currentDate.month}-${currentDate.day}';
+                ExcelExporter().export(
+                  fileName: 'category_master_export_$formattedDate.xlsx',
+                  sheetName: 'Category Records',
+                  headers: ['Category ID', ..._headers],
+                  dataList: categories,
+                );
+              }
             },
             onTapAddNewRequest: () {
               // TODO: Add New Request
