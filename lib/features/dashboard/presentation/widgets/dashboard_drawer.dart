@@ -268,6 +268,10 @@ class DashboardDrawer extends StatelessWidget {
         return AppRoutes.myTickets;
       case 'my actions':
         return AppRoutes.myActions;
+      case 'ticket category':
+        return AppRoutes.ticketCategory;
+      case 'ticket subcategory':
+        return AppRoutes.ticketSubCategory;
       case 'checklist':
         return AppRoutes.checklist;
       case 'workpermit':
@@ -298,6 +302,7 @@ class DashboardDrawer extends StatelessWidget {
     String? moduleName,
     String? route,
   }) {
+    debugPrint('route:: $route');
     if (route == null) return;
 
     if (isMobileView == true) {

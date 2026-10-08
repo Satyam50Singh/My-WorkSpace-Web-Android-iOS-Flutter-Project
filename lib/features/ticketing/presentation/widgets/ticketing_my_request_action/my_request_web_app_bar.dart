@@ -4,14 +4,18 @@ import '../../../../../core/theme/app_colors.dart';
 
 class TicketingMyRequestWebAppBar extends StatelessWidget {
   final String title;
-  final int totalRecordsCount;
+  final bool showAddNewBtn;
+  final bool showExportToExcelBtn;
+  final String addNewBtnTitleText;
   final void Function() onTapExportToExcel;
   final void Function() onTapAddNewRequest;
 
   const TicketingMyRequestWebAppBar({
     super.key,
     this.title = "My Request",
-    required this.totalRecordsCount,
+    required this.showAddNewBtn,
+    required this.showExportToExcelBtn,
+    required this.addNewBtnTitleText,
     required this.onTapExportToExcel,
     required this.onTapAddNewRequest,
   });
@@ -49,7 +53,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (title.toLowerCase() == 'my request')
+                      if (showAddNewBtn)
                         if (isCompact)
                           IconButton.filled(
                             onPressed: onTapAddNewRequest,
@@ -65,7 +69,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                         else
                           ElevatedButton.icon(
                             onPressed: onTapAddNewRequest,
-                            label: const Text("New Request"),
+                            label: Text(addNewBtnTitleText),
                             icon: const Icon(Icons.add),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryDark,
@@ -79,7 +83,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                               ),
                             ),
                           ),
-                      if (totalRecordsCount > 0) ...[
+                      if (showExportToExcelBtn) ...[
                         const SizedBox(width: 8),
                         if (isCompact)
                           IconButton.outlined(
@@ -107,7 +111,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                               "Export",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            icon: const Icon(Icons.download_sharp),
+                            icon: const Icon(Icons.file_download_outlined),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,

@@ -9,6 +9,9 @@ class AppRoutes {
   static const viewTicketDetailsPath = '/view-ticket-details/:ticketId';
   static const addNewRequest = '/add-new-request';
   static const myActions = '/my-actions';
+  static const ticketCategory = '/ticket-category';
+  static const ticketSubCategory = '/ticket-sub-category';
+
   static const externalTransferTicket = '/external-transfer-ticket';
 
   static const checklist = '/checklist';

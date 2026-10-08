@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/auth_bloc.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 
@@ -18,5 +19,6 @@ class AppBlocProviders {
     BlocProvider<ViewTicketDetailsBloc>(create: (_) => sl<ViewTicketDetailsBloc>()),
     BlocProvider<AddNewTicketBloc>(create: (_) => sl<AddNewTicketBloc>()),
     BlocProvider<TicketingMyActionBloc>(create: (_) => sl<TicketingMyActionBloc>()),
+    BlocProvider<TicketCategoryMasterBloc>(create: (_) => sl<TicketCategoryMasterBloc>()),
   ];
 }

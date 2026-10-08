@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_worksphere_web/core/common/widgets/page_not_found.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/external_transfer_ticket_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_category_master_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_sub_category_master_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details_page.dart';
 
@@ -108,6 +111,20 @@ class AppRouter {
                 ticketId: ticketId,
                 onTransferBtnPressed: () {},
               );
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.ticketCategory,
+            name: 'ticket-category',
+            builder: (context, state) {
+              return const TicketCategoryMasterPage();
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.ticketSubCategory,
+            name: 'ticket-sub-category',
+            builder: (context, state) {
+              return const TicketSubCategoryMasterPage();
             },
           ),
         ],

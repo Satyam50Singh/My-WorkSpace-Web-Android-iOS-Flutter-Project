@@ -168,7 +168,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
         if (!isMobile && !isMini)
           TicketingMyRequestWebAppBar(
             title: pageTitle,
-            totalRecordsCount: _totalRecordsCount,
+            showAddNewBtn: widget.pageTag == 'my-request',
+            showExportToExcelBtn: _totalRecordsCount > 0,
+            addNewBtnTitleText: 'New Request',
             onTapExportToExcel: _fetchTicketExportRecords,
             onTapAddNewRequest: _addNewTicketRequest,
           ),

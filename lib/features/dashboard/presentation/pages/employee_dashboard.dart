@@ -31,6 +31,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       return 'Add New Request';
     } else if (location.startsWith(AppRoutes.myActions)) {
       return 'My Action';
+    } else if (location.startsWith(AppRoutes.ticketCategory)) {
+      return 'Ticket Categories';
+    } else if (location.startsWith(AppRoutes.ticketSubCategory)) {
+      return 'Ticket Sub Categories';
     }
     return 'My Worksphere';
   }
