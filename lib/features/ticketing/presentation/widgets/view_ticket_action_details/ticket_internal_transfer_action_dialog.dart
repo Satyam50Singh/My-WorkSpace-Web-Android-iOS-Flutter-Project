@@ -28,8 +28,6 @@ class TicketInternalTransferActionDialog extends StatefulWidget {
 
 class _TicketInternalTransferActionDialogState
     extends State<TicketInternalTransferActionDialog> {
-  late final SearchController controller;
-
   late final TextEditingController remarkController;
 
   int selectedUserID = 0;
@@ -39,7 +37,6 @@ class _TicketInternalTransferActionDialogState
   @override
   void initState() {
     super.initState();
-    controller = SearchController();
     remarkController = TextEditingController();
 
     final bloc = context.read<TicketingMyActionBloc>();
@@ -49,7 +46,6 @@ class _TicketInternalTransferActionDialogState
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
     remarkController.dispose();
   }
 
@@ -128,7 +124,6 @@ class _TicketInternalTransferActionDialogState
                       onChanged: (value) {
                         searchUser(value);
                       },
-                      searchController: controller,
                       color: widget.color,
                     ),
                     SizedBox(height: 16),

@@ -5,14 +5,14 @@ import '../../theme/app_colors.dart';
 class CustomSearchBar extends StatelessWidget {
   final String hintText;
   final Function(String) onChanged;
-  final TextEditingController searchController;
+  final TextEditingController? searchController;
   final Color? color;
 
   const CustomSearchBar({
     super.key,
     required this.hintText,
     required this.onChanged,
-    required this.searchController,
+    this.searchController,
     this.color,
   });
 

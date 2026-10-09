@@ -37,7 +37,6 @@ class TicketDetailActionHistory extends StatefulWidget {
 
 class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
   List<TicketHistoryEntity>? filteredList = [];
-  final SearchController _controller = SearchController();
   Timer? _debounceTimer;
 
   void filterList(String value) {
@@ -87,7 +86,6 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
   @override
   void dispose() {
     _debounceTimer?.cancel();
-    _controller.dispose();
     super.dispose();
   }
 
@@ -142,7 +140,6 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
                           child: SizedBox(
                             width: 200,
                             child: CustomSearchBar(
-                              searchController: _controller,
                               hintText: 'Search logs, user, action status ...',
                               onChanged: (value) {
                                 if (value.length > 1) {

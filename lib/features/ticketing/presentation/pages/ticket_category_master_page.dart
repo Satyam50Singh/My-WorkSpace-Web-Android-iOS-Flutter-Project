@@ -36,14 +36,11 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
     "Action Status",
   ];
 
-  late final SearchController _searchController;
-
   Timer? _debounceTimer;
 
   @override
   void initState() {
     super.initState();
-    _searchController = SearchController();
 
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
@@ -59,7 +56,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
     _debounceTimer?.cancel();
     super.dispose();
   }
@@ -150,7 +146,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: CustomSearchBar(
-                    searchController: _searchController,
                     hintText: 'Search...',
                     onChanged: searchOperation,
                   ),
