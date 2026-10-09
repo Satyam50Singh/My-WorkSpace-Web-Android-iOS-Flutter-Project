@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_chip.dart';
 import 'package:my_worksphere_web/core/common/widgets/custom_search_bar.dart';
@@ -35,17 +37,24 @@ class TicketDetailActionHistory extends StatefulWidget {
 
 class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
   List<TicketHistoryEntity>? filteredList = [];
+  final SearchController _controller = SearchController();
+  Timer? _debounceTimer;
 
   void filterList(String value) {
-    debugPrint('Value: $value');
-    setState(() {
-      filteredList = widget.actionHistoryList?.where((item) {
-        final searchTerm = value.toLowerCase();
-        return (item.userName?.toLowerCase().contains(searchTerm) ?? false) ||
-            (item.ticketStatus?.toLowerCase().contains(searchTerm) ?? false) ||
-            (item.ticketActionStatus?.toLowerCase().contains(searchTerm) ??
-                false);
-      }).toList();
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        filteredList = widget.actionHistoryList?.where((item) {
+          final searchTerm = value.toLowerCase();
+          return (item.userName?.toLowerCase().contains(searchTerm) ?? false) ||
+              (item.ticketStatus?.toLowerCase().contains(searchTerm) ??
+                  false) ||
+              (item.ticketActionStatus?.toLowerCase().contains(searchTerm) ??
+                  false);
+        }).toList();
+        debugPrint('Filtered List: ${filteredList.toString()}');
+      });
     });
   }
 
@@ -73,6 +82,13 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -126,7 +142,7 @@ class _TicketDetailActionHistoryState extends State<TicketDetailActionHistory> {
                           child: SizedBox(
                             width: 200,
                             child: CustomSearchBar(
-                              searchController: TextEditingController(),
+                              searchController: _controller,
                               hintText: 'Search logs, user, action status ...',
                               onChanged: (value) {
                                 if (value.length > 1) {

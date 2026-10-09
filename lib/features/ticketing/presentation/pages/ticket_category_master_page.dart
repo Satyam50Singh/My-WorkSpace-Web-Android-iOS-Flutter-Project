@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +28,8 @@ class TicketCategoryMasterPage extends StatefulWidget {
 class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
   List<TicketCategoryEntity> categories = [];
 
+  List<TicketCategoryEntity> filteredCategories = [];
+
   static const List<String> _headers = [
     "Category Description",
     "Assigned Department",
@@ -33,6 +37,8 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
   ];
 
   late final SearchController _searchController;
+
+  Timer? _debounceTimer;
 
   @override
   void initState() {
@@ -54,6 +60,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
   @override
   void dispose() {
     _searchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -72,6 +79,27 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         ),
       ),
     );
+  }
+
+  void searchOperation(String value) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+
+    if (value.isNotEmpty && value.isNotEmpty) {
+      final searchText = value.toLowerCase();
+      debugPrint('searchText: $searchText');
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          filteredCategories = categories.where((category) {
+            return (category.category!.toLowerCase().contains(searchText) ||
+                category.department!.toLowerCase().contains(searchText));
+          }).toList();
+        });
+        debugPrint('filteredCategories: ${filteredCategories.toString()}');
+      });
+    } else if (value.isEmpty) {
+      filteredCategories = categories;
+      setState(() {});
+    }
   }
 
   @override
@@ -124,12 +152,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                   child: CustomSearchBar(
                     searchController: _searchController,
                     hintText: 'Search...',
-                    onChanged: (value) {
-                      if (value.isNotEmpty && value.length > 2) {
-                      } else {
-                        if (value.isEmpty) {}
-                      }
-                    },
+                    onChanged: searchOperation,
                   ),
                 ),
               ),
@@ -157,6 +180,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                       LoaderUtils.hideLoader(context);
                       setState(() {
                         categories = state.categoryList;
+                        filteredCategories = categories;
                       });
                     }
                   },
@@ -184,7 +208,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                         }).toList(),
                         source: CategoryDataSource(
                           context,
-                          categories,
+                          filteredCategories,
                           0,
                           onTap: (selectedID) {},
                         ),
