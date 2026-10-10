@@ -17,7 +17,7 @@ class InsertUpdateTicketCategoryRequestModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'CategoryID': categoryID,
+      'Category_ID': categoryID,
       'Category': category,
       'DepartmentID': departmentID,
       'CompanyID': companyID,

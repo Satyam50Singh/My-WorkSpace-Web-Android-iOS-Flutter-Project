@@ -54,7 +54,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       if (showAddNewBtn)
-                        if (isCompact)
+                        if (isVeryCompact)
                           IconButton.filled(
                             onPressed: onTapAddNewRequest,
                             icon: const Icon(Icons.add, color: AppColors.white),
@@ -85,7 +85,7 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                           ),
                       if (showExportToExcelBtn) ...[
                         const SizedBox(width: 8),
-                        if (isCompact)
+                        if (isVeryCompact)
                           IconButton.outlined(
                             onPressed: onTapExportToExcel,
                             icon: const Icon(
