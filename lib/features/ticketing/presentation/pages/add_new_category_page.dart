@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/department_entity.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
@@ -76,22 +78,30 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
       final employee = state.employeeDetail;
-      final companyId = employee.companyId;
-      final loggedInUserID = employee.userID;
+      final companyID = employee.companyId ?? 0;
+      final loggedInUserID = employee.userID?.toString() ?? "0";
       final action = widget.selectedCategory != null ? 'U' : 'C';
       final category = _categoryController.text;
-      final departmentID = _selectedDepartment?.departmentID;
+      final departmentID = _selectedDepartment?.departmentID ?? 0;
       final categoryID = widget.selectedCategory != null
-          ? widget.selectedCategory?.categoryID
+          ? widget.selectedCategory?.categoryID ?? 0
           : 0;
-      if (companyId != null) {
-        debugPrint(
-          'companyID: $companyId, loggedInUserID: $loggedInUserID, action: $action, category: $category, departmentID: $departmentID, categoryID: $categoryID',
-        );
-        // context.read<TicketCategoryMasterBloc>().add(
-        //   DepartmentMasterListRequested(companyID: companyId),
-        // );
-      }
+      debugPrint(
+        'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, category: $category, departmentID: $departmentID, categoryID: $categoryID',
+      );
+      InsertUpdateTicketCategoryRequestModel payload =
+          InsertUpdateTicketCategoryRequestModel(
+            categoryID: categoryID,
+            category: category,
+            departmentID: departmentID,
+            companyID: companyID,
+            loggedInUserID: loggedInUserID,
+            action: action,
+          );
+
+      context.read<TicketCategoryMasterBloc>().add(
+        InsertUpdateCategoryRequested(payload: payload),
+      );
     }
   }
 
@@ -125,6 +135,15 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
                     departments = state.departmentList;
                     setState(() {});
                   }
+                } else if (state is InsertUpdateTicketCategorySuccess) {
+                  LoaderUtils.hideLoader(context);
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    widget.selectedCategory != null
+                        ? 'Category Updated Successfully'
+                        : 'Category added successfully',
+                  );
+                  context.pop(true);
                 }
               },
               builder: (BuildContext context, TicketCategoryMasterState state) {

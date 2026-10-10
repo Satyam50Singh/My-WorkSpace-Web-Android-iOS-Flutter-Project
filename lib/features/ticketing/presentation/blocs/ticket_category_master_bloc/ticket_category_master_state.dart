@@ -25,3 +25,9 @@ final class DepartmentMasterListSuccess extends TicketCategoryMasterState {
 
   DepartmentMasterListSuccess({required this.departmentList});
 }
+
+final class InsertUpdateTicketCategorySuccess extends TicketCategoryMasterState {
+  final String message;
+
+  InsertUpdateTicketCategorySuccess({required this.message});
+}

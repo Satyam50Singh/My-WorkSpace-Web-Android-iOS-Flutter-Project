@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/ticket_category_entity.dart';
 
 import '../../../../core/error/failures.dart';
@@ -11,5 +12,9 @@ abstract class TicketCategoryMasterRepository {
 
   Future<Either<Failure, List<DepartmentEntity>>> fetchDepartmentMasterList({
     required int companyID,
+  });
+
+  Future<Either<Failure, String>> insertUpdateTicketCategory({
+    required InsertUpdateTicketCategoryRequestModel payload,
   });
 }

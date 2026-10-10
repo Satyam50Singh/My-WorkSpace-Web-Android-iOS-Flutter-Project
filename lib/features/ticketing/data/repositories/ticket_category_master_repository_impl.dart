@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/ticket_category_master_data_source.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/department_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticket_category_master_repository.dart';
@@ -16,12 +17,17 @@ class TicketCategoryMasterRepositoryImpl
 
   @override
   Future<Either<Failure, List<TicketCategoryEntity>>>
-  fetchTicketCategoryMasterList({required int companyID})  async {
+  fetchTicketCategoryMasterList({required int companyID}) async {
     try {
-      final response = await _dataSource.fetchTicketCategoryList(companyID: companyID);
+      final response = await _dataSource.fetchTicketCategoryList(
+        companyID: companyID,
+      );
       if (response.status == 1 && response.categoryList != null) {
         return Right(
-          response.categoryList?.map((category) => category.toEntity()).toList() ?? [],
+          response.categoryList
+                  ?.map((category) => category.toEntity())
+                  .toList() ??
+              [],
         );
       } else {
         final message = response.message?.trim();
@@ -40,13 +46,46 @@ class TicketCategoryMasterRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, List<DepartmentEntity>>> fetchDepartmentMasterList({required int companyID}) async {
+  Future<Either<Failure, List<DepartmentEntity>>> fetchDepartmentMasterList({
+    required int companyID,
+  }) async {
     try {
-      final response = await _dataSource.fetchDepartmentList(companyID: companyID);
+      final response = await _dataSource.fetchDepartmentList(
+        companyID: companyID,
+      );
       if (response.status == 1 && response.departmentList != null) {
         return Right(
-          response.departmentList?.map((department) => department.toEntity()).toList() ?? [],
+          response.departmentList
+                  ?.map((department) => department.toEntity())
+                  .toList() ??
+              [],
         );
+      } else {
+        final message = response.message?.trim();
+        return Left(
+          ServerFailure(
+            message?.isNotEmpty == true
+                ? message ?? "Something went wrong!"
+                : "Something went wrong!",
+          ),
+        );
+      }
+    } on ServerException catch (e) {
+      debugPrint('ServerException: ${e.message}');
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> insertUpdateTicketCategory({
+    required InsertUpdateTicketCategoryRequestModel payload,
+  }) async {
+    try {
+      final response = await _dataSource.insertUpdateTicketCategory(
+        payload: payload,
+      );
+      if (response.status == 1 && response.message != null) {
+        return Right(response.message ?? '');
       } else {
         final message = response.message?.trim();
         return Left(

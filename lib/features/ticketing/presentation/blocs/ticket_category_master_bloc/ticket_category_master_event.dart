@@ -13,3 +13,9 @@ class DepartmentMasterListRequested extends TicketCategoryMasterEvent {
 
   DepartmentMasterListRequested({required this.companyID});
 }
+
+class InsertUpdateCategoryRequested extends TicketCategoryMasterEvent {
+  final InsertUpdateTicketCategoryRequestModel payload;
+
+  InsertUpdateCategoryRequested({required this.payload});
+}
