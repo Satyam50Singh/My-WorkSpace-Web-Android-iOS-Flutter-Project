@@ -7,3 +7,9 @@ class TicketCategoryListRequested extends TicketCategoryMasterEvent {
 
   TicketCategoryListRequested({required this.companyID});
 }
+
+class DepartmentMasterListRequested extends TicketCategoryMasterEvent {
+  final int companyID;
+
+  DepartmentMasterListRequested({required this.companyID});
+}

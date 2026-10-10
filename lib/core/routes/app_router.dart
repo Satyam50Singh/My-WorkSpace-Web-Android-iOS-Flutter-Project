@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_worksphere_web/core/common/widgets/page_not_found.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
@@ -23,8 +22,8 @@ class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
     _subscription = stream.asBroadcastStream().listen(
-          (dynamic _) => notifyListeners(),
-        );
+      (dynamic _) => notifyListeners(),
+    );
   }
 
   late final StreamSubscription<dynamic> _subscription;
@@ -107,10 +106,7 @@ class AppRouter {
             builder: (context, state) {
               final ticketIdStr = state.pathParameters['ticketId'];
               final ticketId = int.tryParse(ticketIdStr ?? '') ?? 0;
-              return ExternalTransferTicketPage(
-                ticketId: ticketId,
-                onTransferBtnPressed: () {},
-              );
+              return ExternalTransferTicketPage(ticketId: ticketId);
             },
           ),
           GoRoute(
@@ -138,15 +134,18 @@ class AppRouter {
   ) {
     final employeeState = context.read<EmployeeDetailCubit>().state;
     final currentLocation = state.matchedLocation;
-    debugPrint('currentLocation:: $currentLocation, employeeState:: $employeeState');
+    debugPrint(
+      'currentLocation:: $currentLocation, employeeState:: $employeeState',
+    );
 
     if (employeeState is EmployeeDetailInitial) {
       // While initial/restoring from cache, don't force redirect, let the current page show loading state
       return null;
     }
 
-    final isAuthPage = currentLocation == AppRoutes.onboarding ||
-                       currentLocation.startsWith('/user-login');
+    final isAuthPage =
+        currentLocation == AppRoutes.onboarding ||
+        currentLocation.startsWith('/user-login');
 
     if (employeeState is EmployeeDetailFetched) {
       // If logged in, don't allow accessing login or onboarding pages

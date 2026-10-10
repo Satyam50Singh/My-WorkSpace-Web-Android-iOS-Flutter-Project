@@ -9,13 +9,13 @@ class CategoryDataSource extends DataTableSource {
   final BuildContext context;
   final List<TicketCategoryEntity> categories;
   final int firstRowIndex;
-  final void Function(String) onTap;
+  final void Function(TicketCategoryEntity, String) onActionBtnPressed;
 
   CategoryDataSource(
     this.context,
     this.categories,
     this.firstRowIndex, {
-    required this.onTap,
+    required this.onActionBtnPressed,
   });
 
   Widget _buildCell(String text, bool isMobile, {Color? color}) {
@@ -73,7 +73,9 @@ class CategoryDataSource extends DataTableSource {
                 btnColor: AppColors.primary,
                 btnTextColor: AppColors.white,
                 icon: Icons.edit,
-                onPressed: () {},
+                onPressed: () {
+                  onActionBtnPressed(c1, "Edit");
+                },
               ),
               SizedBox(width: 8),
               CategoryActionButton(
@@ -81,7 +83,9 @@ class CategoryDataSource extends DataTableSource {
                 btnColor: AppColors.rose,
                 btnTextColor: AppColors.white,
                 icon: Icons.delete,
-                onPressed: () {},
+                onPressed: () {
+                  onActionBtnPressed(c1, "Delete");
+                },
               ),
             ],
           ),

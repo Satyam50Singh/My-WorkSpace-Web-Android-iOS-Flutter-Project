@@ -121,7 +121,7 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
       decoratorProps: DropDownDecoratorProps(
         decoration: InputDecoration(
           hintText: widget.hintText,
-          labelText: widget.label,
+          // labelText: widget.label,
           filled: true,
           fillColor: isEnabled ? AppColors.white : AppColors.background,
           labelStyle: TextStyle(

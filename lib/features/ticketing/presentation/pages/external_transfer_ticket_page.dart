@@ -20,12 +20,10 @@ import '../../data/models/add_new_request/ticket_location_category_request.dart'
 
 class ExternalTransferTicketPage extends StatefulWidget {
   final int? ticketId;
-  final Function() onTransferBtnPressed;
 
   const ExternalTransferTicketPage({
     super.key,
     this.ticketId,
-    required this.onTransferBtnPressed,
   });
 
   @override

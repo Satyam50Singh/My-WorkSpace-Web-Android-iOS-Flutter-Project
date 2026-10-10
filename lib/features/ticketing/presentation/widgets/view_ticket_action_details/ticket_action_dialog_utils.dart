@@ -139,10 +139,7 @@ class TicketActionDialogUtils {
             child: SizedBox(
               width: dialogWidth,
               height: double.infinity,
-              child: ExternalTransferTicketPage(
-                ticketId: ticketId ?? 0,
-                onTransferBtnPressed: () {},
-              ),
+              child: ExternalTransferTicketPage(ticketId: ticketId ?? 0),
             ),
           );
         },
