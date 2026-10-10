@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_category_page.dart';
 
+import 'delete_category_dialog.dart';
+
 class CategoryActionDialogUtils {
   static void showAddNewCategoryDialog({
     required BuildContext buildContext,
@@ -51,4 +53,20 @@ class CategoryActionDialogUtils {
       }
     }
   }
+
+  static void showDeleteCategoryDialog({
+    required BuildContext context,
+    required TicketCategoryEntity category,
+    required Function(BuildContext) onPressed,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => DeleteCategoryDialog(
+        category: category,
+        onDeletePressed: onPressed,
+      ),
+    );
+  }
+
 }

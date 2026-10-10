@@ -14,6 +14,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket
 import '../../../../core/common/widgets/custom_search_bar.dart';
 import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 import '../widgets/ticketing_my_request_action/ticket_list_empty_view.dart';
@@ -163,75 +164,113 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
           ),
 
           Expanded(
-            child:
-                BlocConsumer<
-                  TicketCategoryMasterBloc,
-                  TicketCategoryMasterState
-                >(
-                  listener: (context, state) {
-                    if (state is TicketCategoryMasterLoading) {
-                      LoaderUtils.showLoader(context);
-                    }
-                    if (state is TicketCategoryMasterFailure) {
-                      LoaderUtils.hideLoader(context);
-                      SnackBarUtils.showFloatingSnackBar(
-                        context,
-                        state.errorMessage,
-                      );
-                    }
-                    if (state is TicketCategoryMasterSuccess) {
-                      LoaderUtils.hideLoader(context);
-                      setState(() {
-                        categories = state.categoryList;
-                        filteredCategories = categories;
-                      });
-                    }
-                  },
-                  builder: (context, state) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8.0,
-                        right: 8.0,
-                        top: 32,
-                        bottom: 32,
+            child: BlocConsumer<TicketCategoryMasterBloc, TicketCategoryMasterState>(
+              listener: (context, state) {
+                if (state is TicketCategoryMasterLoading) {
+                  LoaderUtils.showLoader(context);
+                }
+                if (state is TicketCategoryMasterFailure) {
+                  LoaderUtils.hideLoader(context);
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    state.errorMessage,
+                  );
+                }
+                if (state is TicketCategoryMasterSuccess) {
+                  LoaderUtils.hideLoader(context);
+                  setState(() {
+                    categories = state.categoryList;
+                    filteredCategories = categories;
+                  });
+                }
+                if (state is InsertUpdateTicketCategorySuccess) {
+                  LoaderUtils.hideLoader(context);
+                  _apiCallForCategoryList();
+                }
+              },
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: 8.0,
+                    right: 8.0,
+                    top: 32,
+                    bottom: 32,
+                  ),
+                  child: PaginatedDataTable2(
+                    headingRowColor: WidgetStateColor.resolveWith(
+                      (states) => AppColors.primaryDark,
+                    ),
+                    headingRowDecoration: const BoxDecoration(
+                      color: AppColors.primaryDark,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
                       ),
-                      child: PaginatedDataTable2(
-                        headingRowColor: WidgetStateColor.resolveWith(
-                          (states) => AppColors.primaryDark,
-                        ),
-                        headingRowDecoration: const BoxDecoration(
-                          color: AppColors.primaryDark,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            topRight: Radius.circular(8),
-                          ),
-                        ),
-                        columns: _headers.map((header) {
-                          return _buildColumnHeaderCell(header);
-                        }).toList(),
-                        source: CategoryDataSource(
-                          context,
-                          filteredCategories,
-                          0,
-                          onActionBtnPressed: (category, action) {
-                            if (action == "Edit") {
-                              CategoryActionDialogUtils.showAddNewCategoryDialog(
-                                buildContext: context,
-                                selectedCategory: category,
-                                onSuccess: _apiCallForCategoryList,
-                              );
-                            } else if (action == "Delete") {}
-                          },
-                        ),
-                        onRowsPerPageChanged: (value) {
-                          if (value == null) return;
-                        },
-                        dataRowHeight: 54,
-                        empty: const TicketListEmptyView(),
-                      ),
-                    );
-                  },
-                ),
+                    ),
+                    columns: _headers.map((header) {
+                      return _buildColumnHeaderCell(header);
+                    }).toList(),
+                    source: CategoryDataSource(
+                      context,
+                      filteredCategories,
+                      0,
+                      onActionBtnPressed: (c1, action) {
+                        if (action == "Edit") {
+                          CategoryActionDialogUtils.showAddNewCategoryDialog(
+                            buildContext: context,
+                            selectedCategory: c1,
+                            onSuccess: _apiCallForCategoryList,
+                          );
+                        } else if (action == "Delete") {
+                          CategoryActionDialogUtils.showDeleteCategoryDialog(
+                            context: context,
+                            category: c1,
+                            onPressed: (dialogCtx) {
+                              Navigator.of(dialogCtx).pop();
+                              final state = context
+                                  .read<EmployeeDetailCubit>()
+                                  .state;
+                              if (state is EmployeeDetailFetched) {
+                                final employee = state.employeeDetail;
+                                final companyID = employee.companyId ?? 0;
+                                final loggedInUserID =
+                                    employee.userID?.toString() ?? "0";
+                                final action = 'D';
+                                final category = c1.category ?? "";
+                                final departmentID = c1.departmentID ?? 0;
+                                final categoryID = c1.categoryID ?? 0;
+                                debugPrint(
+                                  'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, category: $category, departmentID: $departmentID, categoryID: $categoryID',
+                                );
+                                final payload =
+                                    InsertUpdateTicketCategoryRequestModel(
+                                      categoryID: categoryID,
+                                      category: category,
+                                      departmentID: departmentID,
+                                      companyID: companyID,
+                                      loggedInUserID: loggedInUserID,
+                                      action: action,
+                                    );
+                                context.read<TicketCategoryMasterBloc>().add(
+                                  InsertUpdateCategoryRequested(
+                                    payload: payload,
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    onRowsPerPageChanged: (value) {
+                      if (value == null) return;
+                    },
+                    dataRowHeight: 54,
+                    empty: const TicketListEmptyView(),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
