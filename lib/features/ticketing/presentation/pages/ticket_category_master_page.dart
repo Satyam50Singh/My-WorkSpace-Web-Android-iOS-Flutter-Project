@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,15 +8,15 @@ import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_action_dialog_utils.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_data_source.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_master_list_view_mobile.dart';
 
 import '../../../../core/common/widgets/custom_search_bar.dart';
 import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
+import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
-import '../widgets/ticketing_my_request_action/ticket_list_empty_view.dart';
 
 class TicketCategoryMasterPage extends StatefulWidget {
   const TicketCategoryMasterPage({super.key});
@@ -64,23 +63,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
   void dispose() {
     _debounceTimer?.cancel();
     super.dispose();
-  }
-
-  DataColumn2 _buildColumnHeaderCell(String header) {
-    return DataColumn2(
-      label: Center(
-        child: Text(
-          header,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontSize: 14,
-            color: AppColors.white,
-            fontWeight: FontWeight.w400,
-          ),
-          softWrap: false,
-          maxLines: 1,
-        ),
-      ),
-    );
   }
 
   void searchOperation(String value) {
@@ -227,183 +209,15 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                   },
                   builder: (context, state) {
                     if (!isMobile) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 8.0,
-                          right: 8.0,
-                          top: isMobile ? 08 : 32,
-                          bottom: 32,
-                        ),
-                        child: PaginatedDataTable2(
-                          minWidth: 640,
-                          headingRowColor: WidgetStateColor.resolveWith(
-                            (states) => AppColors.primaryDark,
-                          ),
-                          headingRowDecoration: const BoxDecoration(
-                            color: AppColors.primaryDark,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
-                            ),
-                          ),
-                          columns: _headers.map((header) {
-                            return _buildColumnHeaderCell(header);
-                          }).toList(),
-                          source: CategoryDataSource(
-                            context,
-                            filteredCategories,
-                            0,
-                            onActionBtnPressed: (c1, action) {
-                              _performEditDeleteOperation(action, c1);
-                            },
-                          ),
-                          onRowsPerPageChanged: (value) {
-                            if (value == null) return;
-                          },
-                          dataRowHeight: 54,
-                          empty: const TicketListEmptyView(),
-                          renderEmptyRowsInTheEnd: false,
-                        ),
+                      return CategoryMasterTableViewWeb(
+                        filteredCategories: filteredCategories,
+                        performEditDeleteOperation: _performEditDeleteOperation,
                       );
                     }
 
-                    return ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 4),
-
-                      itemCount: filteredCategories.length,
-                      itemBuilder: (context, index) {
-                        final category = filteredCategories[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Card(
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Icon(
-                                              Icons.local_offer_outlined,
-                                              size: 18,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: Text(
-                                                category.category ?? "",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headlineSmall
-                                                    ?.copyWith(
-                                                      fontSize: 14,
-                                                      color:
-                                                          AppColors.textSecondary,
-                                                    ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.apartment_outlined,
-                                              size: 18,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: Text(
-                                                category.department ?? "",
-                                                style: Theme.of(
-                                                  context,
-                                                ).textTheme.headlineSmall,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Row(
-                                    children: [
-                                      IconButton.filled(
-                                        onPressed: () {
-                                          _performEditDeleteOperation(
-                                            "Edit",
-                                            category,
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.edit,
-                                          color: AppColors.white,
-                                        ),
-                                        style: IconButton.styleFrom(
-                                          minimumSize: const Size(24, 24),
-                                          backgroundColor:
-                                              AppColors.primaryDark,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      IconButton.outlined(
-                                        onPressed: () {
-                                          _performEditDeleteOperation(
-                                            "Delete",
-                                            category,
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: AppColors.primaryDark,
-                                        ),
-                                        style: IconButton.styleFrom(
-                                          minimumSize: const Size(24, 24),
-                                          backgroundColor: AppColors.white,
-                                          side: const BorderSide(
-                                            color: AppColors.primaryDark,
-                                            width: 1,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                    return CategoryMasterListViewMobile(
+                      filteredCategories: filteredCategories,
+                      performEditDeleteOperation: _performEditDeleteOperation,
                     );
                   },
                 ),
