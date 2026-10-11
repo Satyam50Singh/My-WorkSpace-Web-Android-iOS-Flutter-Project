@@ -18,6 +18,7 @@ class DeleteCategoryDialog extends StatelessWidget {
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 16),
       child: Container(
+        width: 560,
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
