@@ -86,6 +86,9 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
     }
   }
 
+  int totalPages = 0;
+  int currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -175,7 +178,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
           ],
 
           Expanded(
@@ -199,7 +202,9 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                       LoaderUtils.hideLoader(context);
                       setState(() {
                         categories = state.categoryList;
-                        filteredCategories = categories;
+                        filteredCategories = categories.sublist(0, 10);
+                        totalPages = (categories.length / 10).ceil();
+                        currentPage = 1;
                       });
                     }
                     if (state is InsertUpdateTicketCategorySuccess) {
@@ -215,9 +220,56 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                       );
                     }
 
-                    return CategoryMasterListViewMobile(
-                      filteredCategories: filteredCategories,
-                      performEditDeleteOperation: _performEditDeleteOperation,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Card(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: goToPrevious,
+                                  icon: Icon(Icons.chevron_left_rounded),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                Text(
+                                  '$currentPage of $totalPages',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  onPressed: goToNext,
+                                  icon: Icon(Icons.chevron_right_rounded),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Expanded(
+                          child: CategoryMasterListViewMobile(
+                            filteredCategories: filteredCategories,
+                            performEditDeleteOperation:
+                                _performEditDeleteOperation,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -225,6 +277,36 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         ],
       ),
     );
+  }
+
+  void goToPrevious() {
+    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
+    if (currentPage != 1 && currentPage <= totalPages) {
+      // 2, 3, 4
+      setState(() {
+        currentPage--; // 1 // 2
+        final startIndex = (currentPage - 1) * 10; // 0 // 2
+        final endIndex = startIndex + 10;
+        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        filteredCategories = categories.sublist(startIndex, endIndex);
+      });
+    }
+  }
+
+  void goToNext() {
+    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
+    if (currentPage <= totalPages) {
+      setState(() {
+        currentPage++;
+        final startIndex = (currentPage - 1) * 10;
+        var endIndex = startIndex + 10;
+        if (endIndex > categories.length) {
+          endIndex = categories.length;
+        }
+        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        filteredCategories = categories.sublist(startIndex, endIndex);
+      });
+    }
   }
 
   void _performEditDeleteOperation(String action, TicketCategoryEntity c1) {
