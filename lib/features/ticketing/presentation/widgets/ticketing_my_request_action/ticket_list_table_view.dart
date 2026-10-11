@@ -93,9 +93,11 @@ class _TicketListTableViewState extends State<TicketListTableView> {
       horizontalMargin: 16,
       columnSpacing: 16,
       headingRowHeight: 48,
-      dataRowHeight: 56,
+      dataRowHeight: 48,
       rowsPerPage: effectiveRowsPerPage,
       availableRowsPerPage: availableRows,
+      renderEmptyRowsInTheEnd: false,
+      fit: FlexFit.loose,
       onPageChanged: (value) {
         final pageIndex = (value / effectiveRowsPerPage).floor() + 1;
         widget.updatePageCount(pageIndex);

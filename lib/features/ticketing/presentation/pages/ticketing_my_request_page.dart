@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +40,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
   String _selectedStatus = 'All';
   int _totalRecordsCount = 0;
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
 
   DateTimeRange selectedRange = DateTimeRange(
     start: DateTime.now(),
@@ -61,6 +64,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
   @override
   void dispose() {
     _searchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -231,37 +235,22 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                   ),
                   SizedBox(width: 8),
 
-                  Flexible(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 240,
-                        maxHeight: 48,
-                      ),
-                      child: CustomSearchBar(
-                        searchController: _searchController,
-                        hintText: 'Search...',
-                        onChanged: (value) {
-                          if (value.isNotEmpty && value.length > 2) {
-                            _currentSearchText = value;
-                            _fetchTicketDetails(
-                              pageCount: 1,
-                              pageSize: 10,
-                              searchText: _currentSearchText,
-                            );
-                          } else {
-                            if (value.isEmpty) {
-                              _currentSearchText = '';
-                              _fetchTicketDetails(
-                                pageCount: 1,
-                                pageSize: 10,
-                                searchText: _currentSearchText,
-                              );
-                            }
-                          }
-                        },
+                  if (_totalRecordsCount > 0)
+                    Flexible(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 272,
+                          maxHeight: 48,
+                        ),
+                        child: CustomSearchBar(
+                          searchController: _searchController,
+                          hintText: 'Search...',
+                          onChanged: (value) {
+                            _searchTicket(value);
+                          },
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -308,7 +297,8 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                         ),
                       ),
                     ),
-                    if (!isMobile) SizedBox(width: 4),
+                    // if (!isMobile)
+                      SizedBox(width: 4),
                     if (_totalRecordsCount > 0)
                       SizedBox(
                         height: 42,
@@ -327,7 +317,8 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           ),
                         ),
                       ),
-                    if (!isMobile) SizedBox(width: 4),
+                    // if (!isMobile)
+                      SizedBox(width: 4),
                     if (widget.pageTag == 'my-request')
                       SizedBox(
                         height: 42,
@@ -562,6 +553,27 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       if (result == true) {
         _fetchTicketDetails(pageCount: 1);
       }
+    }
+  }
+
+  void _searchTicket(String value) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+    if (value.isNotEmpty && value.length > 2) {
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        _currentSearchText = value;
+        _fetchTicketDetails(
+          pageCount: 1,
+          pageSize: 10,
+          searchText: _currentSearchText,
+        );
+      });
+    } else if (value.isEmpty) {
+      _currentSearchText = '';
+      _fetchTicketDetails(
+        pageCount: 1,
+        pageSize: 10,
+        searchText: _currentSearchText,
+      );
     }
   }
 }
