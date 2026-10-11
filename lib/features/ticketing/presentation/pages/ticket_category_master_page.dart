@@ -106,6 +106,9 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 600;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -114,54 +117,83 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
       },
       child: Column(
         children: [
-          TicketingMyRequestWebAppBar(
-            title: 'Ticket Categories',
-            showAddNewBtn: true,
-            showExportToExcelBtn: true,
-            addNewBtnTitleText: 'Add New Category',
-            onTapExportToExcel: () {
-              if (categories.isNotEmpty) {
-                SnackBarUtils.showFloatingSnackBar(
-                  context,
-                  'Downloading excel file...',
-                );
-                final currentDate = DateTime.now();
-                final formattedDate =
-                    '${currentDate.year}-${currentDate.month}-${currentDate.day}';
-                ExcelExporter().export(
-                  fileName: 'category_master_export_$formattedDate.xlsx',
-                  sheetName: 'Category Records',
-                  headers: ['Category ID', ..._headers],
-                  dataList: categories,
-                );
-              }
-            },
-            onTapAddNewRequest: () {
-              CategoryActionDialogUtils.showAddNewCategoryDialog(
-                buildContext: context,
-                onSuccess: _apiCallForCategoryList,
-              );
-            },
-          ),
+          if (!isMobile) ...[
+            TicketingMyRequestWebAppBar(
+              title: 'Ticket Categories',
+              showAddNewBtn: true,
+              showExportToExcelBtn: true,
+              addNewBtnTitleText: 'Add New Category',
+              onTapExportToExcel: _performExportOperation,
+              onTapAddNewRequest: _performAddNewCategoryOperation,
+            ),
 
-          SizedBox(height: 8),
+            SizedBox(height: 8),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: 400,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: CustomSearchBar(
-                    hintText: 'Search...',
-                    onChanged: searchOperation,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: isMobile ? 408 : 400,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: CustomSearchBar(
+                      hintText: 'Search...',
+                      onChanged: searchOperation,
+                    ),
                   ),
                 ),
+              ],
+            ),
+          ],
+
+          if (isMobile) ...[
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CustomSearchBar(
+                      hintText: 'Search...',
+                      onChanged: searchOperation,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton.filled(
+                    onPressed: _performAddNewCategoryOperation,
+                    icon: const Icon(Icons.add, color: AppColors.white),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(36, 36),
+                      backgroundColor: AppColors.primaryDark,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton.outlined(
+                    onPressed: _performExportOperation,
+                    icon: const Icon(
+                      Icons.download_sharp,
+                      color: AppColors.primaryDark,
+                    ),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(24, 24),
+                      backgroundColor: AppColors.white,
+                      side: const BorderSide(
+                        color: AppColors.primaryDark,
+                        width: 1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
 
           Expanded(
             child:
@@ -194,13 +226,14 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                   },
                   builder: (context, state) {
                     return Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         left: 8.0,
                         right: 8.0,
-                        top: 32,
+                        top: isMobile ? 08 : 32,
                         bottom: 32,
                       ),
                       child: PaginatedDataTable2(
+                        minWidth: 640,
                         headingRowColor: WidgetStateColor.resolveWith(
                           (states) => AppColors.primaryDark,
                         ),
@@ -278,5 +311,27 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         },
       );
     }
+  }
+
+  void _performExportOperation() {
+    if (categories.isNotEmpty) {
+      SnackBarUtils.showFloatingSnackBar(context, 'Downloading excel file...');
+      final currentDate = DateTime.now();
+      final formattedDate =
+          '${currentDate.year}-${currentDate.month}-${currentDate.day}';
+      ExcelExporter().export(
+        fileName: 'category_master_export_$formattedDate.xlsx',
+        sheetName: 'Category Records',
+        headers: ['Category ID', ..._headers],
+        dataList: categories,
+      );
+    }
+  }
+
+  void _performAddNewCategoryOperation() {
+    CategoryActionDialogUtils.showAddNewCategoryDialog(
+      buildContext: context,
+      onSuccess: _apiCallForCategoryList,
+    );
   }
 }
