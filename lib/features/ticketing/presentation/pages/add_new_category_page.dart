@@ -188,7 +188,7 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
                             const SizedBox(height: 16),
                             const LabelHeading(
                               label: 'Department',
-                              icon: Icons.comment,
+                              icon: Icons.apartment_outlined,
                             ),
                             const SizedBox(height: 16),
                             if (state is DepartmentMasterListLoading)

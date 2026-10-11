@@ -17,8 +17,8 @@ class CategoryActionDialogUtils {
 
     if (isMobile) {
       final result = await buildContext.pushNamed<bool>(
-        'external-transfer-ticket',
-        //pathParameters: {'ticketId': '${ticketId ?? 0}'},
+        'add-new-category',
+        extra: selectedCategory,
       );
       if (result == true) {
         debugPrint('navigated with true');
@@ -62,6 +62,7 @@ class CategoryActionDialogUtils {
     showDialog(
       context: context,
       barrierDismissible: false,
+      fullscreenDialog: true,
       builder: (_) => DeleteCategoryDialog(
         category: category,
         onDeletePressed: onPressed,
