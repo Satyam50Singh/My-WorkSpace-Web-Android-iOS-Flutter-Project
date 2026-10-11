@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +36,8 @@ class _TicketInternalTransferActionDialogState
   List<TicketTransferUserListEntity> userList = [];
   late List<TicketTransferUserListEntity> finalUserList = userList;
 
+  Timer? _debounceTimer;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +51,7 @@ class _TicketInternalTransferActionDialogState
   void dispose() {
     super.dispose();
     remarkController.dispose();
+    _debounceTimer?.cancel();
   }
 
   void searchUser(String query) {
@@ -59,17 +64,20 @@ class _TicketInternalTransferActionDialogState
 
     final lowerQuery = query.trim().toLowerCase();
 
-    final filteredList = userList.where((user) {
-      final name = (user.userName ?? "").toLowerCase();
-      final code = (user.userCode ?? "").toLowerCase();
-      final department = (user.department ?? "").toLowerCase();
-      return name.contains(lowerQuery) ||
-          code.contains(lowerQuery) ||
-          department.contains(lowerQuery);
-    }).toList();
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
 
-    setState(() {
-      finalUserList = filteredList;
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      final filteredList = userList.where((user) {
+        final name = (user.userName ?? "").toLowerCase();
+        final code = (user.userCode ?? "").toLowerCase();
+        final department = (user.department ?? "").toLowerCase();
+        return name.contains(lowerQuery) ||
+            code.contains(lowerQuery) ||
+            department.contains(lowerQuery);
+      }).toList();
+      setState(() {
+        finalUserList = filteredList;
+      });
     });
   }
 
