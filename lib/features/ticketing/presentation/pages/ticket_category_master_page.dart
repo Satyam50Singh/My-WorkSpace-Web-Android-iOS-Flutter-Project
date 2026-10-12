@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,8 @@ import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
+import '../widgets/ticket_category_master_widgets/build_master_cell.dart';
+import '../widgets/ticket_category_master_widgets/category_action_button.dart';
 import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 
@@ -202,7 +205,11 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                       LoaderUtils.hideLoader(context);
                       setState(() {
                         categories = state.categoryList;
-                        filteredCategories = categories.sublist(0, 10);
+                        if (kIsWeb) {
+                          filteredCategories = categories;
+                        } else {
+                          filteredCategories = categories.sublist(0, 10);
+                        }
                         totalPages = (categories.length / 10).ceil();
                         currentPage = 1;
                       });
@@ -214,9 +221,63 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                   },
                   builder: (context, state) {
                     if (!isMobile) {
-                      return CategoryMasterTableViewWeb(
-                        filteredCategories: filteredCategories,
-                        performEditDeleteOperation: _performEditDeleteOperation,
+                      return CategoryMasterTableViewWeb<TicketCategoryEntity>(
+                        filteredItems: filteredCategories,
+                        headers: _headers,
+                        minWidth: 720,
+                        cellBuilder: (item, isMobile) {
+                          return [
+                            DataCell(
+                              buildMasterCell(
+                                context,
+                                item.category ?? '-',
+                                isMobile,
+                              ),
+                            ),
+                            DataCell(
+                              buildMasterCell(
+                                context,
+                                item.department ?? '-',
+                                isMobile,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            DataCell(
+                              Row(
+                                crossAxisAlignment: isMobile
+                                    ? CrossAxisAlignment.start
+                                    : CrossAxisAlignment.center,
+                                mainAxisAlignment: isMobile
+                                    ? MainAxisAlignment.start
+                                    : MainAxisAlignment.center,
+                                children: [
+                                  CategoryActionButton(
+                                    btnTitle: 'Edit',
+                                    btnColor: AppColors.primary,
+                                    btnTextColor: AppColors.white,
+                                    icon: Icons.edit,
+                                    onPressed: () {
+                                      _performEditDeleteOperation("Edit", item);
+                                    },
+                                  ),
+                                  SizedBox(width: 8),
+                                  CategoryActionButton(
+                                    btnTitle: 'Delete',
+                                    btnColor: AppColors.rose,
+                                    btnTextColor: AppColors.white,
+                                    icon: Icons.delete,
+                                    onPressed: () {
+                                      _performEditDeleteOperation(
+                                        "Delete",
+                                        item,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ];
+                        },
                       );
                     }
 

@@ -2,33 +2,30 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
-import '../../../domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import '../ticketing_my_request_action/ticket_list_empty_view.dart';
 import 'category_data_source.dart';
 
-class CategoryMasterTableViewWeb extends StatefulWidget {
-  final List<TicketCategoryEntity> filteredCategories;
-  final Function(String, TicketCategoryEntity) performEditDeleteOperation;
+class CategoryMasterTableViewWeb<T> extends StatefulWidget {
+  final List<T> filteredItems;
+  final List<String> headers;
+  final List<DataCell> Function(T item, bool isMobile) cellBuilder;
+  final double minWidth;
 
   const CategoryMasterTableViewWeb({
     super.key,
-    required this.filteredCategories,
-    required this.performEditDeleteOperation,
+    required this.filteredItems,
+    required this.headers,
+    required this.cellBuilder,
+    this.minWidth = 640,
   });
 
   @override
-  State<CategoryMasterTableViewWeb> createState() =>
-      _CategoryMasterTableViewWebState();
+  State<CategoryMasterTableViewWeb<T>> createState() =>
+      _CategoryMasterTableViewWebState<T>();
 }
 
-class _CategoryMasterTableViewWebState
-    extends State<CategoryMasterTableViewWeb> {
-  static const List<String> _headers = [
-    "Category Description",
-    "Assigned Department",
-    "Action Status",
-  ];
-
+class _CategoryMasterTableViewWebState<T>
+    extends State<CategoryMasterTableViewWeb<T>> {
   DataColumn2 _buildColumnHeaderCell(String header) {
     return DataColumn2(
       label: Center(
@@ -70,16 +67,14 @@ class _CategoryMasterTableViewWebState
             topRight: Radius.circular(8),
           ),
         ),
-        columns: _headers.map((header) {
+        columns: widget.headers.map((header) {
           return _buildColumnHeaderCell(header);
         }).toList(),
-        source: CategoryDataSource(
+        source: CategoryDataSource<T>(
           context,
-          widget.filteredCategories,
+          widget.filteredItems,
           0,
-          onActionBtnPressed: (c1, action) {
-            widget.performEditDeleteOperation(action, c1);
-          },
+          cellBuilder: (item, isMobile) => widget.cellBuilder(item, isMobile),
         ),
         onRowsPerPageChanged: (value) {
           if (value == null) return;
