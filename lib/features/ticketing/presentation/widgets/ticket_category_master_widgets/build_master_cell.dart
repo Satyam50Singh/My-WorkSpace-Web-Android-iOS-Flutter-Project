@@ -16,13 +16,17 @@ Widget buildMasterCell(
             color: color ?? AppColors.textPrimary,
           ),
         )
-      : Center(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontSize: 14,
-              color: color ?? AppColors.textPrimary,
+      : Expanded(
+        child: Center(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontSize: 14,
+                color: color ?? AppColors.textPrimary,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-        );
+      );
 }
