@@ -48,10 +48,10 @@ class SubCategoryModel extends SubCategoryMasterEntity {
 
   SubCategoryMasterEntity toEntity() {
     return SubCategoryMasterEntity(
-      subCategoryID,
-      subCategory,
       categoryID,
       category,
+      subCategoryID,
+      subCategory,
       priority,
     );
   }

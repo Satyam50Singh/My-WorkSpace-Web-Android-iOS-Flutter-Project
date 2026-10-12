@@ -45,6 +45,12 @@ class ExcelExporter {
         sheet.getRangeByIndex(row, 2).setText(ticket.category ?? '');
         sheet.getRangeByIndex(row, 3).setText(ticket.department ?? '');
         sheet.getRangeByIndex(row, 4).setText('Active');
+      } else if (sheetName.toLowerCase() == 'sub-category records') {
+        sheet.getRangeByIndex(row, 1).setText(ticket.subCategoryID.toString());
+        sheet.getRangeByIndex(row, 2).setText(ticket.subCategory ?? '');
+        sheet.getRangeByIndex(row, 3).setText(ticket.category ?? '');
+        sheet.getRangeByIndex(row, 4).setText(ticket.priority ?? '');
+        sheet.getRangeByIndex(row, 5).setText('Active');
       }
     }
 

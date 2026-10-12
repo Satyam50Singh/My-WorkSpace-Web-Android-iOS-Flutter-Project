@@ -11,6 +11,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
 
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../widgets/ticket_category_master_widgets/category_action_button.dart';
@@ -59,7 +60,15 @@ class _TicketSubCategoryMasterPageState
     return [
       DataCell(buildMasterCell(context, item.subCategory ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.category ?? '-', isMobile)),
-      DataCell(buildMasterCell(context, item.priority ?? '-', isMobile)),
+      DataCell(
+        buildMasterCell(
+          context,
+          (item.priority == null || item.priority!.isEmpty)
+              ? '-'
+              : item.priority!,
+          isMobile,
+        ),
+      ),
       DataCell(
         Row(
           crossAxisAlignment: isMobile
@@ -195,7 +204,20 @@ class _TicketSubCategoryMasterPageState
     SubCategoryMasterEntity item,
   ) {}
 
-  void _performExportOperation() {}
+  void _performExportOperation() {
+    if (subCategories.isNotEmpty) {
+      SnackBarUtils.showFloatingSnackBar(context, 'Downloading excel file...');
+      final currentDate = DateTime.now();
+      final formattedDate =
+          '${currentDate.year}-${currentDate.month}-${currentDate.day}';
+      ExcelExporter().export(
+        fileName: 'sub_category_master_export_$formattedDate.xlsx',
+        sheetName: 'Sub-Category Records',
+        headers: ['SubCategory ID', ..._headers],
+        dataList: subCategories,
+      );
+    }
+  }
 
   void _performAddNewCategoryOperation() {}
 }
