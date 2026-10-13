@@ -57,16 +57,57 @@ class _TicketSubCategoryMasterPageState
     SubCategoryMasterEntity item,
     bool isMobile,
   ) {
+    final priorityText = (item.priority == null || item.priority!.isEmpty)
+        ? 'Minor'
+        : item.priority!;
+
     return [
       DataCell(buildMasterCell(context, item.subCategory ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.category ?? '-', isMobile)),
       DataCell(
-        buildMasterCell(
-          context,
-          (item.priority == null || item.priority!.isEmpty)
-              ? '-'
-              : item.priority!,
-          isMobile,
+        Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: priorityText == 'Major'
+                  ? AppColors.btnBgRed.withValues(alpha: 0.1)
+                  : AppColors.amber.withValues(alpha: 0.1),
+              border: Border.all(
+                color: priorityText == 'Major'
+                    ? AppColors.btnBgRed
+                    : AppColors.amber,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 4.0,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.circle,
+                    color: priorityText == 'Major'
+                        ? AppColors.btnBgRed
+                        : AppColors.orange,
+                    size: 8,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    priorityText,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: 12,
+                      color: priorityText == 'Major'
+                          ? AppColors.btnBgRed
+                          : AppColors.orange,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
       DataCell(
@@ -197,7 +238,27 @@ class _TicketSubCategoryMasterPageState
     );
   }
 
-  void _searchOperation(String query) {}
+  void _searchOperation(String value) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+
+    if (value.isNotEmpty && value.isNotEmpty) {
+      final searchText = value.toLowerCase();
+      debugPrint('searchText: $searchText');
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          filteredSubCategories = subCategories.where((category) {
+            return (category.category!.toLowerCase().contains(searchText) ||
+                category.subCategory!.toLowerCase().contains(searchText) ||
+                category.priority!.toLowerCase().contains(searchText));
+          }).toList();
+        });
+        debugPrint('filteredSubCategories: ${filteredSubCategories.toString()}');
+      });
+    } else if (value.isEmpty) {
+      filteredSubCategories = subCategories;
+      setState(() {});
+    }
+  }
 
   void _performEditDeleteOperation(
     String action,

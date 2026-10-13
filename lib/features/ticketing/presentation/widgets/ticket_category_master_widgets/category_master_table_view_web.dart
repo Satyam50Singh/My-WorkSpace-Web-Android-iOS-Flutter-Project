@@ -52,8 +52,8 @@ class _CategoryMasterTableViewWebState<T>
       padding: EdgeInsets.only(
         left: 8.0,
         right: 8.0,
-        top: isMobile ? 08 : 32,
-        bottom: 32,
+        top: isMobile ? 08 : 16,
+        bottom: 16,
       ),
       child: PaginatedDataTable2(
         minWidth: 640,
