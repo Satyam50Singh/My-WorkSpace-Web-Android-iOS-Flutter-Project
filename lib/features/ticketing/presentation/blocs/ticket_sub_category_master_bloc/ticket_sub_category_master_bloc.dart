@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 
-import '../../domain/usecases/ticket_sub_category_usecase/ticket_sub_category_master_usecase.dart';
+import '../../../domain/entities/ticket_category_entities/sub_category_master_entity.dart';
+import '../../../domain/usecases/ticket_sub_category_usecase/ticket_sub_category_master_usecase.dart';
 
 part 'ticket_sub_category_master_event.dart';
 part 'ticket_sub_category_master_state.dart';

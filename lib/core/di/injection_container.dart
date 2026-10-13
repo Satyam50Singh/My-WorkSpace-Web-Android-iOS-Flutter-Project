@@ -26,7 +26,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_action_history_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
