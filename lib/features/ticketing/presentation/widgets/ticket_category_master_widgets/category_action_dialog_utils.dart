@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_category_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_sub_category_page.dart';
 
 import 'delete_category_dialog.dart';
 
@@ -56,7 +58,7 @@ class CategoryActionDialogUtils {
 
   static void showDeleteCategoryDialog({
     required BuildContext context,
-    required TicketCategoryEntity category,
+    required String itemTitle,
     required Function(BuildContext) onPressed,
   }) {
     showDialog(
@@ -64,10 +66,57 @@ class CategoryActionDialogUtils {
       barrierDismissible: false,
       fullscreenDialog: true,
       builder: (_) => DeleteCategoryDialog(
-        category: category,
+        itemTitle: itemTitle,
         onDeletePressed: onPressed,
       ),
     );
   }
 
+  static void showAddSubNewCategoryDialog({
+    required BuildContext buildContext,
+    SubCategoryMasterEntity? subCategory,
+    VoidCallback? onSuccess,
+  }) async {
+    final width = MediaQuery.sizeOf(buildContext).width;
+    final isTablet = width >= 600 && width < 1200;
+    final isMobile = width < 600;
+
+    if (isMobile) {
+      final result = await buildContext.pushNamed<bool>(
+        'add-new-sub-category',
+        extra: subCategory,
+      );
+      if (result == true) {
+        debugPrint('navigated with true');
+        onSuccess?.call();
+      }
+    } else {
+      final dialogWidth = isTablet
+          ? 440.0
+          : isMobile
+          ? 360.0
+          : 640.0;
+
+      final result = await showDialog<bool>(
+        context: buildContext,
+        barrierDismissible: false,
+        builder: (context) {
+          return Dialog(
+            alignment: Alignment.centerRight,
+            insetPadding: EdgeInsets.zero,
+            child: SizedBox(
+              width: dialogWidth,
+              height: double.infinity,
+              child: AddNewSubCategoryPage(selectedSubCategory: subCategory),
+            ),
+          );
+        },
+      );
+
+      if (result == true) {
+        debugPrint('navigated with true');
+        onSuccess?.call();
+      }
+    }
+  }
 }

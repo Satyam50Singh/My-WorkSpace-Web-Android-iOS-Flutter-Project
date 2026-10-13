@@ -380,7 +380,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
     } else if (action == "Delete") {
       CategoryActionDialogUtils.showDeleteCategoryDialog(
         context: context,
-        category: c1,
+        itemTitle: c1.category ?? "",
         onPressed: (dialogCtx) {
           Navigator.of(dialogCtx).pop();
           final state = context.read<EmployeeDetailCubit>().state;

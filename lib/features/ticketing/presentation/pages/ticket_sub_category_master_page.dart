@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/build_master_cell.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
 
@@ -15,6 +15,7 @@ import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../widgets/ticket_category_master_widgets/category_action_button.dart';
+import '../widgets/ticket_category_master_widgets/category_action_dialog_utils.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 
 class TicketSubCategoryMasterPage extends StatefulWidget {
@@ -223,7 +224,7 @@ class _TicketSubCategoryMasterPageState
                     }
                   },
                   builder: (context, state) {
-                    return CategoryMasterTableViewWeb(
+                    return CategoryMasterTableViewWeb<SubCategoryMasterEntity>(
                       filteredItems: filteredSubCategories,
                       headers: _headers,
                       minWidth: 720,
@@ -252,7 +253,9 @@ class _TicketSubCategoryMasterPageState
                 category.priority!.toLowerCase().contains(searchText));
           }).toList();
         });
-        debugPrint('filteredSubCategories: ${filteredSubCategories.toString()}');
+        debugPrint(
+          'filteredSubCategories: ${filteredSubCategories.toString()}',
+        );
       });
     } else if (value.isEmpty) {
       filteredSubCategories = subCategories;
@@ -260,10 +263,23 @@ class _TicketSubCategoryMasterPageState
     }
   }
 
-  void _performEditDeleteOperation(
-    String action,
-    SubCategoryMasterEntity item,
-  ) {}
+  void _performEditDeleteOperation(String action, SubCategoryMasterEntity c1) {
+    if (action == "Edit") {
+      CategoryActionDialogUtils.showAddSubNewCategoryDialog(
+        buildContext: context,
+        subCategory: c1,
+        onSuccess: _apiCallForSubCategoryList,
+      );
+    } else if (action == "Delete") {
+      CategoryActionDialogUtils.showDeleteCategoryDialog(
+        context: context,
+        itemTitle: c1.subCategory ?? "",
+        onPressed: (dialogCtx) {
+          Navigator.of(dialogCtx).pop();
+        },
+      );
+    }
+  }
 
   void _performExportOperation() {
     if (subCategories.isNotEmpty) {
@@ -280,5 +296,10 @@ class _TicketSubCategoryMasterPageState
     }
   }
 
-  void _performAddNewCategoryOperation() {}
+  void _performAddNewCategoryOperation() {
+    CategoryActionDialogUtils.showAddSubNewCategoryDialog(
+      buildContext: context,
+      onSuccess: _apiCallForSubCategoryList,
+    );
+  }
 }

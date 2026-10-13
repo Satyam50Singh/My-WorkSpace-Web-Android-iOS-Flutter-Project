@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
-import '../../../domain/entities/ticket_category_entities/ticket_category_entity.dart';
 
 class DeleteCategoryDialog extends StatelessWidget {
-  final TicketCategoryEntity category;
+  final String itemTitle;
   final Function(BuildContext) onDeletePressed;
 
   const DeleteCategoryDialog({
     super.key,
-    required this.category,
+    required this.itemTitle,
     required this.onDeletePressed,
   });
 
@@ -61,24 +60,24 @@ class DeleteCategoryDialog extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'Are you sure you want to delete ',
-                    style: Theme.of(context).textTheme.headlineSmall
-                        ?.copyWith(
-                          fontSize: 14,
-                          color: AppColors.textSecondary,
-                        ),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   TextSpan(
-                    text: category.category ?? "",
-                    style: Theme.of(context).textTheme.headlineSmall
-                        ?.copyWith(fontSize: 16, color: AppColors.primary),
+                    text: itemTitle ?? "",
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: 16,
+                      color: AppColors.primary,
+                    ),
                   ),
                   TextSpan(
                     text: '. This action cannot be undone.',
-                    style: Theme.of(context).textTheme.headlineSmall
-                        ?.copyWith(
-                          fontSize: 14,
-                          color: AppColors.textSecondary,
-                        ),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
