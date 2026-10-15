@@ -19,3 +19,15 @@ final class TicketSubCategoryMasterSuccess extends TicketSubCategoryMasterState 
 
   TicketSubCategoryMasterSuccess({required this.subCategoryList});
 }
+
+final class InsertUpdateSubCategorySuccess extends TicketSubCategoryMasterState {
+  final String message;
+
+  InsertUpdateSubCategorySuccess({required this.message});
+}
+
+final class InsertUpdateSubCategoryFailure extends TicketSubCategoryMasterState {
+  final String errorMessage;
+
+  InsertUpdateSubCategoryFailure({required this.errorMessage});
+}

@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_sub_category_models/insert_update_sub_category_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -38,7 +40,7 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
   void initState() {
     _subCategoryController = TextEditingController();
     if (widget.selectedSubCategory != null) {
-      _subCategoryController.text = widget.selectedSubCategory!.category
+      _subCategoryController.text = widget.selectedSubCategory!.subCategory
           .toString();
       _selectedPriority = widget.selectedSubCategory!.priority;
       _selectedCategory = TicketCategoryEntity(
@@ -88,27 +90,28 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
       final companyID = employee.companyId ?? 0;
       final loggedInUserID = employee.userID?.toString() ?? "0";
       final action = widget.selectedSubCategory != null ? 'U' : 'C';
-      final categoryID =  _selectedCategory?.categoryID ?? 0;
-      final subCategoryID = 0;
+      final categoryID = _selectedCategory?.categoryID ?? 0;
+      final subCategoryID = widget.selectedSubCategory?.subCategoryID ?? 0;
       final subCategory = _subCategoryController.text;
       final priority = _selectedPriority ?? '';
       debugPrint(
         'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, subCategory: $subCategory, priority: $priority',
       );
 
-    //   InsertUpdateTicketCategoryRequestModel payload =
-    //       InsertUpdateTicketCategoryRequestModel(
-    //         categoryID: categoryID,
-    //         category: category,
-    //         departmentID: departmentID,
-    //         companyID: companyID,
-    //         loggedInUserID: loggedInUserID,
-    //         action: action,
-    //       );
-    //
-    //   context.read<TicketCategoryMasterBloc>().add(
-    //     InsertUpdateCategoryRequested(payload: payload),
-    //   );
+      InsertUpdateSubCategoryRequestModel payload =
+          InsertUpdateSubCategoryRequestModel(
+            categoryID: categoryID,
+            subCategoryID: subCategoryID,
+            subCategory: subCategory,
+            companyID: companyID,
+            loggedInUserID: loggedInUserID,
+            action: action,
+            priority: priority,
+          );
+
+      context.read<TicketSubCategoryMasterBloc>().add(
+        InsertUpdateSubCategoryRequested(payload: payload),
+      );
     }
   }
 
@@ -141,151 +144,167 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
                   setState(() {
                     categories = state.categoryList;
                   });
-                } else if (state is InsertUpdateTicketCategorySuccess) {
-                  LoaderUtils.hideLoader(context);
-                  SnackBarUtils.showFloatingSnackBar(
-                    context,
-                    widget.selectedSubCategory != null
-                        ? 'Sub-Category Updated Successfully'
-                        : 'Sub-Category added successfully',
-                  );
-                  context.pop(true);
                 }
               },
               builder: (BuildContext context, TicketCategoryMasterState state) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const LabelHeading(
-                              label: 'Sub-Category',
-                              icon: Icons.local_offer_outlined,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _subCategoryController,
-                              decoration: InputDecoration(
-                                hintText: 'Enter sub-category description...',
-                                hintStyle: const TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
-                                ),
-                                filled: true,
-                                fillColor: AppColors.background,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
+                return BlocListener<
+                  TicketSubCategoryMasterBloc,
+                  TicketSubCategoryMasterState
+                >(
+                  listener: (context, state) {
+                    if (state is InsertUpdateSubCategoryFailure) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
+                    } else if (state is InsertUpdateSubCategorySuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        widget.selectedSubCategory != null
+                            ? 'Sub-Category Updated Successfully'
+                            : 'Sub-Category added successfully',
+                      );
+                      context.pop(true);
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const LabelHeading(
+                                label: 'Sub-Category',
+                                icon: Icons.local_offer_outlined,
                               ),
-                              textInputAction: TextInputAction.next,
-                              onChanged: (value) {
-                                _validateForm();
-                              },
-                              onEditingComplete: () {
-                                _validateForm();
-                              },
-                            ),
-                            const SizedBox(height: 16),
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                controller: _subCategoryController,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter sub-category description...',
+                                  hintStyle: const TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 14,
+                                  ),
+                                  filled: true,
+                                  fillColor: AppColors.background,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                textInputAction: TextInputAction.next,
+                                onChanged: (value) {
+                                  _validateForm();
+                                },
+                                onEditingComplete: () {
+                                  _validateForm();
+                                },
+                              ),
+                              const SizedBox(height: 16),
 
-                            const LabelHeading(
-                              label: 'Category',
-                              icon: Icons.bookmark_border,
-                            ),
-                            const SizedBox(height: 16),
-                            if (state is TicketCategoryMasterLoading)
-                              Container(
-                                height: 48,
-                                width: double.infinity,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.background,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0,
+                              const LabelHeading(
+                                label: 'Category',
+                                icon: Icons.bookmark_border,
+                              ),
+                              const SizedBox(height: 16),
+                              if (state is TicketCategoryMasterLoading)
+                                Container(
+                                  height: 48,
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.background,
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      const CircularProgressIndicator(
-                                        color: AppColors.textSecondary,
-                                        constraints: BoxConstraints(
-                                          minHeight: 16,
-                                          minWidth: 16,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const CircularProgressIndicator(
+                                          color: AppColors.textSecondary,
+                                          constraints: BoxConstraints(
+                                            minHeight: 16,
+                                            minWidth: 16,
+                                          ),
+                                          strokeWidth: 2,
                                         ),
-                                        strokeWidth: 2,
-                                      ),
-                                      SizedBox(width: 16),
-                                      Text(
-                                        'Select Category',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
+                                        SizedBox(width: 16),
+                                        Text(
+                                          'Select Category',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                )
+                              else
+                                CustomDropDown<TicketCategoryEntity>(
+                                  listItems: categories,
+                                  selectedValue: _selectedCategory,
+                                  label: 'Category',
+                                  hintText: 'Select Category',
+                                  searchHintText: 'Search Category ...',
+                                  itemAsString: (category) =>
+                                      category.category!,
+                                  onSelected: (value) {
+                                    if (value != null &&
+                                        value.categoryID != 0) {
+                                      setState(() {
+                                        _selectedCategory = value;
+                                      });
+                                      _validateForm();
+                                      debugPrint(
+                                        'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
+                                      );
+                                    }
+                                  },
+                                  compareFn: (f1, f2) {
+                                    return f1.categoryID == f2.categoryID;
+                                  },
                                 ),
-                              )
-                            else
-                              CustomDropDown<TicketCategoryEntity>(
-                                listItems: categories,
-                                selectedValue: _selectedCategory,
+                              const SizedBox(height: 16),
+
+                              const LabelHeading(
+                                label: 'Priority',
+                                icon: Icons.info_outline,
+                              ),
+                              const SizedBox(height: 16),
+
+                              CustomDropDown<String>(
+                                listItems: priorityList,
+                                selectedValue: _selectedPriority,
                                 label: 'Category',
                                 hintText: 'Select Category',
                                 searchHintText: 'Search Category ...',
-                                itemAsString: (category) => category.category!,
+                                itemAsString: (priority) => priority,
                                 onSelected: (value) {
-                                  if (value != null && value.categoryID != 0) {
+                                  if (value != null) {
                                     setState(() {
-                                      _selectedCategory = value;
+                                      _selectedPriority = value;
                                     });
                                     _validateForm();
                                     debugPrint(
-                                      'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
+                                      'Selected _selectedPriority: $_selectedPriority',
                                     );
                                   }
                                 },
                                 compareFn: (f1, f2) {
-                                  return f1.categoryID == f2.categoryID;
+                                  return f1 == f2;
                                 },
                               ),
-                            const SizedBox(height: 16),
-
-                            const LabelHeading(
-                              label: 'Priority',
-                              icon: Icons.info_outline,
-                            ),
-                            const SizedBox(height: 16),
-
-                            CustomDropDown<String>(
-                              listItems: priorityList,
-                              selectedValue: _selectedPriority,
-                              label: 'Category',
-                              hintText: 'Select Category',
-                              searchHintText: 'Search Category ...',
-                              itemAsString: (priority) => priority,
-                              onSelected: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _selectedPriority = value;
-                                  });
-                                  _validateForm();
-                                  debugPrint(
-                                    'Selected _selectedPriority: $_selectedPriority',
-                                  );
-                                }
-                              },
-                              compareFn: (f1, f2) {
-                                return f1 == f2;
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

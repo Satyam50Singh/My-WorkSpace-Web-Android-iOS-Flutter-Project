@@ -7,3 +7,9 @@ class TicketSubCategoryListRequested extends TicketSubCategoryMasterEvent {
 
   TicketSubCategoryListRequested({required this.companyID});
 }
+
+class InsertUpdateSubCategoryRequested extends TicketSubCategoryMasterEvent {
+  final InsertUpdateSubCategoryRequestModel payload;
+
+  InsertUpdateSubCategoryRequested({required this.payload});
+}
