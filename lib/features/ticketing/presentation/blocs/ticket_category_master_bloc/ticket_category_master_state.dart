@@ -6,6 +6,8 @@ final class TicketCategoryMasterInitial extends TicketCategoryMasterState {}
 
 final class TicketCategoryMasterLoading extends TicketCategoryMasterState {}
 
+final class InsertCategoryMasterLoading extends TicketCategoryMasterState {}
+
 final class DepartmentMasterListLoading extends TicketCategoryMasterState {}
 
 final class TicketCategoryMasterFailure extends TicketCategoryMasterState {
@@ -26,8 +28,44 @@ final class DepartmentMasterListSuccess extends TicketCategoryMasterState {
   DepartmentMasterListSuccess({required this.departmentList});
 }
 
-final class InsertUpdateTicketCategorySuccess extends TicketCategoryMasterState {
+final class DepartmentMasterListFailure extends TicketCategoryMasterState {
+  final String errorMessage;
+
+  DepartmentMasterListFailure({required this.errorMessage});
+}
+
+final class DeleteTicketCategoryFailure extends TicketCategoryMasterState {
+  final String errorMessage;
+
+  DeleteTicketCategoryFailure({required this.errorMessage});
+}
+
+final class InsertTicketCategoryFailure extends TicketCategoryMasterState {
+  final String errorMessage;
+
+  InsertTicketCategoryFailure({required this.errorMessage});
+}
+
+final class UpdateTicketCategoryFailure extends TicketCategoryMasterState {
+  final String errorMessage;
+
+  UpdateTicketCategoryFailure({required this.errorMessage});
+}
+
+final class InsertTicketCategorySuccess extends TicketCategoryMasterState {
   final String message;
 
-  InsertUpdateTicketCategorySuccess({required this.message});
+  InsertTicketCategorySuccess({required this.message});
+}
+
+final class UpdateTicketCategorySuccess extends TicketCategoryMasterState {
+  final String message;
+
+  UpdateTicketCategorySuccess({required this.message});
+}
+
+final class DeleteTicketCategorySuccess extends TicketCategoryMasterState {
+  final String message;
+
+  DeleteTicketCategorySuccess({required this.message});
 }

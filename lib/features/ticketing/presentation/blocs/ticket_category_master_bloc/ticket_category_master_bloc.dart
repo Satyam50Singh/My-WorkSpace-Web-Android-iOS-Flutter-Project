@@ -57,7 +57,7 @@ class TicketCategoryMasterBloc
       );
       result.fold(
         (error) =>
-            emit(TicketCategoryMasterFailure(errorMessage: error.message)),
+            emit(DepartmentMasterListFailure(errorMessage: error.message)),
         (data) => emit(DepartmentMasterListSuccess(departmentList: data)),
       );
     } catch (e) {
@@ -69,16 +69,30 @@ class TicketCategoryMasterBloc
     InsertUpdateCategoryRequested event,
     Emitter<TicketCategoryMasterState> emit,
   ) async {
-    emit(DepartmentMasterListLoading());
+    emit(InsertCategoryMasterLoading());
     try {
       final result = await _insertUpdateTicketCategoryUseCase.call(
         payload: event.payload,
       );
-      result.fold(
-        (error) =>
-            emit(TicketCategoryMasterFailure(errorMessage: error.message)),
-        (data) => emit(InsertUpdateTicketCategorySuccess(message: data)),
-      );
+      if (event.payload.action == 'C') {
+        result.fold(
+          (error) =>
+              emit(InsertTicketCategoryFailure(errorMessage: error.message)),
+          (data) => emit(InsertTicketCategorySuccess(message: data)),
+        );
+      } else if (event.payload.action == 'U') {
+        result.fold(
+          (error) =>
+              emit(UpdateTicketCategoryFailure(errorMessage: error.message)),
+          (data) => emit(UpdateTicketCategorySuccess(message: data)),
+        );
+      } else if (event.payload.action == 'D') {
+        result.fold(
+          (error) =>
+              emit(DeleteTicketCategoryFailure(errorMessage: error.message)),
+          (data) => emit(DeleteTicketCategorySuccess(message: data)),
+        );
+      }
     } catch (e) {
       emit(TicketCategoryMasterFailure(errorMessage: e.toString()));
     }

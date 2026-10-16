@@ -214,9 +214,12 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                         currentPage = 1;
                       });
                     }
-                    if (state is InsertUpdateTicketCategorySuccess) {
+                    if (state is DeleteTicketCategoryFailure) {
                       LoaderUtils.hideLoader(context);
-                      _apiCallForCategoryList();
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -383,30 +386,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         itemTitle: c1.category ?? "",
         onPressed: (dialogCtx) {
           Navigator.of(dialogCtx).pop();
-          final state = context.read<EmployeeDetailCubit>().state;
-          if (state is EmployeeDetailFetched) {
-            final employee = state.employeeDetail;
-            final companyID = employee.companyId ?? 0;
-            final loggedInUserID = employee.userID?.toString() ?? "0";
-            final action = 'D';
-            final category = c1.category ?? "";
-            final departmentID = c1.departmentID ?? 0;
-            final categoryID = c1.categoryID ?? 0;
-            debugPrint(
-              'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, category: $category, departmentID: $departmentID, categoryID: $categoryID',
-            );
-            final payload = InsertUpdateTicketCategoryRequestModel(
-              categoryID: categoryID,
-              category: category,
-              departmentID: departmentID,
-              companyID: companyID,
-              loggedInUserID: loggedInUserID,
-              action: action,
-            );
-            context.read<TicketCategoryMasterBloc>().add(
-              InsertUpdateCategoryRequested(payload: payload),
-            );
-          }
+          _apiCallForDeleteCategory(c1);
         },
       );
     }
@@ -432,5 +412,32 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
       buildContext: context,
       onSuccess: _apiCallForCategoryList,
     );
+  }
+
+  void _apiCallForDeleteCategory(TicketCategoryEntity c1) {
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final companyID = employee.companyId ?? 0;
+      final loggedInUserID = employee.userID?.toString() ?? "0";
+      final action = 'D';
+      final category = c1.category ?? "";
+      final departmentID = c1.departmentID ?? 0;
+      final categoryID = c1.categoryID ?? 0;
+      debugPrint(
+        'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, category: $category, departmentID: $departmentID, categoryID: $categoryID',
+      );
+      final payload = InsertUpdateTicketCategoryRequestModel(
+        categoryID: categoryID,
+        category: category,
+        departmentID: departmentID,
+        companyID: companyID,
+        loggedInUserID: loggedInUserID,
+        action: action,
+      );
+      context.read<TicketCategoryMasterBloc>().add(
+        InsertUpdateCategoryRequested(payload: payload),
+      );
+    }
   }
 }

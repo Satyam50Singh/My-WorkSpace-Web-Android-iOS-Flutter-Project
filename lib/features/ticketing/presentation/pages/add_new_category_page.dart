@@ -123,7 +123,28 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
 
             BlocConsumer<TicketCategoryMasterBloc, TicketCategoryMasterState>(
               listener: (context, state) {
-                if (state is TicketCategoryMasterFailure) {
+                if (state is InsertCategoryMasterLoading) {
+                  LoaderUtils.showLoader(context);
+                }
+                if (state is DepartmentMasterListFailure) {
+                  LoaderUtils.hideLoader(context);
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    state.errorMessage,
+                  );
+                } else if (state is InsertTicketCategoryFailure) {
+                  LoaderUtils.hideLoader(context);
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    state.errorMessage,
+                  );
+                } else if (state is UpdateTicketCategoryFailure) {
+                  LoaderUtils.hideLoader(context);
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    state.errorMessage,
+                  );
+                }  else if (state is DepartmentMasterListFailure) {
                   LoaderUtils.hideLoader(context);
                   SnackBarUtils.showFloatingSnackBar(
                     context,
@@ -135,13 +156,18 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
                     departments = state.departmentList;
                     setState(() {});
                   }
-                } else if (state is InsertUpdateTicketCategorySuccess) {
+                } else if (state is InsertTicketCategorySuccess) {
                   LoaderUtils.hideLoader(context);
                   SnackBarUtils.showFloatingSnackBar(
                     context,
-                    widget.selectedCategory != null
-                        ? 'Category Updated Successfully'
-                        : 'Category added successfully',
+                    'Category added successfully',
+                  );
+                  context.pop(true);
+                } else if (state is UpdateTicketCategorySuccess) {
+                  LoaderUtils.hideLoader(context);
+                  SnackBarUtils.showFloatingSnackBar(
+                    context,
+                    'Category Updated Successfully',
                   );
                   context.pop(true);
                 }
