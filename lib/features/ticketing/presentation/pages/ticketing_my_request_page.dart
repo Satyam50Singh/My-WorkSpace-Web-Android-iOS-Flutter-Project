@@ -234,23 +234,21 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                     ],
                   ),
                   SizedBox(width: 8),
-
-                  if (_totalRecordsCount > 0)
-                    Flexible(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxWidth: 272,
-                          maxHeight: 48,
-                        ),
-                        child: CustomSearchBar(
-                          searchController: _searchController,
-                          hintText: 'Search...',
-                          onChanged: (value) {
-                            _searchTicket(value);
-                          },
-                        ),
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 272,
+                        maxHeight: 48,
+                      ),
+                      child: CustomSearchBar(
+                        searchController: _searchController,
+                        hintText: 'Search by ticket details...',
+                        onChanged: (value) {
+                          _searchTicket(value);
+                        },
                       ),
                     ),
+                  ),
                 ],
               ),
             ),
@@ -298,7 +296,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                       ),
                     ),
                     // if (!isMobile)
-                      SizedBox(width: 4),
+                    SizedBox(width: 4),
                     if (_totalRecordsCount > 0)
                       SizedBox(
                         height: 42,
@@ -318,7 +316,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                         ),
                       ),
                     // if (!isMobile)
-                      SizedBox(width: 4),
+                    SizedBox(width: 4),
                     if (widget.pageTag == 'my-request')
                       SizedBox(
                         height: 42,
