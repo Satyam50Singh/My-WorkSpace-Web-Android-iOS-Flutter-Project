@@ -8,6 +8,8 @@ final class TicketCategoryMasterLoading extends TicketCategoryMasterState {}
 
 final class InsertCategoryMasterLoading extends TicketCategoryMasterState {}
 
+final class DeleteTicketCategoryLoading extends TicketCategoryMasterState {}
+
 final class DepartmentMasterListLoading extends TicketCategoryMasterState {}
 
 final class TicketCategoryMasterFailure extends TicketCategoryMasterState {

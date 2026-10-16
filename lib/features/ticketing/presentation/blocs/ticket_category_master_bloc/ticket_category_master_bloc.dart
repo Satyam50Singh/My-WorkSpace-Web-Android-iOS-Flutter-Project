@@ -61,7 +61,7 @@ class TicketCategoryMasterBloc
         (data) => emit(DepartmentMasterListSuccess(departmentList: data)),
       );
     } catch (e) {
-      emit(TicketCategoryMasterFailure(errorMessage: e.toString()));
+      emit(DepartmentMasterListFailure(errorMessage: e.toString()));
     }
   }
 
@@ -69,7 +69,11 @@ class TicketCategoryMasterBloc
     InsertUpdateCategoryRequested event,
     Emitter<TicketCategoryMasterState> emit,
   ) async {
-    emit(InsertCategoryMasterLoading());
+    if (event.payload.action == 'D') {
+      emit(DeleteTicketCategoryLoading());
+    } else {
+      emit(InsertCategoryMasterLoading());
+    }
     try {
       final result = await _insertUpdateTicketCategoryUseCase.call(
         payload: event.payload,
@@ -94,7 +98,15 @@ class TicketCategoryMasterBloc
         );
       }
     } catch (e) {
-      emit(TicketCategoryMasterFailure(errorMessage: e.toString()));
+      if (event.payload.action == 'C') {
+        emit(InsertTicketCategoryFailure(errorMessage: e.toString()));
+      } else if (event.payload.action == 'U') {
+        emit(UpdateTicketCategoryFailure(errorMessage: e.toString()));
+      } else if (event.payload.action == 'D') {
+        emit(DeleteTicketCategoryFailure(errorMessage: e.toString()));
+      } else {
+        emit(TicketCategoryMasterFailure(errorMessage: e.toString()));
+      }
     }
   }
 }

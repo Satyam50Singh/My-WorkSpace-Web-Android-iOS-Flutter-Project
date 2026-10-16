@@ -125,9 +125,7 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
               listener: (context, state) {
                 if (state is InsertCategoryMasterLoading) {
                   LoaderUtils.showLoader(context);
-                }
-                if (state is DepartmentMasterListFailure) {
-                  LoaderUtils.hideLoader(context);
+                } else if (state is DepartmentMasterListFailure) {
                   SnackBarUtils.showFloatingSnackBar(
                     context,
                     state.errorMessage,
@@ -144,14 +142,7 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
                     context,
                     state.errorMessage,
                   );
-                }  else if (state is DepartmentMasterListFailure) {
-                  LoaderUtils.hideLoader(context);
-                  SnackBarUtils.showFloatingSnackBar(
-                    context,
-                    state.errorMessage,
-                  );
                 } else if (state is DepartmentMasterListSuccess) {
-                  LoaderUtils.hideLoader(context);
                   if (state.departmentList.isNotEmpty) {
                     departments = state.departmentList;
                     setState(() {});

@@ -193,15 +193,13 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                   listener: (context, state) {
                     if (state is TicketCategoryMasterLoading) {
                       LoaderUtils.showLoader(context);
-                    }
-                    if (state is TicketCategoryMasterFailure) {
+                    } else if (state is TicketCategoryMasterFailure) {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
                         state.errorMessage,
                       );
-                    }
-                    if (state is TicketCategoryMasterSuccess) {
+                    } else if (state is TicketCategoryMasterSuccess) {
                       LoaderUtils.hideLoader(context);
                       setState(() {
                         categories = state.categoryList;
@@ -213,13 +211,23 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                         totalPages = (categories.length / 10).ceil();
                         currentPage = 1;
                       });
-                    }
-                    if (state is DeleteTicketCategoryFailure) {
+                    } else if (state is DeleteTicketCategoryLoading) {
+                      LoaderUtils.showLoader(context);
+                    } else if (state is DeleteTicketCategoryFailure) {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
                         state.errorMessage,
                       );
+                    } else if (state is DeleteTicketCategorySuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.message.isNotEmpty
+                            ? state.message
+                            : 'Category deleted successfully',
+                      );
+                      _apiCallForCategoryList();
                     }
                   },
                   builder: (context, state) {
