@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
+import 'package:my_worksphere_web/core/utils/custom_dialog_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
@@ -223,7 +224,18 @@ class DashboardDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              context.read<EmployeeDetailCubit>().clearEmployeeDetails();
+              CustomDialogUtils.customDialogWithPosNegBtn(
+                context: context,
+                headingTitle: 'Logout',
+                subTitle: 'Are you sure you want to log out?',
+                negBtnTitle: 'Cancel',
+                posBtnTitle: 'Logout',
+                color: AppColors.orange,
+                onPosBtnPressed: () {
+                  context.read<EmployeeDetailCubit>().clearEmployeeDetails();
+                },
+                onNegBtnPressed: () {},
+              );
             },
           ),
         ),

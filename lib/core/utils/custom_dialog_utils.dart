@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 
 import '../theme/app_colors.dart';
@@ -249,6 +250,106 @@ class CustomDialogUtils {
                       ),
                     ],
                   ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static void customDialogWithPosNegBtn({
+    required BuildContext context,
+    String? headingTitle,
+    String? subTitle,
+    String? posBtnTitle,
+    String? negBtnTitle,
+    Color? color,
+    required void Function() onPosBtnPressed,
+    required void Function() onNegBtnPressed,
+  }) {
+    showDialog(
+      context: context,
+      // barrierDismissible: false,
+      builder: (ctx) {
+        return Dialog(
+          child: SizedBox(
+            width: 320,
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 8),
+                  if (headingTitle != null) ...[
+                    Text(
+                      headingTitle,
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(
+                            fontSize: 20,
+                            color: AppColors.textPrimary,
+                          ),
+                    ),
+                    SizedBox(height: 16),
+                  ],
+                  if (subTitle != null) ...[
+                    Text(
+                      subTitle,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontSize: 14,
+                            color: AppColors.textSecondary,
+                          ),
+                    ),
+                    SizedBox(height: 16),
+                  ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ctx.pop();
+                            onNegBtnPressed();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              AppColors.background,
+                            ),
+                          ),
+                          child: Text(
+                            negBtnTitle ?? 'Cancel',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: onPosBtnPressed,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            color ?? AppColors.primaryDark,
+                          ),
+                        ),
+                        child: Text(
+                          posBtnTitle ?? 'Logout',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
                 ],
               ),
             ),
