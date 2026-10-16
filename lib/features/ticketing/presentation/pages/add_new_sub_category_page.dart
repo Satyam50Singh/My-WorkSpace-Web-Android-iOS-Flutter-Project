@@ -134,13 +134,11 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
             BlocConsumer<TicketCategoryMasterBloc, TicketCategoryMasterState>(
               listener: (context, state) {
                 if (state is TicketCategoryMasterFailure) {
-                  LoaderUtils.hideLoader(context);
                   SnackBarUtils.showFloatingSnackBar(
                     context,
                     state.errorMessage,
                   );
                 } else if (state is TicketCategoryMasterSuccess) {
-                  LoaderUtils.hideLoader(context);
                   setState(() {
                     categories = state.categoryList;
                   });
@@ -151,20 +149,37 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
                   TicketSubCategoryMasterBloc,
                   TicketSubCategoryMasterState
                 >(
-                  listener: (context, state) {
-                    if (state is InsertUpdateSubCategoryFailure) {
+                  listener: (context, subCategoryState) {
+                    if (subCategoryState is InsertSubCategoryMasterLoading) {
+                      LoaderUtils.showLoader(context);
+                    } else if (subCategoryState
+                        is InsertTicketSubCategoryFailure) {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
-                        state.errorMessage,
+                        subCategoryState.errorMessage,
                       );
-                    } else if (state is InsertUpdateSubCategorySuccess) {
+                    } else if (subCategoryState
+                        is UpdateTicketSubCategoryFailure) {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
-                        widget.selectedSubCategory != null
-                            ? 'Sub-Category Updated Successfully'
-                            : 'Sub-Category added successfully',
+                        subCategoryState.errorMessage,
+                      );
+                    } else if (subCategoryState
+                        is InsertTicketSubCategorySuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        'Sub-Category added successfully',
+                      );
+                      context.pop(true);
+                    } else if (subCategoryState
+                        is UpdateTicketSubCategorySuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        'Sub-Category Updated Successfully',
                       );
                       context.pop(true);
                     }

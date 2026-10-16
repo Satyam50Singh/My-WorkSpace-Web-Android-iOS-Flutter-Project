@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_sub_category_models/insert_update_sub_category_request_model.dart';
 
 import '../../../domain/entities/ticket_category_entities/sub_category_master_entity.dart';
@@ -47,18 +46,48 @@ class TicketSubCategoryMasterBloc
     InsertUpdateSubCategoryRequested event,
     Emitter<TicketSubCategoryMasterState> emit,
   ) async {
-    emit(TicketSubCategoryMasterLoading());
+    if (event.payload.action == 'D') {
+      emit(DeleteTicketSubCategoryLoading());
+    } else {
+      emit(InsertSubCategoryMasterLoading());
+    }
+
     try {
       final result = await _insertUpdateSubCategoryUseCase.call(
         payload: event.payload,
       );
-      result.fold(
-        (error) =>
-            emit(InsertUpdateSubCategoryFailure(errorMessage: error.message)),
-        (data) => emit(InsertUpdateSubCategorySuccess(message: data)),
-      );
+      if (event.payload.action == 'C') {
+        result.fold(
+          (error) => emit(
+            InsertTicketSubCategoryFailure(errorMessage: error.message),
+          ),
+          (data) => emit(InsertTicketSubCategorySuccess(message: data)),
+        );
+      } else if (event.payload.action == 'U') {
+        result.fold(
+          (error) => emit(
+            UpdateTicketSubCategoryFailure(errorMessage: error.message),
+          ),
+          (data) => emit(UpdateTicketSubCategorySuccess(message: data)),
+        );
+      } else if (event.payload.action == 'D') {
+        result.fold(
+          (error) => emit(
+            DeleteTicketSubCategoryFailure(errorMessage: error.message),
+          ),
+          (data) => emit(DeleteTicketSubCategorySuccess(message: data)),
+        );
+      }
     } catch (e) {
-      emit(TicketSubCategoryMasterFailure(errorMessage: e.toString()));
+      if (event.payload.action == 'C') {
+        emit(InsertTicketSubCategoryFailure(errorMessage: e.toString()));
+      } else if (event.payload.action == 'U') {
+        emit(UpdateTicketSubCategoryFailure(errorMessage: e.toString()));
+      } else if (event.payload.action == 'D') {
+        emit(DeleteTicketSubCategoryFailure(errorMessage: e.toString()));
+      } else {
+        emit(TicketSubCategoryMasterFailure(errorMessage: e.toString()));
+      }
     }
   }
 }

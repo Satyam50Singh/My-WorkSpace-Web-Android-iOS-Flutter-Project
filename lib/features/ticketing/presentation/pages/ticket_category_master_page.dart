@@ -223,9 +223,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
-                        state.message.isNotEmpty
-                            ? state.message
-                            : 'Category deleted successfully',
+                        'Category deleted successfully',
                       );
                       _apiCallForCategoryList();
                     }

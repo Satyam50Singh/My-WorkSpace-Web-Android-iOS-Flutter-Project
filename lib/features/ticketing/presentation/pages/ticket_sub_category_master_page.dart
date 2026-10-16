@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_sub_category_models/insert_update_sub_category_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/build_master_cell.dart';
@@ -207,20 +208,33 @@ class _TicketSubCategoryMasterPageState
                   listener: (context, state) {
                     if (state is TicketSubCategoryMasterLoading) {
                       LoaderUtils.showLoader(context);
-                    }
-                    if (state is TicketSubCategoryMasterFailure) {
+                    } else if (state is TicketSubCategoryMasterFailure) {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
                         state.errorMessage,
                       );
-                    }
-                    if (state is TicketSubCategoryMasterSuccess) {
+                    } else if (state is TicketSubCategoryMasterSuccess) {
                       LoaderUtils.hideLoader(context);
                       setState(() {
                         subCategories = state.subCategoryList;
                         filteredSubCategories = subCategories;
                       });
+                    } else if (state is DeleteTicketSubCategoryLoading) {
+                      LoaderUtils.showLoader(context);
+                    } else if (state is DeleteTicketSubCategoryFailure) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
+                    } else if (state is DeleteTicketSubCategorySuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        'Sub-Category deleted successfully',
+                      );
+                      _apiCallForSubCategoryList();
                     }
                   },
                   builder: (context, state) {
@@ -276,7 +290,37 @@ class _TicketSubCategoryMasterPageState
         itemTitle: c1.subCategory ?? "",
         onPressed: (dialogCtx) {
           Navigator.of(dialogCtx).pop();
+          _apiCallForDeleteSubCategory(c1);
         },
+      );
+    }
+  }
+
+  void _apiCallForDeleteSubCategory(SubCategoryMasterEntity c1) {
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final companyID = employee.companyId ?? 0;
+      final loggedInUserID = employee.userID?.toString() ?? "0";
+      final action = 'D';
+      final categoryID = c1.categoryID ?? 0;
+      final subCategoryID = c1.subCategoryID ?? 0;
+      final subCategory = c1.subCategory ?? "";
+      final priority = c1.priority ?? "";
+      debugPrint(
+        'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, subCategory: $subCategory, priority: $priority',
+      );
+      final payload = InsertUpdateSubCategoryRequestModel(
+        categoryID: categoryID,
+        subCategoryID: subCategoryID,
+        subCategory: subCategory,
+        companyID: companyID,
+        loggedInUserID: loggedInUserID,
+        action: action,
+        priority: priority,
+      );
+      context.read<TicketSubCategoryMasterBloc>().add(
+        InsertUpdateSubCategoryRequested(payload: payload),
       );
     }
   }
