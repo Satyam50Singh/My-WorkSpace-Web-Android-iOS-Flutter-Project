@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_category_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_sub_category_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/external_transfer_ticket_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_category_master_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_sub_category_master_page.dart';
@@ -132,6 +134,15 @@ class AppRouter {
               final selectedCategory = state.extra as TicketCategoryEntity?;
               debugPrint('selectedCategory: $selectedCategory');
               return AddNewCategoryPage(selectedCategory: selectedCategory);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.addNewSubCategory,
+            name: 'add-new-sub-category',
+            builder: (context, state) {
+              final subCategory = state.extra as SubCategoryMasterEntity?;
+              debugPrint('selectedCategory: $subCategory');
+              return AddNewSubCategoryPage(selectedSubCategory: subCategory);
             },
           ),
         ],

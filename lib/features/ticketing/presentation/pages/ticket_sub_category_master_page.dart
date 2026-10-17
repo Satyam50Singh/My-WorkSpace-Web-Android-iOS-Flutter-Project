@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_cate
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/build_master_cell.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/sub_category_master_list_view_mobile.dart';
 
 import '../../../../core/common/widgets/custom_search_bar.dart';
 import '../../../../core/export/excel_exporter.dart';
@@ -41,6 +43,9 @@ class _TicketSubCategoryMasterPageState
   ];
 
   Timer? _debounceTimer;
+
+  int totalPages = 0;
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -199,6 +204,49 @@ class _TicketSubCategoryMasterPageState
             ),
           ],
 
+          if (isMobile) ...[
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CustomSearchBar(
+                      hintText: 'Search...',
+                      onChanged: _searchOperation,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton.filled(
+                    onPressed: _performAddNewCategoryOperation,
+                    icon: const Icon(Icons.add, color: AppColors.white),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(36, 36),
+                      backgroundColor: AppColors.primaryDark,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton.outlined(
+                    onPressed: _performExportOperation,
+                    icon: const Icon(
+                      Icons.download_sharp,
+                      color: AppColors.primaryDark,
+                    ),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(24, 24),
+                      backgroundColor: AppColors.white,
+                      side: const BorderSide(
+                        color: AppColors.primaryDark,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
           Expanded(
             child:
                 BlocConsumer<
@@ -218,7 +266,13 @@ class _TicketSubCategoryMasterPageState
                       LoaderUtils.hideLoader(context);
                       setState(() {
                         subCategories = state.subCategoryList;
-                        filteredSubCategories = subCategories;
+                        if (kIsWeb) {
+                          filteredSubCategories = subCategories;
+                        } else {
+                          filteredSubCategories = subCategories.sublist(0, 10);
+                        }
+                        totalPages = (subCategories.length / 10).ceil();
+                        currentPage = 1;
                       });
                     } else if (state is DeleteTicketSubCategoryLoading) {
                       LoaderUtils.showLoader(context);
@@ -238,12 +292,61 @@ class _TicketSubCategoryMasterPageState
                     }
                   },
                   builder: (context, state) {
-                    return CategoryMasterTableViewWeb<SubCategoryMasterEntity>(
-                      filteredItems: filteredSubCategories,
-                      headers: _headers,
-                      minWidth: 720,
-                      cellBuilder: (item, isMobile) =>
-                          _buildSubCategoriesCell(item, isMobile),
+                    if (!isMobile) {
+                      return CategoryMasterTableViewWeb<
+                        SubCategoryMasterEntity
+                      >(
+                        filteredItems: filteredSubCategories,
+                        headers: _headers,
+                        minWidth: 720,
+                        cellBuilder: (item, isMobile) =>
+                            _buildSubCategoriesCell(item, isMobile),
+                      );
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Card(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: goToPrevious,
+                                  icon: Icon(Icons.chevron_left_rounded),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                  ),
+                                ),
+                                Spacer(),
+                                Text(
+                                  '$currentPage of $totalPages',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  onPressed: goToNext,
+                                  icon: Icon(Icons.chevron_right_rounded),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Expanded(
+                          child: SubCategoryMasterListViewMobile(
+                            filteredCategories: filteredSubCategories,
+                            performEditDeleteOperation:
+                                _performEditDeleteOperation,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -251,6 +354,35 @@ class _TicketSubCategoryMasterPageState
         ],
       ),
     );
+  }
+
+  void goToPrevious() {
+    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
+    if (currentPage != 1 && currentPage <= totalPages) {
+      setState(() {
+        currentPage--;
+        final startIndex = (currentPage - 1) * 10; // 0 // 2
+        final endIndex = startIndex + 10;
+        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        filteredSubCategories = subCategories.sublist(startIndex, endIndex);
+      });
+    }
+  }
+
+  void goToNext() {
+    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
+    if (currentPage <= totalPages) {
+      setState(() {
+        currentPage++;
+        final startIndex = (currentPage - 1) * 10;
+        var endIndex = startIndex + 10;
+        if (endIndex > subCategories.length) {
+          endIndex = subCategories.length;
+        }
+        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        filteredSubCategories = subCategories.sublist(startIndex, endIndex);
+      });
+    }
   }
 
   void _searchOperation(String value) {
@@ -287,6 +419,7 @@ class _TicketSubCategoryMasterPageState
     } else if (action == "Delete") {
       CategoryActionDialogUtils.showDeleteCategoryDialog(
         context: context,
+        dialogHeading: 'Delete Sub-Category',
         itemTitle: c1.subCategory ?? "",
         onPressed: (dialogCtx) {
           Navigator.of(dialogCtx).pop();

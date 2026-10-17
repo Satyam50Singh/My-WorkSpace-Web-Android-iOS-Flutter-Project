@@ -14,6 +14,7 @@ class AppRoutes {
 
   static const externalTransferTicket = '/external-transfer-ticket';
   static const addNewCategory = '/add-new-category';
+  static const addNewSubCategory = '/add-new-sub-category';
 
   static const checklist = '/checklist';
   static const workpermit = '/workpermit';

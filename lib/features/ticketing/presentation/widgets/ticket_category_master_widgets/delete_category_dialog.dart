@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
 
 class DeleteCategoryDialog extends StatelessWidget {
+  final String dialogHeading;
   final String itemTitle;
   final Function(BuildContext) onDeletePressed;
 
   const DeleteCategoryDialog({
     super.key,
+    required this.dialogHeading,
     required this.itemTitle,
     required this.onDeletePressed,
   });
@@ -43,7 +45,7 @@ class DeleteCategoryDialog extends StatelessWidget {
                 SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    'Delete Category',
+                    dialogHeading,
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       fontSize: 18,
                       color: AppColors.primary,

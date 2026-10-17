@@ -389,6 +389,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
     } else if (action == "Delete") {
       CategoryActionDialogUtils.showDeleteCategoryDialog(
         context: context,
+        dialogHeading: 'Delete Category',
         itemTitle: c1.category ?? "",
         onPressed: (dialogCtx) {
           Navigator.of(dialogCtx).pop();

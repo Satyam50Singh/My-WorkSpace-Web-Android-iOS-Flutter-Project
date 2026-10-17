@@ -58,6 +58,7 @@ class CategoryActionDialogUtils {
 
   static void showDeleteCategoryDialog({
     required BuildContext context,
+    required String dialogHeading,
     required String itemTitle,
     required Function(BuildContext) onPressed,
   }) {
@@ -67,6 +68,7 @@ class CategoryActionDialogUtils {
       fullscreenDialog: true,
       builder: (_) => DeleteCategoryDialog(
         itemTitle: itemTitle,
+        dialogHeading: dialogHeading,
         onDeletePressed: onPressed,
       ),
     );
