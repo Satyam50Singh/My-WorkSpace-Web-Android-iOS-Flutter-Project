@@ -40,7 +40,7 @@ class CategoryMasterListViewMobile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(Icons.local_offer_outlined, size: 18),
                             const SizedBox(width: 8),
@@ -61,6 +61,7 @@ class CategoryMasterListViewMobile extends StatelessWidget {
                         const SizedBox(height: 8),
 
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(Icons.apartment_outlined, size: 18),
                             const SizedBox(width: 8),
@@ -82,38 +83,25 @@ class CategoryMasterListViewMobile extends StatelessWidget {
                   const SizedBox(width: 8),
                   Row(
                     children: [
-                      IconButton.filled(
-                        onPressed: () {
+                      InkWell(
+                        onTap: () {
                           performEditDeleteOperation("Edit", category);
                         },
-                        icon: const Icon(Icons.edit, color: AppColors.white),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(24, 24),
-                          backgroundColor: AppColors.primaryDark,
-                          // shape: RoundedRectangleBorder(
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
+                        child: Icon(
+                          Icons.edit,
+                          color: AppColors.primary,
+                          size: 24,
                         ),
                       ),
-                      const SizedBox(width: 4),
-                      IconButton.outlined(
-                        onPressed: () {
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () {
                           performEditDeleteOperation("Delete", category);
                         },
-                        icon: const Icon(
+                        child: Icon(
                           Icons.delete,
-                          color: AppColors.primaryDark,
-                        ),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(24, 24),
-                          backgroundColor: AppColors.white,
-                          side: const BorderSide(
-                            color: AppColors.primaryDark,
-                            width: 1,
-                          ),
-                          // shape: RoundedRectangleBorder(
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
+                          color: AppColors.btnBgRed,
+                          size: 24,
                         ),
                       ),
                     ],

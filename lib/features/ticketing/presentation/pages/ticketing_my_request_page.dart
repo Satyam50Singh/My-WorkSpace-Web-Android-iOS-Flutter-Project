@@ -243,9 +243,7 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                       child: CustomSearchBar(
                         searchController: _searchController,
                         hintText: 'Search by ticket details...',
-                        onChanged: (value) {
-                          _searchTicket(value);
-                        },
+                        onChanged: _searchTicket,
                       ),
                     ),
                   ),
@@ -289,14 +287,10 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                         icon: Icon(Icons.filter_alt_off),
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.primaryDark,
-                          // shape: RoundedRectangleBorder(
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
                         ),
                       ),
                     ),
-                    // if (!isMobile)
-                    SizedBox(width: 4),
+                    if (!isMobile) SizedBox(width: 4),
                     if (_totalRecordsCount > 0)
                       SizedBox(
                         height: 42,
@@ -309,14 +303,10 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           style: IconButton.styleFrom(
                             minimumSize: const Size(24, 24),
                             backgroundColor: AppColors.primaryDark,
-                            // shape: RoundedRectangleBorder(
-                            //   borderRadius: BorderRadius.circular(10),
-                            // ),
                           ),
                         ),
                       ),
-                    // if (!isMobile)
-                    SizedBox(width: 4),
+                    if (!isMobile) SizedBox(width: 4),
                     if (widget.pageTag == 'my-request')
                       SizedBox(
                         height: 42,
@@ -326,53 +316,16 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           style: IconButton.styleFrom(
                             minimumSize: const Size(24, 24),
                             backgroundColor: AppColors.primaryDark,
-                            // shape: RoundedRectangleBorder(
-                            //   borderRadius: BorderRadius.circular(10),
-                            // ),
                           ),
                         ),
                       ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: _searchController,
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    hintText: 'Search by ticket ID or subject...',
-                    prefixIcon: const Icon(Icons.search, size: 20),
-                    prefixIconColor: AppColors.primaryDark,
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (value.isNotEmpty && value.length > 2) {
-                      _currentSearchText = value;
-                      _fetchTicketDetails(
-                        pageCount: 1,
-                        pageSize: 10,
-                        searchText: _currentSearchText,
-                      );
-                    } else {
-                      if (value.isEmpty) {
-                        _currentSearchText = '';
-                        _fetchTicketDetails(
-                          pageCount: 1,
-                          pageSize: 10,
-                          searchText: _currentSearchText,
-                        );
-                      }
-                    }
-                  },
+                CustomSearchBar(
+                  searchController: _searchController,
+                  hintText: 'Search by ticket ID or subject...',
+                  onChanged: _searchTicket,
                 ),
               ],
             ),

@@ -40,7 +40,27 @@ class SubCategoryMasterListViewMobile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.priority_high_outlined, size: 18),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                subCategory.priority ?? "",
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(
+                                  fontSize: 13,
+                                  color: subCategory.priority == 'Major' ? AppColors.btnBgRed : AppColors.orange,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(Icons.local_offer_outlined, size: 18),
                             const SizedBox(width: 8),
@@ -59,8 +79,8 @@ class SubCategoryMasterListViewMobile extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(Icons.apartment_outlined, size: 18),
                             const SizedBox(width: 8),
@@ -79,35 +99,29 @@ class SubCategoryMasterListViewMobile extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   const SizedBox(width: 8),
                   Row(
                     children: [
-                      IconButton.filled(
-                        onPressed: () {
+                      InkWell(
+                        onTap: () {
                           performEditDeleteOperation("Edit", subCategory);
                         },
-                        icon: const Icon(Icons.edit, color: AppColors.white),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(24, 24),
-                          backgroundColor: AppColors.primaryDark,
+                        child: Icon(
+                          Icons.edit,
+                          color: AppColors.primary,
+                          size: 24,
                         ),
                       ),
-                      const SizedBox(width: 4),
-                      IconButton.outlined(
-                        onPressed: () {
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () {
                           performEditDeleteOperation("Delete", subCategory);
                         },
-                        icon: const Icon(
+                        child: Icon(
                           Icons.delete,
-                          color: AppColors.primaryDark,
-                        ),
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(24, 24),
-                          backgroundColor: AppColors.white,
-                          side: const BorderSide(
-                            color: AppColors.primaryDark,
-                            width: 1,
-                          ),
+                          color: AppColors.btnBgRed,
+                          size: 24,
                         ),
                       ),
                     ],

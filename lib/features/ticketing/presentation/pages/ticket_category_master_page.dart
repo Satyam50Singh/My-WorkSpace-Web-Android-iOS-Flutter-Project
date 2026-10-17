@@ -73,19 +73,25 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
 
     if (value.isNotEmpty && value.isNotEmpty) {
       final searchText = value.toLowerCase();
-      debugPrint('searchText: $searchText');
       _debounceTimer = Timer(const Duration(milliseconds: 500), () {
         setState(() {
           filteredCategories = categories.where((category) {
             return (category.category!.toLowerCase().contains(searchText) ||
                 category.department!.toLowerCase().contains(searchText));
           }).toList();
+          totalPages = (filteredCategories.length / 10).ceil();
+          currentPage = 1;
         });
-        debugPrint('filteredCategories: ${filteredCategories.toString()}');
+        debugPrint(
+          'filteredCategories: ${filteredCategories.map((e) => {'categoryId': e.categoryID, 'categoryName': e.category}).toList()}',
+        );
       });
     } else if (value.isEmpty) {
-      filteredCategories = categories;
-      setState(() {});
+      setState(() {
+        filteredCategories = categories;
+        totalPages = (filteredCategories.length / 10).ceil();
+        currentPage = 1;
+      });
     }
   }
 
@@ -322,9 +328,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                                   icon: Icon(Icons.chevron_right_rounded),
                                   style: IconButton.styleFrom(
                                     minimumSize: const Size(24, 24),
-                                    // shape: RoundedRectangleBorder(
-                                    //   borderRadius: BorderRadius.circular(10),
-                                    // ),
                                   ),
                                 ),
                               ],
@@ -350,22 +353,21 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
   }
 
   void goToPrevious() {
-    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
     if (currentPage != 1 && currentPage <= totalPages) {
-      // 2, 3, 4
+      debugPrint('currentPage: $currentPage && totalPages: $totalPages');
       setState(() {
-        currentPage--; // 1 // 2
-        final startIndex = (currentPage - 1) * 10; // 0 // 2
+        currentPage--;
+        final startIndex = (currentPage - 1) * 10;
         final endIndex = startIndex + 10;
-        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        debugPrint('startIndex: $startIndex && endIndex: $endIndex');
         filteredCategories = categories.sublist(startIndex, endIndex);
       });
     }
   }
 
   void goToNext() {
-    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
-    if (currentPage <= totalPages) {
+    if (currentPage != totalPages && currentPage <= totalPages) {
+      debugPrint('currentPage: $currentPage && totalPages: $totalPages');
       setState(() {
         currentPage++;
         final startIndex = (currentPage - 1) * 10;
@@ -373,9 +375,11 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         if (endIndex > categories.length) {
           endIndex = categories.length;
         }
-        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        debugPrint('startIndex: $startIndex && endIndex: $endIndex');
         filteredCategories = categories.sublist(startIndex, endIndex);
       });
+    } else {
+      debugPrint('No more pages to load');
     }
   }
 

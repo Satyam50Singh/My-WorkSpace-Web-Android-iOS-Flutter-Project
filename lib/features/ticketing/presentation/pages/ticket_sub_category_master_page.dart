@@ -225,7 +225,6 @@ class _TicketSubCategoryMasterPageState
                       backgroundColor: AppColors.primaryDark,
                     ),
                   ),
-                  const SizedBox(width: 4),
                   IconButton.outlined(
                     onPressed: _performExportOperation,
                     icon: const Icon(
@@ -357,21 +356,21 @@ class _TicketSubCategoryMasterPageState
   }
 
   void goToPrevious() {
-    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
     if (currentPage != 1 && currentPage <= totalPages) {
+      debugPrint('currentPage: $currentPage && totalPages: $totalPages');
       setState(() {
         currentPage--;
-        final startIndex = (currentPage - 1) * 10; // 0 // 2
+        final startIndex = (currentPage - 1) * 10;
         final endIndex = startIndex + 10;
-        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        debugPrint('startIndex: $startIndex && endIndex: $endIndex');
         filteredSubCategories = subCategories.sublist(startIndex, endIndex);
       });
     }
   }
 
   void goToNext() {
-    debugPrint('currentPage: $currentPage && totalPages: $totalPages');
-    if (currentPage <= totalPages) {
+    if (currentPage != totalPages && currentPage <= totalPages) {
+      debugPrint('currentPage: $currentPage && totalPages: $totalPages');
       setState(() {
         currentPage++;
         final startIndex = (currentPage - 1) * 10;
@@ -379,9 +378,11 @@ class _TicketSubCategoryMasterPageState
         if (endIndex > subCategories.length) {
           endIndex = subCategories.length;
         }
-        debugPrint('currentPage: $startIndex && totalPages: $endIndex');
+        debugPrint('startIndex: $startIndex && endIndex: $endIndex');
         filteredSubCategories = subCategories.sublist(startIndex, endIndex);
       });
+    } else {
+      debugPrint('No more pages to load');
     }
   }
 
@@ -390,7 +391,6 @@ class _TicketSubCategoryMasterPageState
 
     if (value.isNotEmpty && value.isNotEmpty) {
       final searchText = value.toLowerCase();
-      debugPrint('searchText: $searchText');
       _debounceTimer = Timer(const Duration(milliseconds: 500), () {
         setState(() {
           filteredSubCategories = subCategories.where((category) {
@@ -398,14 +398,19 @@ class _TicketSubCategoryMasterPageState
                 category.subCategory!.toLowerCase().contains(searchText) ||
                 category.priority!.toLowerCase().contains(searchText));
           }).toList();
+          totalPages = (filteredSubCategories.length / 10).ceil();
+          currentPage = 1;
         });
         debugPrint(
-          'filteredSubCategories: ${filteredSubCategories.toString()}',
+          'filteredCategories: ${filteredSubCategories.map((e) => {'categoryId': e.categoryID, 'categoryName': e.category, 'subCategoryId': e.subCategoryID, 'subCategoryName': e.subCategory, 'priority': e.priority}).toList()}',
         );
       });
     } else if (value.isEmpty) {
-      filteredSubCategories = subCategories;
-      setState(() {});
+      setState(() {
+        filteredSubCategories = subCategories;
+        totalPages = (filteredSubCategories.length / 10).ceil();
+        currentPage = 1;
+      });
     }
   }
 
