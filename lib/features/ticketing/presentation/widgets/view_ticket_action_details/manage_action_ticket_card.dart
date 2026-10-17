@@ -48,9 +48,9 @@ class ManageActionTicketCard extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.orange,
             foregroundColor: AppColors.background,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.circular(10),
+            // ),
           ),
         ),
       );
@@ -71,9 +71,9 @@ class ManageActionTicketCard extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.btnBgRed,
             foregroundColor: AppColors.background,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.circular(10),
+            // ),
           ),
         ),
       );
@@ -95,9 +95,9 @@ class ManageActionTicketCard extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.background,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+              // shape: RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
             ),
           ),
         );
@@ -118,9 +118,9 @@ class ManageActionTicketCard extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.amberDark,
               foregroundColor: AppColors.background,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+              // shape: RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
             ),
           ),
         );
@@ -140,9 +140,9 @@ class ManageActionTicketCard extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.btnBgGreen,
             foregroundColor: AppColors.background,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.circular(10),
+            // ),
           ),
         ),
       );

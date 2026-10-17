@@ -78,9 +78,9 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                                 vertical: 16,
                               ),
                               foregroundColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(0),
+                              // ),
                             ),
                           ),
                       if (showExportToExcelBtn) ...[

@@ -225,9 +225,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                               vertical: 16,
                             ),
                             backgroundColor: AppColors.primaryDark,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                            // shape: RoundedRectangleBorder(
+                            //   borderRadius: BorderRadius.circular(10),
+                            // ),
                           ),
                         ),
                       ),
@@ -289,9 +289,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                         icon: Icon(Icons.filter_alt_off),
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.primaryDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                     ),
@@ -309,9 +309,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           style: IconButton.styleFrom(
                             minimumSize: const Size(24, 24),
                             backgroundColor: AppColors.primaryDark,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                            // shape: RoundedRectangleBorder(
+                            //   borderRadius: BorderRadius.circular(10),
+                            // ),
                           ),
                         ),
                       ),
@@ -326,9 +326,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
                           style: IconButton.styleFrom(
                             minimumSize: const Size(24, 24),
                             backgroundColor: AppColors.primaryDark,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                            // shape: RoundedRectangleBorder(
+                            //   borderRadius: BorderRadius.circular(10),
+                            // ),
                           ),
                         ),
                       ),

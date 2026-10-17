@@ -77,9 +77,9 @@ class AddNewRequestHeader extends StatelessWidget {
                   disabledBackgroundColor: AppColors.white.withOpacity(0.12),
                   disabledForegroundColor: AppColors.white.withOpacity(0.38),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  // shape: RoundedRectangleBorder(
+                  //   borderRadius: BorderRadius.circular(8),
+                  // ),
                 ),
                 child: Text(
                   btnText,

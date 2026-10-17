@@ -230,7 +230,7 @@ class DashboardDrawer extends StatelessWidget {
                 subTitle: 'Are you sure you want to log out?',
                 negBtnTitle: 'Cancel',
                 posBtnTitle: 'Logout',
-                color: AppColors.orange,
+                color: AppColors.primary,
                 onPosBtnPressed: () {
                   context.read<EmployeeDetailCubit>().clearEmployeeDetails();
                 },

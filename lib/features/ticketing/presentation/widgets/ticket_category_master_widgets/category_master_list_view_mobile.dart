@@ -90,9 +90,9 @@ class CategoryMasterListViewMobile extends StatelessWidget {
                         style: IconButton.styleFrom(
                           minimumSize: const Size(24, 24),
                           backgroundColor: AppColors.primaryDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                       const SizedBox(width: 4),
@@ -111,9 +111,9 @@ class CategoryMasterListViewMobile extends StatelessWidget {
                             color: AppColors.primaryDark,
                             width: 1,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                       ),
                     ],

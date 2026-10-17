@@ -219,9 +219,9 @@ class CustomDialogUtils {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryDark,
                               foregroundColor: AppColors.background,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(10),
+                              // ),
                             ),
                             icon: loading
                                 ? SizedBox(
@@ -290,7 +290,7 @@ class CustomDialogUtils {
                       style: Theme.of(context).textTheme.headlineLarge
                           ?.copyWith(
                             fontSize: 20,
-                            color: AppColors.textPrimary,
+                            color: color ?? AppColors.textPrimary,
                           ),
                     ),
                     SizedBox(height: 16),
