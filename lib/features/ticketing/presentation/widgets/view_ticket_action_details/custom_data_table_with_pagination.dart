@@ -248,9 +248,9 @@ class _CustomDataTableWithPaginationState
                     onPressed: selectedPage > 1 ? goToPreviousPage : null,
                     icon: Icon(Icons.navigate_before),
                     style: IconButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      // shape: RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(12),
+                      // ),
                       backgroundColor: selectedPage > 1
                           ? AppColors.textHint
                           : AppColors.border,
@@ -266,9 +266,9 @@ class _CustomDataTableWithPaginationState
                     onPressed: selectedPage < totalPages ? goToNextPage : null,
                     icon: Icon(Icons.navigate_next_outlined),
                     style: IconButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      // shape: RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(12),
+                      // ),
                       backgroundColor: selectedPage < totalPages
                           ? AppColors.textHint
                           : AppColors.border,

@@ -220,9 +220,9 @@ class _UpdateTicketActionDialogState extends State<UpdateTicketActionDialog> {
                           backgroundColor:
                               widget.color ?? AppColors.primaryDark,
                           foregroundColor: AppColors.background,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
                         ),
                         icon: loading
                             ? SizedBox(

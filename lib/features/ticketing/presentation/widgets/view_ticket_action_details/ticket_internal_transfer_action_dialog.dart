@@ -339,9 +339,9 @@ class _TicketInternalTransferActionDialogState
                             ? widget.color?.withValues(alpha: 0.5)
                             : widget.color,
                         foregroundColor: AppColors.background,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        // shape: RoundedRectangleBorder(
+                        //   borderRadius: BorderRadius.circular(10),
+                        // ),
                       ),
                     ),
                   ],

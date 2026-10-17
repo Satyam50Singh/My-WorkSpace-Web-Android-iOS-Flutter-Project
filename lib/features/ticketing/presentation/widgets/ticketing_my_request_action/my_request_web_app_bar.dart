@@ -61,9 +61,9 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                             style: IconButton.styleFrom(
                               minimumSize: const Size(36, 36),
                               backgroundColor: AppColors.primaryDark,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(10),
+                              // ),
                             ),
                           )
                         else
@@ -99,9 +99,9 @@ class TicketingMyRequestWebAppBar extends StatelessWidget {
                                 color: AppColors.primaryDark,
                                 width: 1,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(8),
+                              // ),
                             ),
                           )
                         else
