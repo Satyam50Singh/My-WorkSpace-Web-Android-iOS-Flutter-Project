@@ -279,7 +279,6 @@ class DashboardDrawer extends StatelessWidget {
   }
 
   bool _isRouteSelected(String currentRoute, String targetRoute) {
-    debugPrint('currentRoute: $currentRoute && targetRoute: $targetRoute');
     if (currentRoute.isEmpty || targetRoute.isEmpty) return false;
     if (currentRoute == targetRoute) return true;
     if (targetRoute == AppRoutes.myTickets &&

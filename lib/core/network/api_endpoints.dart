@@ -1,8 +1,10 @@
+import 'package:my_worksphere_web/core/config/env.dart';
+
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const baseUatUrl = "https://apiuat.fsuite.org/api";
-  static const baseProdUrl = "https://apinew.fsuite.tech/api";
+  static final baseUatUrl = Env.baseUatUrl;
+  static final baseProdUrl = Env.baseProdUrl;
 
   static String baseUrl = baseUatUrl;
 
