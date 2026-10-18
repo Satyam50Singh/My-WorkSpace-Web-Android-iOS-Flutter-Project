@@ -6,6 +6,7 @@ class LoggingInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (kDebugMode) {
       debugPrint('➡️ ${options.method} ${options.uri}');
+      debugPrint('➡️ Headers: ${options.headers}');
       if (options.data != null) {
         if (options.data is FormData) {
           final formData = options.data as FormData;

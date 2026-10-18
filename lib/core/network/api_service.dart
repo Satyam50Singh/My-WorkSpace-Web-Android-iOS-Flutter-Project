@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:my_worksphere_web/core/network/token_interceptor.dart';
 
 import 'api_endpoints.dart';
 import 'logging_interceptor.dart';
@@ -16,6 +17,7 @@ class ApiService {
       ),
     );
 
+    dio.interceptors.add(TokenInterceptor());
     dio.interceptors.add(NetworkIntercept());
     dio.interceptors.add(LoggingInterceptor());
   }
