@@ -1,13 +1,13 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const baseUatUrl = "https://apiuat.fsuite.tech/api";
+  static const baseUatUrl = "https://apiuat.fsuite.org/api";
   static const baseProdUrl = "https://apinew.fsuite.tech/api";
 
   static String baseUrl = baseUatUrl;
 
-  static const validateCompanyCode = "/Master/Validate_Company_Code";
-  static const employeeLogin = "/Master/Validate_Login_V6_Web";
+  static const validateCompanyCode = "/Auth/Validate_Company_Code";
+  static const employeeLogin = "/Auth/Validate_Login_V6_Web";
 
   // -- Ticketing Module APIs -- //
   static const fetchTicketMyRequestDetails = "/Ticketing/Fetch_Ticket_MyRequest_Web_API";

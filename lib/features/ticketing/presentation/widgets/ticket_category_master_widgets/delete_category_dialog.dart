@@ -68,7 +68,7 @@ class DeleteCategoryDialog extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: itemTitle ?? "",
+                    text: itemTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontSize: 16,
                       color: AppColors.primary,

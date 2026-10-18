@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/core/error/exceptions.dart';
@@ -47,14 +49,9 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     required EmployeeUserRequest employeeUserRequest,
   }) async {
     try {
-      final json = await apiClient.get(
+      final json = await apiClient.post(
         ApiEndpoints.employeeLogin,
-        queryParameters: {
-          "UserName": employeeUserRequest.username,
-          "Password": employeeUserRequest.password,
-          "UserType": employeeUserRequest.userType,
-          "CompanyID": employeeUserRequest.companyId,
-        },
+        data: FormData.fromMap({'0': jsonEncode(employeeUserRequest.toJson())}),
       );
 
       return EmployerLoginResponseModel.fromJson(json);

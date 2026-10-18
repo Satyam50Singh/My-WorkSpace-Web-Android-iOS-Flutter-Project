@@ -60,26 +60,27 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     } else if (state is EmployeeLoginSuccess) {
                       Navigator.of(context).pop();
                       final employeeDetails = state.employeeDetails;
-                      final companyId = int.tryParse(widget.companyId ?? "0") ?? 0;
-
+                      final companyId =
+                          int.tryParse(widget.companyId ?? "0") ?? 0;
                       context.read<EmployeeDetailCubit>().saveEmployeeDetails(
-                            EmployeeDetail(
-                              userID: employeeDetails.userID,
-                              companyId: companyId,
-                              username: employeeDetails.username,
-                              fullName: employeeDetails.fullName,
-                              rollCd: employeeDetails.rollCd,
-                              empCd: employeeDetails.empCd,
-                              profilePic: employeeDetails.profilePic,
-                              departmentID: employeeDetails.departmentID,
-                              roleName: employeeDetails.roleName,
-                              isFirstLogin: employeeDetails.isFirstLogin,
-                              isRequestToDelete: employeeDetails.isRequestToDelete,
-                              isHOD: employeeDetails.isHOD,
-                              hODOfDepartment: employeeDetails.hODOfDepartment,
-                              moduleAccess: employeeDetails.moduleAccess,
-                            ),
-                          );
+                        EmployeeDetail(
+                          userID: employeeDetails.userID,
+                          companyId: companyId,
+                          username: employeeDetails.username,
+                          fullName: employeeDetails.fullName,
+                          rollCd: employeeDetails.rollCd,
+                          empCd: employeeDetails.empCd,
+                          profilePic: employeeDetails.profilePic,
+                          departmentID: employeeDetails.departmentID,
+                          roleName: employeeDetails.roleName,
+                          isFirstLogin: employeeDetails.isFirstLogin,
+                          isRequestToDelete: employeeDetails.isRequestToDelete,
+                          isHOD: employeeDetails.isHOD,
+                          hODOfDepartment: employeeDetails.hODOfDepartment,
+                          moduleAccess: employeeDetails.moduleAccess,
+                          jwtToken: employeeDetails.jwtToken
+                        ),
+                      );
                       context.go(AppRoutes.myTickets);
                     }
                   },

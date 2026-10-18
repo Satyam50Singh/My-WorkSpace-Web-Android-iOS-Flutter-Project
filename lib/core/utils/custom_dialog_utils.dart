@@ -271,7 +271,7 @@ class CustomDialogUtils {
   }) {
     showDialog(
       context: context,
-      // barrierDismissible: false,
+      barrierDismissible: false,
       builder: (ctx) {
         return Dialog(
           child: SizedBox(

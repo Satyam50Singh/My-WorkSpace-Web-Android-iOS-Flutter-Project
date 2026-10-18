@@ -10,4 +10,13 @@ class EmployeeUserRequest {
     required this.userType,
     required this.companyId,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Username': username,
+      'Password': password,
+      'UserType': userType,
+      'CompanyId': companyId,
+    };
+  }
 }

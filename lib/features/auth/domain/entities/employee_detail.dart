@@ -13,8 +13,9 @@ class EmployeeDetail {
   final bool? isHOD;
   final String? hODOfDepartment;
   final List<ModuleAccess>? moduleAccess;
+  String? jwtToken;
 
-  const EmployeeDetail({
+  EmployeeDetail({
     this.userID,
     this.companyId,
     this.username,
@@ -29,6 +30,7 @@ class EmployeeDetail {
     this.isHOD,
     this.hODOfDepartment,
     this.moduleAccess,
+    this.jwtToken,
   });
 }
 
