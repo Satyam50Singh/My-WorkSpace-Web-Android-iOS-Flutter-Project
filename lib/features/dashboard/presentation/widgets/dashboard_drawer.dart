@@ -5,9 +5,9 @@ import 'package:my_worksphere_web/core/routes/app_routes.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/core/utils/custom_dialog_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
-import 'package:my_worksphere_web/features/auth/domain/entities/employee_detail.dart';
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 
+import '../../../auth/domain/entities/employee_detail.dart';
 import 'drawer_menu_item.dart';
 
 class DashboardDrawer extends StatelessWidget {
@@ -22,27 +22,38 @@ class DashboardDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String currentRoute = '';
+    try {
+      currentRoute = GoRouterState.of(context).uri.path;
+    } catch (_) {}
+
     final List<ModuleAccess> moduleAccess = employeeDetail.moduleAccess ?? [];
     final List<DrawerMenuItems> menuItems = [];
 
     for (final module in moduleAccess) {
       final List<SubMenuItems> subItems = [];
       for (final subModule in module.subModules ?? []) {
+        final route = _getModuleRoute(subModule.menu);
+        final isSelected = _isRouteSelected(currentRoute, route);
         subItems.add(
           SubMenuItems(
+            isSelected,
             title: subModule.menu == 'My Tickets' ? 'My Request' : subModule.menu ?? '',
             icon: Icons.arrow_right,
-            route: _getModuleRoute(subModule.menu),
+            route: route,
             isDivider: false,
           ),
         );
       }
 
       if (module.moduleName == 'Ticketing') {
+        final route = _getModuleRoute('My Actions');
+        final isSelected = _isRouteSelected(currentRoute, route);
         final myActionsItem = SubMenuItems(
+          isSelected,
           title: 'My Actions',
           icon: Icons.arrow_right,
-          route: _getModuleRoute('My Actions'),
+          route: route,
           isDivider: false,
         );
         if (subItems.isNotEmpty) {
@@ -105,11 +116,16 @@ class DashboardDrawer extends StatelessWidget {
                   final item = menuItems[index];
 
                   if (item.subItems.isNotEmpty) {
+                    final bool isAnySubItemSelected =
+                        item.subItems.any((sub) => sub.isSelected);
+
                     return Theme(
                       data: Theme.of(
                         context,
                       ).copyWith(dividerColor: Colors.transparent),
                       child: ExpansionTile(
+                        key: Key('${item.title}_$isAnySubItemSelected'),
+                        initiallyExpanded: isAnySubItemSelected,
                         dense: true,
                         visualDensity: const VisualDensity(vertical: 1),
                         tilePadding: const EdgeInsets.symmetric(
@@ -120,7 +136,9 @@ class DashboardDrawer extends StatelessWidget {
                         collapsedShape: const Border(),
                         leading: Icon(
                           item.icon,
-                          color: AppColors.primaryDark,
+                          color: isAnySubItemSelected
+                              ? AppColors.primary
+                              : AppColors.primaryDark,
                           size: 22,
                         ),
                         title: Text(
@@ -138,8 +156,17 @@ class DashboardDrawer extends StatelessWidget {
                         ),
                         children: item.subItems.map((subItem) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 32.0, right: 12.0),
+                            padding: const EdgeInsets.only(
+                              left: 32.0,
+                              right: 12.0,
+                            ),
                             child: ListTile(
+                              tileColor: subItem.isSelected
+                                  ? AppColors.primary.withValues(alpha: 0.12)
+                                  : null,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0),
+                              ),
                               dense: true,
                               visualDensity: const VisualDensity(vertical: -2),
                               minVerticalPadding: 0,
@@ -150,14 +177,20 @@ class DashboardDrawer extends StatelessWidget {
                               leading: Icon(
                                 Icons.circle,
                                 size: 8,
-                                color: AppColors.primary.withValues(alpha: 0.5),
+                                color: subItem.isSelected
+                                    ? AppColors.primary
+                                    : AppColors.primary.withValues(alpha: 0.5),
                               ),
                               title: Text(
                                 subItem.title,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12.5,
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w600,
+                                  color: subItem.isSelected
+                                      ? AppColors.primary
+                                      : AppColors.textPrimary,
+                                  fontWeight: subItem.isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.w600,
                                 ),
                               ),
                               onTap: () {
@@ -177,7 +210,9 @@ class DashboardDrawer extends StatelessWidget {
                   return ListTile(
                     dense: true,
                     visualDensity: const VisualDensity(vertical: 1),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                    ),
                     leading: Icon(
                       item.icon,
                       color: AppColors.primary,
@@ -241,6 +276,18 @@ class DashboardDrawer extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  bool _isRouteSelected(String currentRoute, String targetRoute) {
+    debugPrint('currentRoute: $currentRoute && targetRoute: $targetRoute');
+    if (currentRoute.isEmpty || targetRoute.isEmpty) return false;
+    if (currentRoute == targetRoute) return true;
+    if (targetRoute == AppRoutes.myTickets &&
+        (currentRoute.startsWith('/view-ticket-details') ||
+            currentRoute.startsWith(AppRoutes.addNewRequest))) {
+      return true;
+    }
+    return false;
   }
 
   IconData _getModuleIcon(String? moduleName) {

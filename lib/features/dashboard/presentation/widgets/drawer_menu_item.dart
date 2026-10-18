@@ -21,8 +21,10 @@ class SubMenuItems {
   final IconData icon;
   final String route;
   final bool isDivider;
+  bool isSelected = false;
 
-  SubMenuItems({
+  SubMenuItems(
+    this.isSelected, {
     required this.title,
     required this.icon,
     required this.route,
