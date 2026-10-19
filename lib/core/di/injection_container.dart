@@ -8,9 +8,11 @@ import 'package:my_worksphere_web/features/auth/presentation/blocs/auto_bloc/aut
 import 'package:my_worksphere_web/features/auth/presentation/cubit/employee_detail_cubit.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/add_new_request_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/ticket_sub_category_master_data_source.dart';
+import 'package:my_worksphere_web/features/ticketing/data/datasources/ticket_workflow_master_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/ticketing_remote_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/data/datasources/view_ticket_detail_remote_data_source.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/add_new_request_repository.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticket_workflow_master_repository.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/ticketing_repository.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/repositories/view_ticket_detail_repository.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/add_new_request/add_new_ticket_usecase.dart';
@@ -21,6 +23,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_cate
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_category_usecases/ticket_category_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_sub_category_usecase/insert_update_sub_category_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_sub_category_usecase/ticket_sub_category_master_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecases/ticket_workflow_master_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_action_usecases/update_ticket_action_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_request_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/submit_reopen_review_usecase.dart';
@@ -38,6 +41,7 @@ import '../../features/ticketing/data/datasources/ticketing_my_action_remote_dat
 import '../../features/ticketing/data/repositories/add_new_request_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticket_category_master_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticket_sub_category_master_repository_impl.dart';
+import '../../features/ticketing/data/repositories/ticket_workflow_master_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticketing_my_action_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticketing_repository_impl.dart';
 import '../../features/ticketing/data/repositories/view_ticket_detail_repository_impl.dart';
@@ -52,6 +56,7 @@ import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/tr
 import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_workflow_usecase.dart';
 import '../../features/ticketing/domain/usecases/view_ticket_details_usecases/view_ticket_detail_v6_usecase.dart';
 import '../../features/ticketing/presentation/blocs/my_ticket_request_bloc/ticketing_bloc.dart';
+import '../../features/ticketing/presentation/blocs/ticket_workflow_master_bloc/ticket_workflow_master_bloc.dart';
 import '../../features/ticketing/presentation/blocs/ticketing_my_action_bloc/ticketing_my_action_bloc.dart';
 import '../network/api_client.dart';
 
@@ -92,6 +97,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketSubCategoryMasterDataSource>(
     () => TicketSubCategoryMasterDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<TicketWorkflowMasterDataSource>(
+    () => TicketWorkflowMasterDataSourceImpl(sl()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<AuthRepository>(
@@ -114,6 +122,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<TicketSubCategoryMasterRepository>(
     () => TicketSubCategoryMasterRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<TicketWorkflowMasterRepository>(
+    () => TicketWorkflowMasterRepositoryImpl(sl()),
   );
 
   // ---------- Use cases ----------
@@ -180,6 +191,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<InsertUpdateSubCategoryUseCase>(
     () => InsertUpdateSubCategoryUseCase(sl()),
   );
+  sl.registerLazySingleton<TicketWorkflowMasterUseCase>(
+    () => TicketWorkflowMasterUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
@@ -190,4 +204,5 @@ Future<void> configureDependencies() async {
   sl.registerFactory(() => TicketingMyActionBloc(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => TicketCategoryMasterBloc(sl(), sl(), sl()));
   sl.registerFactory(() => TicketSubCategoryMasterBloc(sl(), sl()));
+  sl.registerFactory(() => TicketWorkflowMasterBloc(sl()));
 }

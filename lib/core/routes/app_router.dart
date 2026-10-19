@@ -12,6 +12,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/external_transfer_ticket_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_category_master_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_sub_category_master_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_workflow_master_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticketing_my_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/view_ticket_details_page.dart';
 
@@ -143,6 +144,13 @@ class AppRouter {
               final subCategory = state.extra as SubCategoryMasterEntity?;
               debugPrint('selectedCategory: $subCategory');
               return AddNewSubCategoryPage(selectedSubCategory: subCategory);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.ticketWorkflow,
+            name: 'ticket-workflow',
+            builder: (context, state) {
+              return const TicketWorkflowMasterPage();
             },
           ),
         ],

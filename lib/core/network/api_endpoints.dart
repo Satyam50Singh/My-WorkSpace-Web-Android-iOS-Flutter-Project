@@ -38,5 +38,6 @@ class ApiEndpoints {
 
   static const fetchTicketSubCategoryList = "/Ticketing/Fetch_Ticket_SubCategory_List";
   static const insertUpdateTicketSubCategory = "/Ticketing/Insert_Update_Ticket_SubCategory";
+  static const fetchTicketWorkflowList = "/Ticketing/Fetch_Ticket_Workflow_List";
 
 }
