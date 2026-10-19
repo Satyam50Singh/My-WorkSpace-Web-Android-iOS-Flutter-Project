@@ -33,6 +33,9 @@ class DashboardDrawer extends StatelessWidget {
     for (final module in moduleAccess) {
       final List<SubMenuItems> subItems = [];
       for (final subModule in module.subModules ?? []) {
+        if (module.moduleName == 'Ticketing' && subModule.menu == 'CTT Report') {
+          continue;
+        }
         final route = _getModuleRoute(subModule.menu);
         final isSelected = _isRouteSelected(currentRoute, route);
         subItems.add(

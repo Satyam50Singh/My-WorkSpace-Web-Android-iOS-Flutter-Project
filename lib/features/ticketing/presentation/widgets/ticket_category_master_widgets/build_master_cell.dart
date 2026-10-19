@@ -25,6 +25,7 @@ Widget buildMasterCell(
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
           ),
         );
 }

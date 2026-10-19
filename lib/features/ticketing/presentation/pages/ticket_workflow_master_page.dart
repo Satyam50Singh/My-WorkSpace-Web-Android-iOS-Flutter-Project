@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +14,9 @@ import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../widgets/ticket_category_master_widgets/build_master_cell.dart';
 import '../widgets/ticket_category_master_widgets/category_action_button.dart';
+import '../widgets/ticket_category_master_widgets/category_action_dialog_utils.dart';
 import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
+import '../widgets/ticket_workflow_master_widgets/workflow_master_list_view_mobile.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 
 class TicketWorkflowMasterPage extends StatefulWidget {
@@ -30,6 +34,8 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
   int totalPages = 0;
   int currentPage = 0;
 
+  Timer? _debounceTimer;
+
   static const List<String> _headers = [
     "Workflow Description",
     "Category",
@@ -42,6 +48,12 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
   void initState() {
     _apiCallForFetchingTicketWorkflow();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _debounceTimer?.cancel();
   }
 
   void _apiCallForFetchingTicketWorkflow() {
@@ -89,7 +101,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearchBar(
                       hintText: 'Search Here ...',
-                      onChanged: (value) {},
+                      onChanged: _searchOperation,
                     ),
                   ),
                 ),
@@ -106,7 +118,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                   Expanded(
                     child: CustomSearchBar(
                       hintText: 'Search...',
-                      onChanged: (value) {},
+                      onChanged: _searchOperation,
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -118,21 +130,6 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                       backgroundColor: AppColors.primaryDark,
                     ),
                   ),
-                  IconButton.outlined(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.download_sharp,
-                      color: AppColors.primaryDark,
-                    ),
-                    style: IconButton.styleFrom(
-                      minimumSize: const Size(24, 24),
-                      backgroundColor: AppColors.white,
-                      side: const BorderSide(
-                        color: AppColors.primaryDark,
-                        width: 1,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -140,52 +137,142 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
           ],
 
           Expanded(
-            child: BlocConsumer<TicketWorkflowMasterBloc, TicketWorkflowMasterState>(
-              listener: (context, state) {
-                debugPrint('state: $state');
-                if (state is TicketWorkflowMasterLoading) {
-                  LoaderUtils.showLoader(context);
-                } else if (state is TicketWorkflowMasterFailure) {
-                  LoaderUtils.hideLoader(context);
-                  SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
-                } else if (state is TicketWorkflowMasterSuccess) {
-                  LoaderUtils.hideLoader(context);
-                  setState(() {
-                    workflowList = state.ticketWorkflowList!;
-                    if (kIsWeb) {
-                      filteredWorkflows = workflowList;
-                    } else {
-                      filteredWorkflows = workflowList.sublist(0, 10);
+            child:
+                BlocConsumer<
+                  TicketWorkflowMasterBloc,
+                  TicketWorkflowMasterState
+                >(
+                  listener: (context, state) {
+                    debugPrint('state: $state');
+                    if (state is TicketWorkflowMasterLoading) {
+                      LoaderUtils.showLoader(context);
+                    } else if (state is TicketWorkflowMasterFailure) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
+                    } else if (state is TicketWorkflowMasterSuccess) {
+                      LoaderUtils.hideLoader(context);
+                      setState(() {
+                        workflowList = state.ticketWorkflowList!;
+                        if (kIsWeb) {
+                          filteredWorkflows = workflowList;
+                        } else {
+                          filteredWorkflows = workflowList.sublist(0, 10);
+                        }
+                        totalPages = (workflowList.length / 10).ceil();
+                        currentPage = 1;
+                      });
                     }
-                    totalPages = (workflowList.length / 10).ceil();
-                    currentPage = 1;
-                  });
-                }
-              },
-              builder: (context, state) {
-                return CategoryMasterTableViewWeb<TicketWorkflowMasterEntity>(
-                  filteredItems: filteredWorkflows,
-                  headers: _headers,
-                  minWidth: 720,
-                  cellBuilder: (item, isMobile) =>
-                      _buildWorkflowCell(item, isMobile),
-                );
-              },
-            ),
+                  },
+                  builder: (context, state) {
+                    if (!isMobile) {
+                      return CategoryMasterTableViewWeb<
+                        TicketWorkflowMasterEntity
+                      >(
+                        filteredItems: filteredWorkflows,
+                        headers: _headers,
+                        minWidth: 720,
+                        cellBuilder: (item, isMobile) =>
+                            _buildWorkflowCell(item, isMobile),
+                      );
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Card(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: goToPrevious,
+                                  icon: Icon(Icons.chevron_left_rounded),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                  ),
+                                ),
+                                Spacer(),
+                                Text(
+                                  '$currentPage of $totalPages',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  onPressed: goToNext,
+                                  icon: Icon(Icons.chevron_right_rounded),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Expanded(
+                          child: WorkflowMasterListViewMobile(
+                            workflowList: filteredWorkflows,
+                            performEditDeleteOperation:
+                                _performEditDeleteOperation,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
           ),
         ],
       ),
     );
   }
 
+  void goToPrevious() {
+    if (currentPage != 1 && currentPage <= totalPages) {
+      debugPrint('currentPage: $currentPage && totalPages: $totalPages');
+      setState(() {
+        currentPage--;
+        final startIndex = (currentPage - 1) * 10;
+        final endIndex = startIndex + 10;
+        debugPrint('startIndex: $startIndex && endIndex: $endIndex');
+        filteredWorkflows = workflowList.sublist(startIndex, endIndex);
+      });
+    }
+  }
+
+  void goToNext() {
+    if (currentPage != totalPages && currentPage <= totalPages) {
+      debugPrint('currentPage: $currentPage && totalPages: $totalPages');
+      setState(() {
+        currentPage++;
+        final startIndex = (currentPage - 1) * 10;
+        var endIndex = startIndex + 10;
+        if (endIndex > workflowList.length) {
+          endIndex = workflowList.length;
+        }
+        debugPrint('startIndex: $startIndex && endIndex: $endIndex');
+        filteredWorkflows = workflowList.sublist(startIndex, endIndex);
+      });
+    } else {
+      debugPrint('No more pages to load');
+    }
+  }
+
   List<DataCell> _buildWorkflowCell(
     TicketWorkflowMasterEntity item,
     bool isMobile,
   ) {
+    String getValue(String? value) =>
+        (value != null && value.isNotEmpty) ? value : '-';
+
     return [
-      DataCell(buildMasterCell(context, item.workflowName ?? '-', isMobile)),
-      DataCell(buildMasterCell(context, item.category ?? '-', isMobile)),
-      DataCell(buildMasterCell(context, item.subCategory ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, getValue(item.workflowName), isMobile)),
+      DataCell(buildMasterCell(context, getValue(item.category), isMobile)),
+      DataCell(buildMasterCell(context, getValue(item.subCategory), isMobile)),
       DataCell(buildMasterCell(context, item.noOfLevels.toString(), isMobile)),
       DataCell(
         Row(
@@ -224,5 +311,51 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
   void _performEditDeleteOperation(
     String action,
     TicketWorkflowMasterEntity item,
-  ) {}
+  ) {
+    if (action == 'Edit') {
+    } else if (action == 'Delete') {
+      CategoryActionDialogUtils.showDeleteCategoryDialog(
+        context: context,
+        dialogHeading: 'Delete Workflow',
+        itemTitle: item.workflowName ?? "",
+        onPressed: (dialogCtx) {
+          Navigator.of(dialogCtx).pop();
+          _apiCallForDeleteWorkflow(item);
+        },
+      );
+    }
+  }
+
+  void _searchOperation(String value) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+
+    if (value.isNotEmpty && value.isNotEmpty) {
+      final searchText = value.toLowerCase();
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          filteredWorkflows = workflowList.where((category) {
+            return (category.category!.toLowerCase().contains(searchText) ||
+                category.subCategory!.toLowerCase().contains(searchText) ||
+                category.workflowName!.toLowerCase().contains(searchText) ||
+                category.noOfLevels!.toString().toLowerCase().contains(
+                  searchText,
+                ));
+          }).toList();
+          totalPages = (filteredWorkflows.length / 10).ceil();
+          currentPage = 1;
+        });
+        debugPrint(
+          'filteredWorkflows: ${filteredWorkflows.map((e) => {'workflowId': e.workflowID, 'workflowName': e.workflowName, 'categoryId': e.categoryID, 'categoryName': e.category, 'subCategoryId': e.subCategoryID, 'subCategoryName': e.subCategory}).toList()}',
+        );
+      });
+    } else if (value.isEmpty) {
+      setState(() {
+        filteredWorkflows = workflowList;
+        totalPages = (filteredWorkflows.length / 10).ceil();
+        currentPage = 1;
+      });
+    }
+  }
+
+  void _apiCallForDeleteWorkflow(TicketWorkflowMasterEntity item) {}
 }
