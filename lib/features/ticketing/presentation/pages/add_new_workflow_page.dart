@@ -163,7 +163,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                             icon: Icons.description,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           flex: isMobile ? 1 : 2,
                           child: TextFormField(
@@ -189,7 +189,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                             },
                           ),
                         ),
-                        Expanded(child: Spacer()),
+                        const Spacer(),
                       ],
                     ),
                   ],
@@ -249,11 +249,14 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                     icon: Icons.bookmark_border,
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(width: 16),
 
                                 if (state is TicketCategoryMasterLoading)
-                                  CustomLoadingDropdown(
-                                    label: 'Select Category',
+                                  Expanded(
+                                    flex: isMobile ? 1 : 2,
+                                    child: CustomLoadingDropdown(
+                                      label: 'Select Category',
+                                    ),
                                   )
                                 else
                                   Expanded(
@@ -294,7 +297,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       },
                                     ),
                                   ),
-                                Expanded(child: Spacer()),
+                                const Spacer(),
                               ],
                             ),
                           ],
@@ -387,11 +390,14 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                     icon: Icons.local_offer_outlined,
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(width: 16),
 
                                 if (state is TicketSubCategoryMasterLoading)
-                                  CustomLoadingDropdown(
-                                    label: 'Select Sub-Category',
+                                  Expanded(
+                                    flex: isMobile ? 1 : 2,
+                                    child: CustomLoadingDropdown(
+                                      label: 'Select Sub-Category',
+                                    ),
                                   )
                                 else
                                   Expanded(
@@ -422,7 +428,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       },
                                     ),
                                   ),
-                                Expanded(child: Spacer()),
+                                const Spacer(),
                               ],
                             ),
                           ],
