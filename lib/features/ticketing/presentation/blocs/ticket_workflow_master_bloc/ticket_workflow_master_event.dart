@@ -7,3 +7,9 @@ class TicketWorkflowListRequested extends TicketWorkflowMasterEvent {
 
   TicketWorkflowListRequested({required this.companyID});
 }
+
+class DeleteWorkflowListRequested extends TicketWorkflowMasterEvent {
+  final InsertUpdateWorkflowRequestModel payload;
+
+  DeleteWorkflowListRequested({required this.payload});
+}

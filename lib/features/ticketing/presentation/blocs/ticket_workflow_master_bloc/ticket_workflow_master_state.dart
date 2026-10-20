@@ -17,3 +17,9 @@ final class TicketWorkflowMasterSuccess extends TicketWorkflowMasterState {
 
   TicketWorkflowMasterSuccess({this.ticketWorkflowList});
 }
+
+final class DeleteWorkflowMasterSuccess extends TicketWorkflowMasterState {
+  final String message;
+
+  DeleteWorkflowMasterSuccess({required this.message});
+}

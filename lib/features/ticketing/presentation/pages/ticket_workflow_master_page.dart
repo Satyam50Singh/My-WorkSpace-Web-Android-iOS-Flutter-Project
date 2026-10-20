@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/insert_update_workflow_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_workflow_master_bloc/ticket_workflow_master_bloc.dart';
 
@@ -164,6 +165,13 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                         totalPages = (workflowList.length / 10).ceil();
                         currentPage = 1;
                       });
+                    } else if (state is DeleteWorkflowMasterSuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        'Workflow deleted successfully',
+                      );
+                      _apiCallForFetchingTicketWorkflow();
                     }
                   },
                   builder: (context, state) {
@@ -357,5 +365,34 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
     }
   }
 
-  void _apiCallForDeleteWorkflow(TicketWorkflowMasterEntity item) {}
+  void _apiCallForDeleteWorkflow(TicketWorkflowMasterEntity item) {
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final companyID = employee.companyId ?? 0;
+      final loggedInUserID = employee.userID?.toString() ?? "0";
+      final action = 'D';
+      final categoryID = item.categoryID ?? 0;
+      final subCategoryID = item.subCategoryID ?? 0;
+      final workflowId = item.workflowID ?? 0;
+      final workflowName = item.workflowName ?? "";
+      final workflowDetails = [];
+      debugPrint(
+        'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, workflowId: $workflowId, workflowName: $workflowName',
+      );
+      final payload = InsertUpdateWorkflowRequestModel(
+        categoryId: categoryID,
+        subCategoryId: subCategoryID,
+        workflowId: workflowId,
+        workflowName: workflowName,
+        companyId: companyID,
+        loggedInUserId: loggedInUserID,
+        action: action,
+        workflowDetails: workflowDetails,
+      );
+      context.read<TicketWorkflowMasterBloc>().add(
+        DeleteWorkflowListRequested(payload: payload),
+      );
+    }
+  }
 }
