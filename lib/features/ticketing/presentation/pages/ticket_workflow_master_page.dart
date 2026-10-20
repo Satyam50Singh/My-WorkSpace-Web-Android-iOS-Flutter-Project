@@ -88,7 +88,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
               showExportToExcelBtn: false,
               addNewBtnTitleText: 'Add New Workflow',
               onTapExportToExcel: () {},
-              onTapAddNewRequest: () {},
+              onTapAddNewRequest: () => goToAddNewWorkflowPage(null),
             ),
             SizedBox(height: 8),
 
@@ -124,7 +124,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                   ),
                   const SizedBox(width: 4),
                   IconButton.filled(
-                    onPressed: () {},
+                    onPressed: () => goToAddNewWorkflowPage(null),
                     icon: const Icon(Icons.add, color: AppColors.white),
                     style: IconButton.styleFrom(
                       minimumSize: const Size(36, 36),
@@ -321,6 +321,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
     TicketWorkflowMasterEntity item,
   ) {
     if (action == 'Edit') {
+      goToAddNewWorkflowPage(item);
     } else if (action == 'Delete') {
       CategoryActionDialogUtils.showDeleteCategoryDialog(
         context: context,
@@ -393,6 +394,17 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
       context.read<TicketWorkflowMasterBloc>().add(
         DeleteWorkflowListRequested(payload: payload),
       );
+    }
+  }
+
+  void goToAddNewWorkflowPage(TicketWorkflowMasterEntity? item) async {
+    final result = await context.pushNamed<bool>(
+      'add-new-workflow',
+      extra: item,
+    );
+    if (result == true) {
+      debugPrint('navigated with true');
+      _apiCallForFetchingTicketWorkflow();
     }
   }
 }

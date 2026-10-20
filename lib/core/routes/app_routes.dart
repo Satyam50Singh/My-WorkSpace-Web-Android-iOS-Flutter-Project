@@ -17,6 +17,7 @@ class AppRoutes {
   static const addNewSubCategory = '/add-new-sub-category';
 
   static const ticketWorkflow = '/ticket-workflow';
+  static const addNewWorkflow = '/add-new-workflow';
 
   static const checklist = '/checklist';
   static const workpermit = '/workpermit';

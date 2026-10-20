@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/dashboard_home.dart';
 import 'package:my_worksphere_web/features/dashboard/presentation/pages/employee_dashboard.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_category_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_request_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_sub_category_page.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/pages/add_new_workflow_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/external_transfer_ticket_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_category_master_page.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/pages/ticket_sub_category_master_page.dart';
@@ -151,6 +153,15 @@ class AppRouter {
             name: 'ticket-workflow',
             builder: (context, state) {
               return const TicketWorkflowMasterPage();
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.addNewWorkflow,
+            name: 'add-new-workflow',
+            builder: (context, state) {
+              final workflow = state.extra as TicketWorkflowMasterEntity?;
+              debugPrint('workflow: $workflow');
+              return AddNewWorkflowPage(selectedWorkflow: workflow);
             },
           ),
         ],
