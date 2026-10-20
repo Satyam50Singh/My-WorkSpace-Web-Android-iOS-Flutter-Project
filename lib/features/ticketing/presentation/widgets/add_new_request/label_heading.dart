@@ -26,6 +26,8 @@ class LabelHeading extends StatelessWidget {
             color: AppColors.textSecondary,
             fontSize: 14,
           ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
         ),
         if (isRequired) ...[
           const SizedBox(width: 4),

@@ -7,6 +7,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticket_category
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/department_entity.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
+import '../../../../core/common/widgets/custom_loading_dropdown.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_category_entities/ticket_category_entity.dart';
@@ -208,39 +209,9 @@ class _AddNewCategoryPageState extends State<AddNewCategoryPage> {
                               icon: Icons.apartment_outlined,
                             ),
                             const SizedBox(height: 16),
-                            if (state is DepartmentMasterListLoading)
-                              Container(
-                                height: 48,
-                                width: double.infinity,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.background,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const CircularProgressIndicator(
-                                        color: AppColors.textSecondary,
-                                        constraints: BoxConstraints(
-                                          minHeight: 16,
-                                          minWidth: 16,
-                                        ),
-                                        strokeWidth: 2,
-                                      ),
-                                      SizedBox(width: 16),
-                                      Text(
-                                        'Select Department',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            else
+                            if (state is DepartmentMasterListLoading) ...[
+                              CustomLoadingDropdown(label: 'Select Department'),
+                            ] else
                               CustomDropDown<DepartmentEntity>(
                                 listItems: departments,
                                 selectedValue: _selectedDepartment,

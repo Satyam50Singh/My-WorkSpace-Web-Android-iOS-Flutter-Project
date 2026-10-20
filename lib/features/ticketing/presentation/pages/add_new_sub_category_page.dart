@@ -8,6 +8,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_cate
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
+import '../../../../core/common/widgets/custom_loading_dropdown.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_category_entities/ticket_category_entity.dart';
@@ -83,7 +84,7 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
     }
   }
 
-  void _apiCallForAddNewCategory() {
+  void _apiCallForAddNewSubCategory() {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
       final employee = state.employeeDetail;
@@ -127,7 +128,7 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
             AddNewRequestHeader(
               headingText: 'Add New Sub-Category',
               btnText: 'SAVE',
-              onSaveTap: _apiCallForAddNewCategory,
+              onSaveTap: _apiCallForAddNewSubCategory,
               isSaveEnabled: isSaveBtnEnabled,
             ),
 
@@ -229,39 +230,9 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
                                 icon: Icons.bookmark_border,
                               ),
                               const SizedBox(height: 16),
-                              if (state is TicketCategoryMasterLoading)
-                                Container(
-                                  height: 48,
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.background,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const CircularProgressIndicator(
-                                          color: AppColors.textSecondary,
-                                          constraints: BoxConstraints(
-                                            minHeight: 16,
-                                            minWidth: 16,
-                                          ),
-                                          strokeWidth: 2,
-                                        ),
-                                        SizedBox(width: 16),
-                                        Text(
-                                          'Select Category',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              else
+                              if (state is TicketCategoryMasterLoading) ...[
+                                CustomLoadingDropdown(label: 'Select Category'),
+                              ] else
                                 CustomDropDown<TicketCategoryEntity>(
                                   listItems: categories,
                                   selectedValue: _selectedCategory,
