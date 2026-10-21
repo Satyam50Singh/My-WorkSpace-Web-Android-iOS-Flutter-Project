@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_level_card.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_outlined_button.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
 import '../../../../core/common/widgets/custom_loading_dropdown.dart';
@@ -146,355 +148,403 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
             ),
             Divider(color: AppColors.textHint),
             SizedBox(height: 16),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (!isMobile) ...[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+            Expanded(
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(
+                  context,
+                ).copyWith(scrollbars: false),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: const LabelHeading(
-                            label: 'Workflow Description',
-                            icon: Icons.description,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          flex: isMobile ? 1 : 2,
-                          child: TextFormField(
-                            controller: _workflowController,
-                            decoration: InputDecoration(
-                              hintText: 'Enter workflow description...',
-                              hintStyle: const TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 14,
+                        if (!isMobile) ...[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: const LabelHeading(
+                                  label: 'Workflow Description',
+                                  icon: Icons.description,
+                                ),
                               ),
-                              filled: true,
-                              fillColor: AppColors.background,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.0),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                flex: isMobile ? 1 : 2,
+                                child: TextFormField(
+                                  controller: _workflowController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter workflow description...',
+                                    hintStyle: const TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontSize: 14,
+                                    ),
+                                    filled: true,
+                                    fillColor: AppColors.background,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  onChanged: (value) {
+                                    _validateForm();
+                                  },
+                                  onEditingComplete: () {
+                                    _validateForm();
+                                  },
+                                ),
                               ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                            onChanged: (value) {
-                              _validateForm();
-                            },
-                            onEditingComplete: () {
-                              _validateForm();
-                            },
+                              const Spacer(),
+                            ],
                           ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ],
+                        ],
 
-                  if (isMobile) ...[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const LabelHeading(
-                          label: 'Workflow Description',
-                          icon: Icons.description,
-                        ),
+                        if (isMobile) ...[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const LabelHeading(
+                                label: 'Workflow Description',
+                                icon: Icons.description,
+                              ),
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                controller: _workflowController,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter workflow description...',
+                                  hintStyle: const TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 14,
+                                  ),
+                                  filled: true,
+                                  fillColor: AppColors.background,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                textInputAction: TextInputAction.next,
+                                onChanged: (value) {
+                                  _validateForm();
+                                },
+                                onEditingComplete: () {
+                                  _validateForm();
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+
                         const SizedBox(height: 16),
-                        TextFormField(
-                          controller: _workflowController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter workflow description...',
-                            hintStyle: const TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 14,
-                            ),
-                            filled: true,
-                            fillColor: AppColors.background,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                          ),
-                          textInputAction: TextInputAction.next,
-                          onChanged: (value) {
-                            _validateForm();
+                        BlocConsumer<
+                          TicketCategoryMasterBloc,
+                          TicketCategoryMasterState
+                        >(
+                          builder: (context, state) {
+                            return Column(
+                              children: [
+                                if (!isMobile) ...[
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: const LabelHeading(
+                                          label: 'Category',
+                                          icon: Icons.bookmark_border,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+
+                                      if (state is TicketCategoryMasterLoading)
+                                        Expanded(
+                                          flex: isMobile ? 1 : 2,
+                                          child: CustomLoadingDropdown(
+                                            label: 'Select Category',
+                                          ),
+                                        )
+                                      else
+                                        Expanded(
+                                          flex: isMobile ? 1 : 2,
+                                          child: CustomDropDown<TicketCategoryEntity>(
+                                            listItems: categories,
+                                            selectedValue: _selectedCategory,
+                                            label: 'Category',
+                                            hintText: 'Select Category',
+                                            searchHintText:
+                                                'Search Category ...',
+                                            itemAsString: (category) =>
+                                                category.category!,
+                                            onSelected: (value) {
+                                              if (value != null &&
+                                                  value.categoryID != 0) {
+                                                setState(() {
+                                                  _selectedCategory = value;
+                                                  filteredSubCategories =
+                                                      subCategories
+                                                          .where(
+                                                            (subCategory) =>
+                                                                subCategory
+                                                                    .categoryID ==
+                                                                _selectedCategory!
+                                                                    .categoryID,
+                                                          )
+                                                          .toList();
+                                                  _selectedSubCategory = null;
+                                                });
+                                                _validateForm();
+                                                debugPrint(
+                                                  'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
+                                                );
+                                              }
+                                            },
+                                            compareFn: (f1, f2) {
+                                              return f1.categoryID ==
+                                                  f2.categoryID;
+                                            },
+                                          ),
+                                        ),
+                                      const Spacer(),
+                                    ],
+                                  ),
+                                ],
+
+                                if (isMobile) ...[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const LabelHeading(
+                                        label: 'Category',
+                                        icon: Icons.bookmark_border,
+                                      ),
+                                      const SizedBox(height: 16),
+
+                                      if (state is TicketCategoryMasterLoading)
+                                        CustomLoadingDropdown(
+                                          label: 'Select Category',
+                                        )
+                                      else
+                                        CustomDropDown<TicketCategoryEntity>(
+                                          listItems: categories,
+                                          selectedValue: _selectedCategory,
+                                          label: 'Category',
+                                          hintText: 'Select Category',
+                                          searchHintText: 'Search Category ...',
+                                          itemAsString: (category) =>
+                                              category.category!,
+                                          onSelected: (value) {
+                                            if (value != null &&
+                                                value.categoryID != 0) {
+                                              setState(() {
+                                                _selectedCategory = value;
+                                                filteredSubCategories =
+                                                    subCategories
+                                                        .where(
+                                                          (subCategory) =>
+                                                              subCategory
+                                                                  .categoryID ==
+                                                              _selectedCategory!
+                                                                  .categoryID,
+                                                        )
+                                                        .toList();
+                                                _selectedSubCategory = null;
+                                              });
+                                              _validateForm();
+                                              debugPrint(
+                                                'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
+                                              );
+                                            }
+                                          },
+                                          compareFn: (f1, f2) {
+                                            return f1.categoryID ==
+                                                f2.categoryID;
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            );
                           },
-                          onEditingComplete: () {
-                            _validateForm();
+                          listener: (context, state) {
+                            if (state is TicketCategoryMasterFailure) {
+                              SnackBarUtils.showFloatingSnackBar(
+                                context,
+                                state.errorMessage,
+                              );
+                            } else if (state is TicketCategoryMasterSuccess) {
+                              setState(() {
+                                categories = state.categoryList;
+                              });
+                            }
                           },
                         ),
+
+                        const SizedBox(height: 16),
+                        BlocConsumer<
+                          TicketSubCategoryMasterBloc,
+                          TicketSubCategoryMasterState
+                        >(
+                          builder: (context, state) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (!isMobile) ...[
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: const LabelHeading(
+                                          label: 'Sub-Category',
+                                          icon: Icons.local_offer_outlined,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+
+                                      if (state
+                                          is TicketSubCategoryMasterLoading)
+                                        Expanded(
+                                          flex: isMobile ? 1 : 2,
+                                          child: CustomLoadingDropdown(
+                                            label: 'Select Sub-Category',
+                                          ),
+                                        )
+                                      else
+                                        Expanded(
+                                          flex: isMobile ? 1 : 2,
+                                          child:
+                                              CustomDropDown<
+                                                SubCategoryMasterEntity
+                                              >(
+                                                listItems:
+                                                    filteredSubCategories,
+                                                selectedValue:
+                                                    _selectedSubCategory,
+                                                label: 'Category',
+                                                hintText: 'Select Sub-Category',
+                                                searchHintText:
+                                                    'Search Sub-Category ...',
+                                                itemAsString: (subCategory) =>
+                                                    subCategory.subCategory!,
+                                                onSelected: (value) {
+                                                  if (value != null &&
+                                                      value.subCategoryID !=
+                                                          0) {
+                                                    setState(() {
+                                                      _selectedSubCategory =
+                                                          value;
+                                                    });
+                                                    _validateForm();
+                                                    debugPrint(
+                                                      'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
+                                                    );
+                                                  }
+                                                },
+                                                compareFn: (f1, f2) {
+                                                  return f1.subCategoryID ==
+                                                      f2.subCategoryID;
+                                                },
+                                              ),
+                                        ),
+                                      const Spacer(),
+                                    ],
+                                  ),
+                                ],
+
+                                if (isMobile) ...[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const LabelHeading(
+                                        label: 'Sub-Category',
+                                        icon: Icons.bookmark_border,
+                                      ),
+                                      const SizedBox(height: 16),
+
+                                      if (state
+                                          is TicketSubCategoryMasterLoading)
+                                        CustomLoadingDropdown(
+                                          label: 'Select Sub-Category',
+                                        )
+                                      else
+                                        CustomDropDown<SubCategoryMasterEntity>(
+                                          listItems: filteredSubCategories,
+                                          selectedValue: _selectedSubCategory,
+                                          label: 'Sub-Category',
+                                          hintText: 'Select Sub-Category',
+                                          searchHintText:
+                                              'Search Sub-Category ...',
+                                          itemAsString: (subCategory) =>
+                                              subCategory.subCategory!,
+                                          onSelected: (value) {
+                                            if (value != null &&
+                                                value.subCategoryID != 0) {
+                                              setState(() {
+                                                _selectedSubCategory = value;
+                                              });
+                                              _validateForm();
+                                              debugPrint(
+                                                'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
+                                              );
+                                            }
+                                          },
+                                          compareFn: (f1, f2) {
+                                            return f1.subCategoryID ==
+                                                f2.subCategoryID;
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            );
+                          },
+                          listener: (context, state) {
+                            if (state is TicketSubCategoryMasterFailure) {
+                              SnackBarUtils.showFloatingSnackBar(
+                                context,
+                                state.errorMessage,
+                              );
+                            } else if (state
+                                is TicketSubCategoryMasterSuccess) {
+                              setState(() {
+                                subCategories = state.subCategoryList;
+                              });
+                            }
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        Row(
+                          children: [
+                            Spacer(),
+                            WorkflowOutlinedButton(
+                              btnTitle: 'New Level',
+                              icon: Icons.add,
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+                        WorkflowLevelCard(),
+                        const SizedBox(height: 16),
+                        WorkflowLevelCard(),
+                        const SizedBox(height: 16),
+                        WorkflowLevelCard(),
                       ],
                     ),
-                  ],
-
-                  const SizedBox(height: 16),
-                  BlocConsumer<
-                    TicketCategoryMasterBloc,
-                    TicketCategoryMasterState
-                  >(
-                    builder: (context, state) {
-                      return Column(
-                        children: [
-                          if (!isMobile) ...[
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: const LabelHeading(
-                                    label: 'Category',
-                                    icon: Icons.bookmark_border,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-
-                                if (state is TicketCategoryMasterLoading)
-                                  Expanded(
-                                    flex: isMobile ? 1 : 2,
-                                    child: CustomLoadingDropdown(
-                                      label: 'Select Category',
-                                    ),
-                                  )
-                                else
-                                  Expanded(
-                                    flex: isMobile ? 1 : 2,
-                                    child: CustomDropDown<TicketCategoryEntity>(
-                                      listItems: categories,
-                                      selectedValue: _selectedCategory,
-                                      label: 'Category',
-                                      hintText: 'Select Category',
-                                      searchHintText: 'Search Category ...',
-                                      itemAsString: (category) =>
-                                          category.category!,
-                                      onSelected: (value) {
-                                        if (value != null &&
-                                            value.categoryID != 0) {
-                                          setState(() {
-                                            _selectedCategory = value;
-                                            filteredSubCategories =
-                                                subCategories
-                                                    .where(
-                                                      (subCategory) =>
-                                                          subCategory
-                                                              .categoryID ==
-                                                          _selectedCategory!
-                                                              .categoryID,
-                                                    )
-                                                    .toList();
-                                            _selectedSubCategory = null;
-                                          });
-                                          _validateForm();
-                                          debugPrint(
-                                            'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
-                                          );
-                                        }
-                                      },
-                                      compareFn: (f1, f2) {
-                                        return f1.categoryID == f2.categoryID;
-                                      },
-                                    ),
-                                  ),
-                                const Spacer(),
-                              ],
-                            ),
-                          ],
-
-                          if (isMobile) ...[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const LabelHeading(
-                                  label: 'Category',
-                                  icon: Icons.bookmark_border,
-                                ),
-                                const SizedBox(height: 16),
-
-                                if (state is TicketCategoryMasterLoading)
-                                  CustomLoadingDropdown(
-                                    label: 'Select Category',
-                                  )
-                                else
-                                  CustomDropDown<TicketCategoryEntity>(
-                                    listItems: categories,
-                                    selectedValue: _selectedCategory,
-                                    label: 'Category',
-                                    hintText: 'Select Category',
-                                    searchHintText: 'Search Category ...',
-                                    itemAsString: (category) =>
-                                        category.category!,
-                                    onSelected: (value) {
-                                      if (value != null &&
-                                          value.categoryID != 0) {
-                                        setState(() {
-                                          _selectedCategory = value;
-                                          filteredSubCategories = subCategories
-                                              .where(
-                                                (subCategory) =>
-                                                    subCategory.categoryID ==
-                                                    _selectedCategory!
-                                                        .categoryID,
-                                              )
-                                              .toList();
-                                          _selectedSubCategory = null;
-                                        });
-                                        _validateForm();
-                                        debugPrint(
-                                          'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
-                                        );
-                                      }
-                                    },
-                                    compareFn: (f1, f2) {
-                                      return f1.categoryID == f2.categoryID;
-                                    },
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ],
-                      );
-                    },
-                    listener: (context, state) {
-                      if (state is TicketCategoryMasterFailure) {
-                        SnackBarUtils.showFloatingSnackBar(
-                          context,
-                          state.errorMessage,
-                        );
-                      } else if (state is TicketCategoryMasterSuccess) {
-                        setState(() {
-                          categories = state.categoryList;
-                        });
-                      }
-                    },
                   ),
-
-                  const SizedBox(height: 16),
-                  BlocConsumer<
-                    TicketSubCategoryMasterBloc,
-                    TicketSubCategoryMasterState
-                  >(
-                    builder: (context, state) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (!isMobile) ...[
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: const LabelHeading(
-                                    label: 'Sub-Category',
-                                    icon: Icons.local_offer_outlined,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-
-                                if (state is TicketSubCategoryMasterLoading)
-                                  Expanded(
-                                    flex: isMobile ? 1 : 2,
-                                    child: CustomLoadingDropdown(
-                                      label: 'Select Sub-Category',
-                                    ),
-                                  )
-                                else
-                                  Expanded(
-                                    flex: isMobile ? 1 : 2,
-                                    child: CustomDropDown<SubCategoryMasterEntity>(
-                                      listItems: filteredSubCategories,
-                                      selectedValue: _selectedSubCategory,
-                                      label: 'Category',
-                                      hintText: 'Select Sub-Category',
-                                      searchHintText: 'Search Sub-Category ...',
-                                      itemAsString: (subCategory) =>
-                                          subCategory.subCategory!,
-                                      onSelected: (value) {
-                                        if (value != null &&
-                                            value.subCategoryID != 0) {
-                                          setState(() {
-                                            _selectedSubCategory = value;
-                                          });
-                                          _validateForm();
-                                          debugPrint(
-                                            'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
-                                          );
-                                        }
-                                      },
-                                      compareFn: (f1, f2) {
-                                        return f1.subCategoryID ==
-                                            f2.subCategoryID;
-                                      },
-                                    ),
-                                  ),
-                                const Spacer(),
-                              ],
-                            ),
-                          ],
-
-                          if (isMobile) ...[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const LabelHeading(
-                                  label: 'Sub-Category',
-                                  icon: Icons.bookmark_border,
-                                ),
-                                const SizedBox(height: 16),
-
-                                if (state is TicketSubCategoryMasterLoading)
-                                  CustomLoadingDropdown(
-                                    label: 'Select Sub-Category',
-                                  )
-                                else
-                                  CustomDropDown<SubCategoryMasterEntity>(
-                                    listItems: filteredSubCategories,
-                                    selectedValue: _selectedSubCategory,
-                                    label: 'Sub-Category',
-                                    hintText: 'Select Sub-Category',
-                                    searchHintText: 'Search Sub-Category ...',
-                                    itemAsString: (subCategory) =>
-                                        subCategory.subCategory!,
-                                    onSelected: (value) {
-                                      if (value != null &&
-                                          value.subCategoryID != 0) {
-                                        setState(() {
-                                          _selectedSubCategory = value;
-                                        });
-                                        _validateForm();
-                                        debugPrint(
-                                          'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
-                                        );
-                                      }
-                                    },
-                                    compareFn: (f1, f2) {
-                                      return f1.subCategoryID ==
-                                          f2.subCategoryID;
-                                    },
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ],
-                      );
-                    },
-                    listener: (context, state) {
-                      if (state is TicketSubCategoryMasterFailure) {
-                        SnackBarUtils.showFloatingSnackBar(
-                          context,
-                          state.errorMessage,
-                        );
-                      } else if (state is TicketSubCategoryMasterSuccess) {
-                        setState(() {
-                          subCategories = state.subCategoryList;
-                        });
-                      }
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
-                ],
+                ),
               ),
             ),
           ],
