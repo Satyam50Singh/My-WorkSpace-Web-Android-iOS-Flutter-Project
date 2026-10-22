@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/ticket_workflow_list_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/insert_update_workflow_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/workflow_user_group_list_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/common_response_model.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -18,6 +19,10 @@ abstract class TicketWorkflowMasterDataSource {
 
   Future<CommonResponseModel> insertUpdateTicketWorkflow({
     required InsertUpdateWorkflowRequestModel payload,
+  });
+
+  Future<WorkflowUserGroupListResponseModel> fetchWorkPermitConfigUserGroupChecklistList({
+    required int companyID,
   });
 }
 
@@ -56,6 +61,23 @@ class TicketWorkflowMasterDataSourceImpl
         data: FormData.fromMap({'0': jsonEncode(payload.toJson())}),
       );
       return CommonResponseModel.fromJson(json);
+    } on ApiException catch (e) {
+      debugPrint('ApiException: ${e.message}');
+      throw ServerException(message: e.message);
+    } on DioException catch (e) {
+      debugPrint('DioException: ${e.message}');
+      throw ServerException(message: e.message ?? "Something went wrong!");
+    }
+  }
+
+  @override
+  Future<WorkflowUserGroupListResponseModel> fetchWorkPermitConfigUserGroupChecklistList({required int companyID})  async {
+    try {
+      final json = await _apiClient.get(
+        ApiEndpoints.fetchWorkPermitConfigUserGroupChecklistList,
+        queryParameters: {'CompanyID': companyID},
+      );
+      return WorkflowUserGroupListResponseModel.fromJson(json);
     } on ApiException catch (e) {
       debugPrint('ApiException: ${e.message}');
       throw ServerException(message: e.message);

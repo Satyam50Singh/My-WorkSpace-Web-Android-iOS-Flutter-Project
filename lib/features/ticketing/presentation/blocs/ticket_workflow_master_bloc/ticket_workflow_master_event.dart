@@ -13,3 +13,9 @@ class DeleteWorkflowListRequested extends TicketWorkflowMasterEvent {
 
   DeleteWorkflowListRequested({required this.payload});
 }
+
+class WorkflowUserGroupListRequested extends TicketWorkflowMasterEvent {
+  final int companyID;
+
+  WorkflowUserGroupListRequested({required this.companyID});
+}

@@ -24,6 +24,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_cate
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_sub_category_usecase/insert_update_sub_category_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_sub_category_usecase/ticket_sub_category_master_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecases/ticket_workflow_master_usecase.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecases/workflow_user_group_list_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_action_usecases/update_ticket_action_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticketing_my_request_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/submit_reopen_review_usecase.dart';
@@ -198,6 +199,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<InsertUpdateWorkflowUseCase>(
     () => InsertUpdateWorkflowUseCase(sl()),
   );
+  sl.registerLazySingleton<WorkflowUserGroupListUseCase>(
+    () => WorkflowUserGroupListUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
@@ -208,5 +212,5 @@ Future<void> configureDependencies() async {
   sl.registerFactory(() => TicketingMyActionBloc(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => TicketCategoryMasterBloc(sl(), sl(), sl()));
   sl.registerFactory(() => TicketSubCategoryMasterBloc(sl(), sl()));
-  sl.registerFactory(() => TicketWorkflowMasterBloc(sl(), sl()));
+  sl.registerFactory(() => TicketWorkflowMasterBloc(sl(), sl(), sl()));
 }

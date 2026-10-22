@@ -41,4 +41,6 @@ class ApiEndpoints {
   static const fetchTicketWorkflowList = "/Ticketing/Fetch_Ticket_Workflow_List";
   static const insertUpdateTicketWorkflow = "/Ticketing/Insert_Update_Ticket_Workflow";
 
+  static const fetchWorkPermitConfigUserGroupChecklistList = "/Workpermit/Fetch_WorkPermit_Config_User_Group_Checklist_List";
+
 }

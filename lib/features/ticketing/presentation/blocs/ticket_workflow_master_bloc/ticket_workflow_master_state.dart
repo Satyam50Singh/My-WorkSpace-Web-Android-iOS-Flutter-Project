@@ -23,3 +23,9 @@ final class DeleteWorkflowMasterSuccess extends TicketWorkflowMasterState {
 
   DeleteWorkflowMasterSuccess({required this.message});
 }
+
+final class WorkflowUserGroupMasterSuccess extends TicketWorkflowMasterState {
+  final WorkflowUserGroupListEntity? data;
+
+  WorkflowUserGroupMasterSuccess({required this.data});
+}
