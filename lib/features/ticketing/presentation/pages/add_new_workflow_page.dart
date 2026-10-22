@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/workflow_level_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_level_card.dart';
@@ -34,6 +35,8 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
   List<SubCategoryMasterEntity> subCategories = [];
   List<SubCategoryMasterEntity> filteredSubCategories = [];
   SubCategoryMasterEntity? _selectedSubCategory;
+
+  List<WorkflowLevelModel> workflowLevels = [WorkflowLevelModel(level: 1)];
 
   @override
   void initState() {
@@ -530,17 +533,36 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                             WorkflowOutlinedButton(
                               btnTitle: 'New Level',
                               icon: Icons.add,
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  workflowLevels.add(
+                                    WorkflowLevelModel(
+                                      level: workflowLevels.length + 1,
+                                    ),
+                                  );
+                                });
+                              },
                             ),
                           ],
                         ),
 
                         const SizedBox(height: 16),
-                        WorkflowLevelCard(),
-                        const SizedBox(height: 16),
-                        WorkflowLevelCard(),
-                        const SizedBox(height: 16),
-                        WorkflowLevelCard(),
+                        for (int i = 0; i < workflowLevels.length; i++) ...[
+                          WorkflowLevelCard(
+                            workflowLevel: workflowLevels[i],
+                            onDeletePressed: (level) {
+                              return () {
+                                setState(() {
+                                  workflowLevels.removeWhere(
+                                        (workflowLevel) =>
+                                    workflowLevel.level == level,
+                                  );
+                                });
+                              };
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                        ],
                       ],
                     ),
                   ),

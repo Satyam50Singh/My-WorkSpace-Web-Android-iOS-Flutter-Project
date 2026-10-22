@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/workflow_level_model.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_outlined_button.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 
 class WorkflowLevelCard extends StatelessWidget {
-  const WorkflowLevelCard({super.key});
+  final WorkflowLevelModel workflowLevel;
+  final Function(int) onDeletePressed;
+
+  const WorkflowLevelCard({
+    super.key,
+    required this.workflowLevel,
+    required this.onDeletePressed,
+  });
 
   Widget _buildHeader(BuildContext context, String label) {
     return Center(
@@ -36,12 +44,12 @@ class WorkflowLevelCard extends StatelessWidget {
                 Icon(Icons.drag_indicator, color: AppColors.background),
                 SizedBox(width: 16),
                 Text(
-                  'Level 1',
+                  'Level ${workflowLevel.level}',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Spacer(),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: onDeletePressed(workflowLevel.level),
                   icon: Icon(Icons.delete_outline, color: AppColors.btnBgRed),
                 ),
               ],
