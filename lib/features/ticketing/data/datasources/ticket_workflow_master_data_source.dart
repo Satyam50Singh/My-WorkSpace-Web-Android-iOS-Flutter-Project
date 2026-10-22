@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_list_response_model.dart';
+import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/ticket_workflow_list_response_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/insert_update_workflow_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticketing_my_action_models/common_response_model.dart';
 
