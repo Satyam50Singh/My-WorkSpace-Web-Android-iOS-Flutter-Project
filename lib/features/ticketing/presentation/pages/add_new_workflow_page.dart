@@ -175,6 +175,42 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                     }
                   },
                 ),
+
+                BlocListener<
+                  TicketCategoryMasterBloc,
+                  TicketCategoryMasterState
+                >(
+                  listener: (context, state) {
+                    if (state is TicketCategoryMasterFailure) {
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
+                    } else if (state is TicketCategoryMasterSuccess) {
+                      setState(() {
+                        categories = state.categoryList;
+                      });
+                    }
+                  },
+                ),
+
+                BlocListener<
+                  TicketSubCategoryMasterBloc,
+                  TicketSubCategoryMasterState
+                >(
+                  listener: (context, state) {
+                    if (state is TicketSubCategoryMasterFailure) {
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
+                    } else if (state is TicketSubCategoryMasterSuccess) {
+                      setState(() {
+                        subCategories = state.subCategoryList;
+                      });
+                    }
+                  },
+                ),
               ],
               child: Expanded(
                 child: ScrollConfiguration(
@@ -270,7 +306,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
                           const SizedBox(height: 16),
 
-                          BlocConsumer<
+                          BlocBuilder<
                             TicketCategoryMasterBloc,
                             TicketCategoryMasterState
                           >(
@@ -405,22 +441,10 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                 ],
                               );
                             },
-                            listener: (context, state) {
-                              if (state is TicketCategoryMasterFailure) {
-                                SnackBarUtils.showFloatingSnackBar(
-                                  context,
-                                  state.errorMessage,
-                                );
-                              } else if (state is TicketCategoryMasterSuccess) {
-                                setState(() {
-                                  categories = state.categoryList;
-                                });
-                              }
-                            },
                           ),
 
                           const SizedBox(height: 16),
-                          BlocConsumer<
+                          BlocBuilder<
                             TicketSubCategoryMasterBloc,
                             TicketSubCategoryMasterState
                           >(
@@ -544,19 +568,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                   ],
                                 ],
                               );
-                            },
-                            listener: (context, state) {
-                              if (state is TicketSubCategoryMasterFailure) {
-                                SnackBarUtils.showFloatingSnackBar(
-                                  context,
-                                  state.errorMessage,
-                                );
-                              } else if (state
-                                  is TicketSubCategoryMasterSuccess) {
-                                setState(() {
-                                  subCategories = state.subCategoryList;
-                                });
-                              }
                             },
                           ),
 
