@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/workflow_level_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/workflow_user_group_list_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_level_card.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_outlined_button.dart';
 
@@ -12,6 +15,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
+import '../../data/models/ticket_workflow_models/insert_update_workflow_request_model.dart';
 import '../../domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
 import '../blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
@@ -39,6 +43,10 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
   SubCategoryMasterEntity? _selectedSubCategory;
 
   List<WorkflowLevelModel> workflowLevels = [WorkflowLevelModel(level: 1)];
+
+  List<WorkflowUserItemEntity>? usersList;
+
+  List<WorkflowGroupItemEntity>? groupUserList;
 
   @override
   void initState() {
@@ -168,10 +176,19 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         state.errorMessage,
                       );
                     } else if (state is WorkflowUserGroupMasterSuccess) {
+                      usersList = state.data?.userList;
+                      groupUserList = state.data?.groupList;
                       LoaderUtils.hideLoader(context);
                       debugPrint(
-                        'WorkflowUserGroupMasterSuccess: users :: ${state.data?.userList?.length} and Groups :: ${state.data?.groupList?.length}',
+                        'WorkflowUserGroupMasterSuccess: users :: ${usersList?.length} and Groups :: ${state.data?.groupList?.length}',
                       );
+                    } else if (state is DeleteWorkflowMasterSuccess) {
+                      LoaderUtils.hideLoader(context);
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        'Workflow added successfully',
+                      );
+                      Navigator.of(context).pop();
                     }
                   },
                 ),
@@ -586,6 +603,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                         level: workflowLevels.length + 1,
                                       ),
                                     );
+                                    _reindexLevels();
                                   });
                                 },
                               ),
@@ -595,7 +613,10 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                           const SizedBox(height: 16),
                           for (int i = 0; i < workflowLevels.length; i++) ...[
                             WorkflowLevelCard(
+                              key: ObjectKey(workflowLevels[i]),
                               workflowLevel: workflowLevels[i],
+                              usersList: usersList ?? [],
+                              groupUserList: groupUserList ?? [],
                               onDeletePressed: (level) {
                                 return () {
                                   setState(() {
@@ -603,6 +624,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       (workflowLevel) =>
                                           workflowLevel.level == level,
                                     );
+                                    _reindexLevels();
                                   });
                                 };
                               },
@@ -622,7 +644,50 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
     );
   }
 
-  void _apiCallForAddNewWorkflow() {}
+  void _reindexLevels() {
+    for (int i = 0; i < workflowLevels.length; i++) {
+      workflowLevels[i].level = i + 1;
+    }
+  }
+
+  void _apiCallForAddNewWorkflow() {
+    debugPrint(
+      'workflow description: ${_workflowController.text}, category: ${_selectedCategory?.categoryID}, subCategory: ${_selectedSubCategory?.subCategoryID}, level: ${workflowLevels.length}',
+    );
+    final levelsJson = jsonEncode(
+      workflowLevels.map((e) => e.toJson()).toList(),
+    );
+    debugPrint('workflow levels data: $levelsJson');
+
+    final state = context.read<EmployeeDetailCubit>().state;
+    if (state is EmployeeDetailFetched) {
+      final employee = state.employeeDetail;
+      final companyID = employee.companyId;
+      final loggedInUserID = employee.userID?.toString() ?? "0";
+      final action = 'C';
+      final categoryID = _selectedCategory?.categoryID ?? 0;;
+      final subCategoryID = _selectedSubCategory?.subCategoryID ?? 0;
+      final workflowId = 0;
+      final workflowName = _workflowController.text ?? "";
+      final workflowDetails = workflowLevels.map((e) => e.toJson()).toList();
+      debugPrint(
+        'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, workflowId: $workflowId, workflowName: $workflowName',
+      );
+      final payload = InsertUpdateWorkflowRequestModel(
+        categoryId: categoryID,
+        subCategoryId: subCategoryID,
+        workflowId: workflowId,
+        workflowName: workflowName,
+        companyId: companyID,
+        loggedInUserId: loggedInUserID,
+        action: action,
+        workflowDetails: workflowDetails,
+      );
+      context.read<TicketWorkflowMasterBloc>().add(
+        DeleteWorkflowListRequested(payload: payload),
+      );
+    }
+  }
 
   void _callInitialAPIsForFetchingDropdownValues() {
     final state = context.read<EmployeeDetailCubit>().state;

@@ -17,28 +17,29 @@ class WorkflowUserGroupListResponseModel extends WorkflowUserGroupListEntity {
       message: json['Message'] as String?,
       userList: json['User_List'] != null
           ? (json['User_List'] as List)
-              .map(
-                (e) =>
-                    WorkflowUserItemModel.fromJson(e as Map<String, dynamic>),
-              )
-              .toList()
+                .map(
+                  (e) =>
+                      WorkflowUserItemModel.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
           : null,
       groupList: json['Group_List'] != null
           ? (json['Group_List'] as List)
-              .map(
-                (e) =>
-                    WorkflowGroupItemModel.fromJson(e as Map<String, dynamic>),
-              )
-              .toList()
+                .map(
+                  (e) => WorkflowGroupItemModel.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
+                )
+                .toList()
           : null,
       checklistList: json['Checklist_List'] != null
           ? (json['Checklist_List'] as List)
-              .map(
-                (e) => WorkflowChecklistItemModel.fromJson(
-                  e as Map<String, dynamic>,
-                ),
-              )
-              .toList()
+                .map(
+                  (e) => WorkflowChecklistItemModel.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
+                )
+                .toList()
           : null,
     );
   }
@@ -48,31 +49,37 @@ class WorkflowUserGroupListResponseModel extends WorkflowUserGroupListEntity {
       'Status': status,
       'Message': message,
       'User_List': userList
-          ?.map((e) => (e is WorkflowUserItemModel)
-              ? e.toJson()
-              : WorkflowUserItemModel(
-                  userID: e.userID,
-                  userName: e.userName,
-                  userCode: e.userCode,
-                  department: e.department,
-                ).toJson())
+          ?.map(
+            (e) => (e is WorkflowUserItemModel)
+                ? e.toJson()
+                : WorkflowUserItemModel(
+                    userID: e.userID,
+                    userName: e.userName,
+                    userCode: e.userCode,
+                    department: e.department,
+                  ).toJson(),
+          )
           .toList(),
       'Group_List': groupList
-          ?.map((e) => (e is WorkflowGroupItemModel)
-              ? e.toJson()
-              : WorkflowGroupItemModel(
-                  groupID: e.groupID,
-                  groupName: e.groupName,
-                  groupUsers: e.groupUsers,
-                ).toJson())
+          ?.map(
+            (e) => (e is WorkflowGroupItemModel)
+                ? e.toJson()
+                : WorkflowGroupItemModel(
+                    groupID: e.groupID,
+                    groupName: e.groupName,
+                    groupUsers: e.groupUsers,
+                  ).toJson(),
+          )
           .toList(),
       'Checklist_List': checklistList
-          ?.map((e) => (e is WorkflowChecklistItemModel)
-              ? e.toJson()
-              : WorkflowChecklistItemModel(
-                  chkConfigID: e.chkConfigID,
-                  checklistName: e.checklistName,
-                ).toJson())
+          ?.map(
+            (e) => (e is WorkflowChecklistItemModel)
+                ? e.toJson()
+                : WorkflowChecklistItemModel(
+                    chkConfigID: e.chkConfigID,
+                    checklistName: e.checklistName,
+                  ).toJson(),
+          )
           .toList(),
     };
   }
@@ -89,7 +96,7 @@ class WorkflowUserGroupListResponseModel extends WorkflowUserGroupListEntity {
 }
 
 class WorkflowUserItemModel extends WorkflowUserItemEntity {
-  const WorkflowUserItemModel({
+  WorkflowUserItemModel({
     super.userID,
     super.userName,
     super.userCode,
@@ -125,11 +132,7 @@ class WorkflowUserItemModel extends WorkflowUserItemEntity {
 }
 
 class WorkflowGroupItemModel extends WorkflowGroupItemEntity {
-  const WorkflowGroupItemModel({
-    super.groupID,
-    super.groupName,
-    super.groupUsers,
-  });
+  WorkflowGroupItemModel({super.groupID, super.groupName, super.groupUsers});
 
   factory WorkflowGroupItemModel.fromJson(Map<String, dynamic> json) {
     return WorkflowGroupItemModel(
@@ -157,10 +160,7 @@ class WorkflowGroupItemModel extends WorkflowGroupItemEntity {
 }
 
 class WorkflowChecklistItemModel extends WorkflowChecklistItemEntity {
-  const WorkflowChecklistItemModel({
-    super.chkConfigID,
-    super.checklistName,
-  });
+  const WorkflowChecklistItemModel({super.chkConfigID, super.checklistName});
 
   factory WorkflowChecklistItemModel.fromJson(Map<String, dynamic> json) {
     return WorkflowChecklistItemModel(
@@ -170,10 +170,7 @@ class WorkflowChecklistItemModel extends WorkflowChecklistItemEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'Chk_Config_ID': chkConfigID,
-      'ChecklistName': checklistName,
-    };
+    return {'Chk_Config_ID': chkConfigID, 'ChecklistName': checklistName};
   }
 
   WorkflowChecklistItemEntity toEntity() {
