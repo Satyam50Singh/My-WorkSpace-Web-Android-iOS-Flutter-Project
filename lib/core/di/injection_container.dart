@@ -50,6 +50,7 @@ import '../../features/ticketing/domain/repositories/ticket_category_master_repo
 import '../../features/ticketing/domain/repositories/ticket_sub_category_master_repository.dart';
 import '../../features/ticketing/domain/repositories/ticketing_my_action_repository.dart';
 import '../../features/ticketing/domain/usecases/add_new_request/ticket_sub_category_usecase.dart';
+import '../../features/ticketing/domain/usecases/ticket_workflow_usecases/fetch_ticket_workflow_details_web_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticket_workflow_usecases/insert_update_workflow_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/accept_web_ticket_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/ticket_transfer_user_list_usecase.dart';
@@ -202,6 +203,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<WorkflowUserGroupListUseCase>(
     () => WorkflowUserGroupListUseCase(sl()),
   );
+  sl.registerLazySingleton<FetchTicketWorkflowDetailsWebUseCase>(
+    () => FetchTicketWorkflowDetailsWebUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
@@ -212,5 +216,5 @@ Future<void> configureDependencies() async {
   sl.registerFactory(() => TicketingMyActionBloc(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => TicketCategoryMasterBloc(sl(), sl(), sl()));
   sl.registerFactory(() => TicketSubCategoryMasterBloc(sl(), sl()));
-  sl.registerFactory(() => TicketWorkflowMasterBloc(sl(), sl(), sl()));
+  sl.registerFactory(() => TicketWorkflowMasterBloc(sl(), sl(), sl(), sl()));
 }

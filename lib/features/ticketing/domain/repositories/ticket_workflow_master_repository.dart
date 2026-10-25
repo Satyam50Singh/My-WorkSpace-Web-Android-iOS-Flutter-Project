@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_detail_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/workflow_user_group_list_entity.dart';
 
@@ -15,4 +16,9 @@ abstract class TicketWorkflowMasterRepository {
 
   Future<Either<Failure, WorkflowUserGroupListEntity>>
   fetchWorkPermitConfigUserGroupChecklistList({required int companyID});
+
+  Future<Either<Failure, TicketWorkflowDetailEntity>> fetchTicketWorkflowDetailsWeb({
+    required int companyID,
+    required int workflowID,
+  });
 }

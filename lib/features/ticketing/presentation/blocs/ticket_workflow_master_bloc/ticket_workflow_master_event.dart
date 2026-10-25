@@ -25,3 +25,13 @@ class InsertUpdateWorkflowListRequested extends TicketWorkflowMasterEvent {
 
   InsertUpdateWorkflowListRequested({required this.payload});
 }
+
+class TicketWorkflowDetailByIDRequested extends TicketWorkflowMasterEvent {
+  final int companyID;
+  final int workflowID;
+
+  TicketWorkflowDetailByIDRequested({
+    required this.companyID,
+    required this.workflowID,
+  });
+}

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_worksphere_web/core/error/failures.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/insert_update_workflow_request_model.dart';
+import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_detail_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/workflow_user_group_list_entity.dart';
 
@@ -73,8 +74,36 @@ class TicketWorkflowMasterRepositoryImpl
   Future<Either<Failure, WorkflowUserGroupListEntity>>
   fetchWorkPermitConfigUserGroupChecklistList({required int companyID}) async {
     try {
-      final response = await _dataSource.fetchWorkPermitConfigUserGroupChecklistList(
+      final response = await _dataSource
+          .fetchWorkPermitConfigUserGroupChecklistList(companyID: companyID);
+      if (response.status == 1) {
+        return Right(response);
+      } else {
+        final message = response.message?.trim();
+        return Left(
+          ServerFailure(
+            message?.isNotEmpty == true
+                ? message ?? "Something went wrong!"
+                : "Something went wrong!",
+          ),
+        );
+      }
+    } on ServerException catch (e) {
+      debugPrint('ServerException: ${e.message}');
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TicketWorkflowDetailEntity>>
+  fetchTicketWorkflowDetailsWeb({
+    required int companyID,
+    required int workflowID,
+  }) async {
+    try {
+      final response = await _dataSource.fetchTicketWorkflowDetailsWeb(
         companyID: companyID,
+        workflowID: workflowID,
       );
       if (response.status == 1) {
         return Right(response);

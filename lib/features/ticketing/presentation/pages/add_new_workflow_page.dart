@@ -48,35 +48,26 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
   @override
   void initState() {
+    super.initState();
     _callInitialAPIsForFetchingDropdownValues();
+  }
+
+  void _apiCallForWorkflowDetailByID() {
     if (widget.selectedWorkflow != null) {
-      _workflowController.text = widget.selectedWorkflow!.workflowName ?? '';
-      _selectedCategory = TicketCategoryEntity(
-        categoryID: widget.selectedWorkflow!.categoryID ?? 0,
-        category: widget.selectedWorkflow!.category,
-        departmentID: 0,
-        department: '',
-      );
-      _selectedSubCategory = SubCategoryMasterEntity(
-        subCategoryID: widget.selectedWorkflow!.subCategoryID ?? 0,
-        subCategory: widget.selectedWorkflow!.subCategory,
-        categoryID: widget.selectedWorkflow!.categoryID ?? 0,
-        category: widget.selectedWorkflow!.category,
-        priority: null,
-      );
-      final workflowDetails = widget.selectedWorkflow!.noOfLevels ?? 0;
-      for (int i = 0; i < workflowDetails; i++) {
-        workflowLevels.add(
-          WorkflowLevelModel(
-            level: i + 1,
-            userId: widget.selectedWorkflow!.workflowID.toString(),
-            groupId: 0,
-            escalateTime: 0,
+      final state = context.read<EmployeeDetailCubit>().state;
+      if (state is EmployeeDetailFetched) {
+        final employee = state.employeeDetail;
+        final companyID = employee.companyId ?? 0;
+        final workflowID = widget.selectedWorkflow?.workflowID ?? 0;
+
+        context.read<TicketWorkflowMasterBloc>().add(
+          TicketWorkflowDetailByIDRequested(
+            companyID: companyID,
+            workflowID: workflowID,
           ),
         );
       }
     }
-    super.initState();
   }
 
   @override
@@ -205,6 +196,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                       setState(() {
                         usersList = state.data?.userList;
                         groupUserList = state.data?.groupList;
+                        _apiCallForWorkflowDetailByID();
                       });
                     } else if (state is InsertUpdateWorkflowMasterSuccess) {
                       LoaderUtils.hideLoader(context);
@@ -214,6 +206,17 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         isEditing ? 'Workflow Updated Successfully' : 'Workflow Added Successfully',
                       );
                       Navigator.of(context).pop(true);
+                    } else if (state is TicketWorkflowDetailByIDFailure) {
+                      SnackBarUtils.showFloatingSnackBar(
+                        context,
+                        state.errorMessage,
+                      );
+                    } else if (state is TicketWorkflowDetailByIDSuccess) {
+                      LoaderUtils.hideLoader(context);
+                      final workflow = state.workflowDetail?.workflow;
+                      if (workflow == null) {
+                        return;
+                      }
                     }
                   },
                 ),
@@ -664,10 +667,11 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
         final employee = state.employeeDetail;
         final companyID = employee.companyId;
         final loggedInUserID = employee.userID?.toString() ?? "0";
-        final action = 'C';
+        final isEditing = widget.selectedWorkflow != null;
+        final action = isEditing ? 'U' : 'C';
         final categoryID = _selectedCategory?.categoryID ?? 0;
         final subCategoryID = _selectedSubCategory?.subCategoryID ?? 0;
-        final workflowId = 0;
+        final workflowId = widget.selectedWorkflow?.workflowID ?? 0;
         final workflowName = _workflowController.text;
         final workflowDetails = workflowLevels.map((e) => e.toJson()).toList();
         debugPrint(

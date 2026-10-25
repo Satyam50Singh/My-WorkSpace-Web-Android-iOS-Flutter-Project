@@ -52,12 +52,6 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
         .where((group) => group.groupID == selectedGroupID)
         .map((group) => group.groupName)
         .join(', ');
-    // selectedGroups = widget.groupUserList
-    //     .where((group) => group.isSelected)
-    //     .map((user) => user.groupName)
-    //     .join(', ');
-    debugPrint('Selected Users: $selectedUsersNames');
-    // debugPrint('Selected Groups: $selectedGroups');
   }
 
   @override
@@ -298,6 +292,7 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                                 height: 42,
                                 width: 80,
                                 child: TextField(
+                                  controller: TextEditingController(),
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 8,
@@ -310,10 +305,8 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                                   ),
                                   maxLines: 1,
                                   onChanged: (value) {
-                                    setState(() {
-                                      widget.workflowLevel.escalateTime =
-                                          int.parse(value);
-                                    });
+                                    widget.workflowLevel.escalateTime =
+                                        int.tryParse(value) ?? 0;
                                   },
                                   keyboardType: TextInputType.number,
                                 ),

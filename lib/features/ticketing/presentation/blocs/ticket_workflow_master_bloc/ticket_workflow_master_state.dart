@@ -35,3 +35,15 @@ final class InsertUpdateWorkflowMasterSuccess extends TicketWorkflowMasterState 
 
   InsertUpdateWorkflowMasterSuccess({required this.message});
 }
+
+final class TicketWorkflowDetailByIDFailure extends TicketWorkflowMasterState {
+  final String errorMessage;
+
+  TicketWorkflowDetailByIDFailure({required this.errorMessage});
+}
+
+final class TicketWorkflowDetailByIDSuccess extends TicketWorkflowMasterState {
+  final TicketWorkflowDetailEntity? workflowDetail;
+
+  TicketWorkflowDetailByIDSuccess({this.workflowDetail});
+}

@@ -60,4 +60,16 @@ class TicketWorkflowModel extends TicketWorkflowMasterEntity {
       noOfLevels,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'WorkflowID': workflowID,
+      'Workflow_Name': workflowName,
+      'Category_ID': categoryID,
+      'Category': category,
+      'SubCategory_ID': subCategoryID,
+      'SubCategory': subCategory,
+      'No_Of_Levels': noOfLevels,
+    };
+  }
 }
