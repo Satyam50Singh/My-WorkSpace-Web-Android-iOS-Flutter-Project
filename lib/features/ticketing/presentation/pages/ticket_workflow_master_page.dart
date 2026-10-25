@@ -160,7 +160,11 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                         if (kIsWeb) {
                           filteredWorkflows = workflowList;
                         } else {
-                          filteredWorkflows = workflowList.sublist(0, 10);
+                          if (workflowList.length < 10) {
+                            filteredWorkflows = workflowList;
+                          } else {
+                            filteredWorkflows = workflowList.sublist(0, 10);
+                          }
                         }
                         totalPages = (workflowList.length / 10).ceil();
                         currentPage = 1;
@@ -338,17 +342,20 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
   void _searchOperation(String value) {
     if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
 
-    if (value.isNotEmpty && value.isNotEmpty) {
+    if (value.isNotEmpty) {
       final searchText = value.toLowerCase();
       _debounceTimer = Timer(const Duration(milliseconds: 500), () {
         setState(() {
-          filteredWorkflows = workflowList.where((category) {
-            return (category.category!.toLowerCase().contains(searchText) ||
-                category.subCategory!.toLowerCase().contains(searchText) ||
-                category.workflowName!.toLowerCase().contains(searchText) ||
-                category.noOfLevels!.toString().toLowerCase().contains(
-                  searchText,
-                ));
+          filteredWorkflows = workflowList.where((workflow) {
+            final category = workflow.category?.toLowerCase() ?? "";
+            final subCategory = workflow.subCategory?.toLowerCase() ?? "";
+            final workflowName = workflow.workflowName?.toLowerCase() ?? "";
+            final noOfLevels = workflow.noOfLevels?.toString() ?? "";
+
+            return (category.contains(searchText) ||
+                subCategory.contains(searchText) ||
+                workflowName.contains(searchText) ||
+                noOfLevels.contains(searchText));
           }).toList();
           totalPages = (filteredWorkflows.length / 10).ceil();
           currentPage = 1;
