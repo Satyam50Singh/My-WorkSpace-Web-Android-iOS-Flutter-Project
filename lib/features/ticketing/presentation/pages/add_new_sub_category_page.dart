@@ -45,10 +45,10 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
           .toString();
       _selectedPriority = widget.selectedSubCategory!.priority;
       _selectedCategory = TicketCategoryEntity(
-        widget.selectedSubCategory!.categoryID,
-        widget.selectedSubCategory!.category,
-        null,
-        null,
+        categoryID: widget.selectedSubCategory!.categoryID,
+        category: widget.selectedSubCategory!.category,
+        departmentID: null,
+        department: null,
       );
     }
     super.initState();

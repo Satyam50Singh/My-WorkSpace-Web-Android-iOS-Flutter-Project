@@ -29,30 +29,30 @@ class FetchTicketSubCategoryListResponseModel {
 }
 
 class SubCategoryModel extends SubCategoryMasterEntity {
-  SubCategoryModel(
+  SubCategoryModel({
     super.categoryID,
     super.category,
     super.subCategoryID,
     super.subCategory,
     super.priority,
-  );
+  });
 
   SubCategoryModel.fromJson(Map<String, dynamic> json)
     : super(
-        json['Category_ID'] as int?,
-        json['Category'] as String?,
-        json['SubCategory_ID'] as int?,
-        json['SubCategory'] as String?,
-        json['Priority'] as String?,
+        categoryID: json['Category_ID'] as int?,
+        category: json['Category'] as String?,
+        subCategoryID: json['SubCategory_ID'] as int?,
+        subCategory: json['SubCategory'] as String?,
+        priority: json['Priority'] as String?,
       );
 
   SubCategoryMasterEntity toEntity() {
     return SubCategoryMasterEntity(
-      categoryID,
-      category,
-      subCategoryID,
-      subCategory,
-      priority,
+      categoryID: categoryID,
+      category: category,
+      subCategoryID: subCategoryID,
+      subCategory: subCategory,
+      priority: priority,
     );
   }
 }

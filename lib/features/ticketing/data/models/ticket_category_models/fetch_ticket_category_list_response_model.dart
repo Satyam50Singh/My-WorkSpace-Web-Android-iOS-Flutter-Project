@@ -27,22 +27,27 @@ class FetchTicketCategoryListResponseModel {
 }
 
 class CategoryModel extends TicketCategoryEntity {
-  CategoryModel(
+  CategoryModel({
     super.categoryID,
     super.category,
     super.departmentID,
     super.department,
-  );
+  });
 
   CategoryModel.fromJson(Map<String, dynamic> json)
     : super(
-        json['Category_ID'] as int?,
-        json['Category'] as String?,
-        json['DepartmentID'] as int?,
-        json['Department'] as String?,
+        categoryID: json['Category_ID'] as int?,
+        category: json['Category'] as String?,
+        departmentID: json['DepartmentID'] as int?,
+        department: json['Department'] as String?,
       );
 
   TicketCategoryEntity toEntity() {
-    return TicketCategoryEntity(categoryID, category, departmentID, department);
+    return TicketCategoryEntity(
+      categoryID: categoryID,
+      category: category,
+      departmentID: departmentID,
+      department: department,
+    );
   }
 }

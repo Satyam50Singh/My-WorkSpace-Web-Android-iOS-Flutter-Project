@@ -4,10 +4,10 @@ class TicketCategoryEntity {
   final int? departmentID;
   final String? department;
 
-  TicketCategoryEntity(
+  TicketCategoryEntity({
     this.categoryID,
     this.category,
     this.departmentID,
     this.department,
-  );
+  });
 }

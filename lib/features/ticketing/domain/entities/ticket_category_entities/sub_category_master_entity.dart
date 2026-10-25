@@ -5,11 +5,11 @@ class SubCategoryMasterEntity {
   final String? category;
   final String? priority;
 
-  SubCategoryMasterEntity(
+  SubCategoryMasterEntity({
     this.subCategoryID,
     this.subCategory,
     this.categoryID,
     this.category,
     this.priority,
-  );
+  });
 }

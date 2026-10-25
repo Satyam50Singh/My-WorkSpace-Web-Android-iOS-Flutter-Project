@@ -49,6 +49,33 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
   @override
   void initState() {
     _callInitialAPIsForFetchingDropdownValues();
+    if (widget.selectedWorkflow != null) {
+      _workflowController.text = widget.selectedWorkflow!.workflowName ?? '';
+      _selectedCategory = TicketCategoryEntity(
+        categoryID: widget.selectedWorkflow!.categoryID ?? 0,
+        category: widget.selectedWorkflow!.category,
+        departmentID: 0,
+        department: '',
+      );
+      _selectedSubCategory = SubCategoryMasterEntity(
+        subCategoryID: widget.selectedWorkflow!.subCategoryID ?? 0,
+        subCategory: widget.selectedWorkflow!.subCategory,
+        categoryID: widget.selectedWorkflow!.categoryID ?? 0,
+        category: widget.selectedWorkflow!.category,
+        priority: null,
+      );
+      final workflowDetails = widget.selectedWorkflow!.noOfLevels ?? 0;
+      for (int i = 0; i < workflowDetails; i++) {
+        workflowLevels.add(
+          WorkflowLevelModel(
+            level: i + 1,
+            userId: widget.selectedWorkflow!.workflowID.toString(),
+            groupId: 0,
+            escalateTime: 0,
+          ),
+        );
+      }
+    }
     super.initState();
   }
 
@@ -181,9 +208,10 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                       });
                     } else if (state is InsertUpdateWorkflowMasterSuccess) {
                       LoaderUtils.hideLoader(context);
+                      final isEditing = widget.selectedWorkflow != null;
                       SnackBarUtils.showFloatingSnackBar(
                         context,
-                        'Workflow Added Successfully',
+                        isEditing ? 'Workflow Updated Successfully' : 'Workflow Added Successfully',
                       );
                       Navigator.of(context).pop(true);
                     }
