@@ -96,7 +96,7 @@ class WorkflowUserGroupListResponseModel extends WorkflowUserGroupListEntity {
 }
 
 class WorkflowUserItemModel extends WorkflowUserItemEntity {
-  WorkflowUserItemModel({
+  const WorkflowUserItemModel({
     super.userID,
     super.userName,
     super.userCode,
@@ -132,7 +132,11 @@ class WorkflowUserItemModel extends WorkflowUserItemEntity {
 }
 
 class WorkflowGroupItemModel extends WorkflowGroupItemEntity {
-  WorkflowGroupItemModel({super.groupID, super.groupName, super.groupUsers});
+  const WorkflowGroupItemModel({
+    super.groupID,
+    super.groupName,
+    super.groupUsers,
+  });
 
   factory WorkflowGroupItemModel.fromJson(Map<String, dynamic> json) {
     return WorkflowGroupItemModel(

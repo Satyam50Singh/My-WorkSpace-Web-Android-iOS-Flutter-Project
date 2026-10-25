@@ -19,14 +19,12 @@ class WorkflowUserItemEntity {
   final String? userName;
   final String? userCode;
   final String? department;
-  bool isSelected;
 
-  WorkflowUserItemEntity({
+  const WorkflowUserItemEntity({
     this.userID,
     this.userName,
     this.userCode,
     this.department,
-    this.isSelected = false,
   });
 }
 
@@ -34,13 +32,11 @@ class WorkflowGroupItemEntity {
   final int? groupID;
   final String? groupName;
   final String? groupUsers;
-  bool isSelected;
 
-  WorkflowGroupItemEntity({
+  const WorkflowGroupItemEntity({
     this.groupID,
     this.groupName,
     this.groupUsers,
-    this.isSelected = false,
   });
 }
 

@@ -19,3 +19,9 @@ class WorkflowUserGroupListRequested extends TicketWorkflowMasterEvent {
 
   WorkflowUserGroupListRequested({required this.companyID});
 }
+
+class InsertUpdateWorkflowListRequested extends TicketWorkflowMasterEvent {
+  final InsertUpdateWorkflowRequestModel payload;
+
+  InsertUpdateWorkflowListRequested({required this.payload});
+}

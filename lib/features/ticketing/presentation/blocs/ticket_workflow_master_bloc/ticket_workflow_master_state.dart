@@ -29,3 +29,9 @@ final class WorkflowUserGroupMasterSuccess extends TicketWorkflowMasterState {
 
   WorkflowUserGroupMasterSuccess({required this.data});
 }
+
+final class InsertUpdateWorkflowMasterSuccess extends TicketWorkflowMasterState {
+  final String message;
+
+  InsertUpdateWorkflowMasterSuccess({required this.message});
+}

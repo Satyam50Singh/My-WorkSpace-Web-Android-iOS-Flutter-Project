@@ -26,6 +26,7 @@ class TicketWorkflowMasterBloc
     on<TicketWorkflowListRequested>(_onTicketWorkflowListRequested);
     on<DeleteWorkflowListRequested>(_onDeleteWorkflowListRequested);
     on<WorkflowUserGroupListRequested>(_onWorkflowUserGroupListRequested);
+    on<InsertUpdateWorkflowListRequested>(_onInsertUpdateWorkflowListRequested);
   }
 
   FutureOr<void> _onTicketWorkflowListRequested(
@@ -82,6 +83,26 @@ class TicketWorkflowMasterBloc
         (error) =>
             emit(TicketWorkflowMasterFailure(errorMessage: error.message)),
         (data) => emit(WorkflowUserGroupMasterSuccess(data: data)),
+      );
+    } catch (e) {
+      emit(TicketWorkflowMasterFailure(errorMessage: e.toString()));
+    }
+  }
+
+  FutureOr<void> _onInsertUpdateWorkflowListRequested(
+    InsertUpdateWorkflowListRequested event,
+    Emitter<TicketWorkflowMasterState> emit,
+  ) async {
+    emit(TicketWorkflowMasterLoading());
+
+    try {
+      final result = await _insertUpdateWorkflowUseCase.call(
+        payload: event.payload,
+      );
+      result.fold(
+        (error) =>
+            emit(TicketWorkflowMasterFailure(errorMessage: error.message)),
+        (data) => emit(InsertUpdateWorkflowMasterSuccess(message: data)),
       );
     } catch (e) {
       emit(TicketWorkflowMasterFailure(errorMessage: e.toString()));

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/workflow_level_model.dart';
@@ -176,19 +174,18 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         state.errorMessage,
                       );
                     } else if (state is WorkflowUserGroupMasterSuccess) {
-                      usersList = state.data?.userList;
-                      groupUserList = state.data?.groupList;
                       LoaderUtils.hideLoader(context);
-                      debugPrint(
-                        'WorkflowUserGroupMasterSuccess: users :: ${usersList?.length} and Groups :: ${state.data?.groupList?.length}',
-                      );
-                    } else if (state is DeleteWorkflowMasterSuccess) {
+                      setState(() {
+                        usersList = state.data?.userList;
+                        groupUserList = state.data?.groupList;
+                      });
+                    } else if (state is InsertUpdateWorkflowMasterSuccess) {
                       LoaderUtils.hideLoader(context);
                       SnackBarUtils.showFloatingSnackBar(
                         context,
-                        'Workflow added successfully',
+                        'Workflow Added Successfully',
                       );
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(true);
                     }
                   },
                 ),
@@ -271,13 +268,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                         ),
                                       ),
                                     ),
-                                    textInputAction: TextInputAction.next,
-                                    onChanged: (value) {
-                                      _validateForm();
-                                    },
-                                    onEditingComplete: () {
-                                      _validateForm();
-                                    },
                                   ),
                                 ),
                                 const Spacer(),
@@ -309,13 +299,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                   ),
-                                  textInputAction: TextInputAction.next,
-                                  onChanged: (value) {
-                                    _validateForm();
-                                  },
-                                  onEditingComplete: () {
-                                    _validateForm();
-                                  },
                                 ),
                               ],
                             ),
@@ -381,7 +364,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                         .toList();
                                                     _selectedSubCategory = null;
                                                   });
-                                                  _validateForm();
                                                   debugPrint(
                                                     'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
                                                   );
@@ -441,7 +423,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                           .toList();
                                                   _selectedSubCategory = null;
                                                 });
-                                                _validateForm();
                                                 debugPrint(
                                                   'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
                                                 );
@@ -518,7 +499,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                         _selectedSubCategory =
                                                             value;
                                                       });
-                                                      _validateForm();
                                                       debugPrint(
                                                         'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
                                                       );
@@ -569,7 +549,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                 setState(() {
                                                   _selectedSubCategory = value;
                                                 });
-                                                _validateForm();
                                                 debugPrint(
                                                   'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
                                                 );
@@ -603,7 +582,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                         level: workflowLevels.length + 1,
                                       ),
                                     );
-                                    _reindexLevels();
+                                    _resetWorkflowLevels();
                                   });
                                 },
                               ),
@@ -624,7 +603,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       (workflowLevel) =>
                                           workflowLevel.level == level,
                                     );
-                                    _reindexLevels();
+                                    _resetWorkflowLevels();
                                   });
                                 };
                               },
@@ -644,48 +623,42 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
     );
   }
 
-  void _reindexLevels() {
+  void _resetWorkflowLevels() {
     for (int i = 0; i < workflowLevels.length; i++) {
       workflowLevels[i].level = i + 1;
     }
   }
 
   void _apiCallForAddNewWorkflow() {
-    debugPrint(
-      'workflow description: ${_workflowController.text}, category: ${_selectedCategory?.categoryID}, subCategory: ${_selectedSubCategory?.subCategoryID}, level: ${workflowLevels.length}',
-    );
-    final levelsJson = jsonEncode(
-      workflowLevels.map((e) => e.toJson()).toList(),
-    );
-    debugPrint('workflow levels data: $levelsJson');
-
-    final state = context.read<EmployeeDetailCubit>().state;
-    if (state is EmployeeDetailFetched) {
-      final employee = state.employeeDetail;
-      final companyID = employee.companyId;
-      final loggedInUserID = employee.userID?.toString() ?? "0";
-      final action = 'C';
-      final categoryID = _selectedCategory?.categoryID ?? 0;;
-      final subCategoryID = _selectedSubCategory?.subCategoryID ?? 0;
-      final workflowId = 0;
-      final workflowName = _workflowController.text ?? "";
-      final workflowDetails = workflowLevels.map((e) => e.toJson()).toList();
-      debugPrint(
-        'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, workflowId: $workflowId, workflowName: $workflowName',
-      );
-      final payload = InsertUpdateWorkflowRequestModel(
-        categoryId: categoryID,
-        subCategoryId: subCategoryID,
-        workflowId: workflowId,
-        workflowName: workflowName,
-        companyId: companyID,
-        loggedInUserId: loggedInUserID,
-        action: action,
-        workflowDetails: workflowDetails,
-      );
-      context.read<TicketWorkflowMasterBloc>().add(
-        DeleteWorkflowListRequested(payload: payload),
-      );
+    if (_validateForm()) {
+      final state = context.read<EmployeeDetailCubit>().state;
+      if (state is EmployeeDetailFetched) {
+        final employee = state.employeeDetail;
+        final companyID = employee.companyId;
+        final loggedInUserID = employee.userID?.toString() ?? "0";
+        final action = 'C';
+        final categoryID = _selectedCategory?.categoryID ?? 0;
+        final subCategoryID = _selectedSubCategory?.subCategoryID ?? 0;
+        final workflowId = 0;
+        final workflowName = _workflowController.text;
+        final workflowDetails = workflowLevels.map((e) => e.toJson()).toList();
+        debugPrint(
+          'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, workflowId: $workflowId, workflowName: $workflowName, workflowDetails: $workflowDetails',
+        );
+        final payload = InsertUpdateWorkflowRequestModel(
+          categoryId: categoryID,
+          subCategoryId: subCategoryID,
+          workflowId: workflowId,
+          workflowName: workflowName,
+          companyId: companyID,
+          loggedInUserId: loggedInUserID,
+          action: action,
+          workflowDetails: workflowDetails,
+        );
+        context.read<TicketWorkflowMasterBloc>().add(
+          InsertUpdateWorkflowListRequested(payload: payload),
+        );
+      }
     }
   }
 
@@ -720,5 +693,38 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
     );
   }
 
-  void _validateForm() {}
+  bool _validateForm() {
+    if (_workflowController.text.isEmpty) {
+      SnackBarUtils.showFloatingSnackBar(context, 'Enter Workflow Description');
+      return false;
+    } else if (_selectedCategory == null) {
+      SnackBarUtils.showFloatingSnackBar(context, 'Select Category');
+      return false;
+    } else if (_selectedSubCategory == null) {
+      SnackBarUtils.showFloatingSnackBar(context, 'Select Sub-Category');
+      return false;
+    } else if (workflowLevels.length == 1 &&
+        workflowLevels[0].userId == '0' &&
+        workflowLevels[0].groupId == 0) {
+      SnackBarUtils.showFloatingSnackBar(
+        context,
+        'At least one level is required',
+      );
+      return false;
+    } else {
+      for (var workflow in workflowLevels) {
+        if (((workflow.escalateTime == null || workflow.escalateTime == 0) &&
+                (workflow.userId != null && workflow.userId != '0')) ||
+            ((workflow.escalateTime == null || workflow.escalateTime == 0) &&
+                (workflow.groupId != null && workflow.groupId != 0))) {
+          SnackBarUtils.showFloatingSnackBar(
+            context,
+            'Escalation Time is required',
+          );
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }

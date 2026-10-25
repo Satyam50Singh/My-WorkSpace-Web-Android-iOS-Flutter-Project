@@ -13,15 +13,12 @@ class WorkflowAssignUserDialog {
     required BuildContext context,
     required List<WorkflowUserItemEntity> usersList,
     required List<WorkflowGroupItemEntity> groupUserList,
-    required Set<int> initialSelectedUserIds,
-    required Set<int> initialSelectedGroupIds,
-    required Function(Set<int> selectedUserIds, Set<int> selectedGroupIds)
-        onAssignSelectedPressed,
+    required Set<int> selectedUserIds,
+    required int selectedGroupID,
+    required Function(Set<int>, int) onAssignSelectedPressed,
   }) {
-    var selectedView = initialSelectedGroupIds.isNotEmpty ? 1 : 0;
+    var selectedView = selectedUserIds.isNotEmpty ? 0 : 1;
     var searchQuery = '';
-    final Set<int> selectedUserIds = Set.from(initialSelectedUserIds);
-    final Set<int> selectedGroupIds = Set.from(initialSelectedGroupIds);
 
     const List<String> headers = [
       "Select",
@@ -45,7 +42,7 @@ class WorkflowAssignUserDialog {
             (value != null && value.isNotEmpty) ? value : '-';
         return StatefulBuilder(
           builder: (ctx, setState) {
-            final List<WorkflowUserItemEntity> filteredUserList = searchQuery
+            List<WorkflowUserItemEntity> filteredUserList = searchQuery
                     .isEmpty
                 ? usersList
                 : usersList.where((u) {
@@ -57,7 +54,7 @@ class WorkflowAssignUserDialog {
                         dept.contains(searchQuery);
                   }).toList();
 
-            final List<WorkflowGroupItemEntity> filteredGroupUserList =
+            List<WorkflowGroupItemEntity> filteredGroupUserList =
                 searchQuery.isEmpty
                     ? groupUserList
                     : groupUserList.where((g) {
@@ -110,7 +107,7 @@ class WorkflowAssignUserDialog {
                             onPressed: () {
                               setState(() {
                                 selectedView = 0;
-                                selectedGroupIds.clear();
+                                filteredUserList = usersList;
                               });
                             },
                             label: Text(
@@ -143,7 +140,7 @@ class WorkflowAssignUserDialog {
                             onPressed: () {
                               setState(() {
                                 selectedView = 1;
-                                selectedUserIds.clear();
+                                filteredGroupUserList = groupUserList;
                               });
                             },
                             label: Text(
@@ -195,10 +192,11 @@ class WorkflowAssignUserDialog {
                             btnTitle: 'Assign Selected',
                             onPressed: () {
                               context.pop();
-                              onAssignSelectedPressed(
-                                selectedUserIds,
-                                selectedGroupIds,
-                              );
+                              if (selectedView == 0) {
+                                onAssignSelectedPressed(selectedUserIds, 0);
+                              } else {
+                                onAssignSelectedPressed({}, selectedGroupID);
+                              }
                             },
                           ),
                         ],
@@ -225,7 +223,6 @@ class WorkflowAssignUserDialog {
                                           value: isChecked,
                                           onChanged: (isSelected) {
                                             setState(() {
-                                              selectedGroupIds.clear();
                                               if (item.userID != null) {
                                                 if (isSelected == true) {
                                                   selectedUserIds.add(
@@ -277,24 +274,15 @@ class WorkflowAssignUserDialog {
                                 headers: groupTableHeader,
                                 minWidth: 720,
                                 cellBuilder: (item, isMobile) {
-                                  final isChecked =
-                                      item.groupID != null &&
-                                      selectedGroupIds.contains(item.groupID);
                                   return [
                                     DataCell(
                                       Center(
-                                        child: Checkbox(
-                                          value: isChecked,
-                                          onChanged: (isSelected) {
+                                        child: Radio<int>(
+                                          value: item.groupID!,
+                                          groupValue: selectedGroupID,
+                                          onChanged: (value) {
                                             setState(() {
-                                              selectedUserIds.clear();
-                                              selectedGroupIds.clear();
-                                              if (item.groupID != null &&
-                                                  isSelected == true) {
-                                                selectedGroupIds.add(
-                                                  item.groupID!,
-                                                );
-                                              }
+                                              selectedGroupID = value!;
                                             });
                                           },
                                         ),

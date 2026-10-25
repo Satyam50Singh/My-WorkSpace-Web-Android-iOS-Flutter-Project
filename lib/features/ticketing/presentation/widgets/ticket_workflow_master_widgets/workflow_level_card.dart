@@ -25,56 +25,6 @@ class WorkflowLevelCard extends StatefulWidget {
 }
 
 class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
-  Set<int> _parseIds(String? idString) {
-    if (idString == null || idString.isEmpty || idString == "0") return {};
-    return idString
-        .split(',')
-        .map((e) => int.tryParse(e.trim()))
-        .whereType<int>()
-        .where((id) => id > 0)
-        .toSet();
-  }
-
-  Set<int> get _selectedUserIds => _parseIds(widget.workflowLevel.userId);
-  Set<int> get _selectedGroupIds {
-    final gId = widget.workflowLevel.groupId;
-    if (gId != null && gId > 0) {
-      return <int>{gId};
-    }
-    return <int>{};
-  }
-
-  String get _selectedUsersNames {
-    final userIds = _selectedUserIds;
-    if (userIds.isEmpty) return '';
-    return widget.usersList
-        .where((user) => user.userID != null && userIds.contains(user.userID))
-        .map((user) => user.userName ?? '')
-        .where((name) => name.isNotEmpty)
-        .join(', ');
-  }
-
-  String get _selectedGroups {
-    final gId = widget.workflowLevel.groupId;
-    if (gId == null || gId <= 0) return '';
-    return widget.groupUserList
-        .where((group) => group.groupID == gId)
-        .map((group) => group.groupName ?? '')
-        .where((name) => name.isNotEmpty)
-        .join('');
-  }
-
-  String get _assignedDisplay {
-    final users = _selectedUsersNames;
-    final groups = _selectedGroups;
-    if (users.isNotEmpty) {
-      return users;
-    } else if (groups.isNotEmpty) {
-      return groups;
-    }
-    return '';
-  }
-
   Widget _buildHeader(BuildContext context, String label) {
     return Center(
       child: Text(
@@ -87,25 +37,31 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
     );
   }
 
-  Widget _buildCellText(BuildContext context, String label) {
-    return Center(
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          fontSize: 12,
-          color: AppColors.textPrimary,
-        ),
-        textAlign: TextAlign.center,
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
+  String selectedUsersNames = '', selectedGroupName = '';
+  Set<int> selectedUserIds = {};
+  int selectedGroupID = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedUsersNames = widget.usersList
+        .where((user) => selectedUserIds.contains(user.userID))
+        .map((user) => user.userName)
+        .join(', ');
+    selectedGroupName = widget.groupUserList
+        .where((group) => group.groupID == selectedGroupID)
+        .map((group) => group.groupName)
+        .join(', ');
+    // selectedGroups = widget.groupUserList
+    //     .where((group) => group.isSelected)
+    //     .map((user) => user.groupName)
+    //     .join(', ');
+    debugPrint('Selected Users: $selectedUsersNames');
+    // debugPrint('Selected Groups: $selectedGroups');
   }
 
   @override
   Widget build(BuildContext context) {
-    final assignedDisplay = _assignedDisplay;
-    debugPrint('Level ${widget.workflowLevel.level} Assigned: $assignedDisplay');
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(
@@ -137,25 +93,45 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
               btnTitle: 'Assign User',
               icon: Icons.person_add_alt_1_outlined,
               onPressed: () {
+                debugPrint(
+                  '----------------------------------------------------',
+                );
+                debugPrint('Assign User button pressed');
+                debugPrint('Users: ${widget.usersList.length}');
+                debugPrint('Groups: ${widget.groupUserList.length}');
+                debugPrint(
+                  '----------------------------------------------------',
+                );
                 WorkflowAssignUserDialog.showAssignUserDialog(
                   context: context,
                   usersList: widget.usersList,
                   groupUserList: widget.groupUserList,
-                  initialSelectedUserIds: _selectedUserIds,
-                  initialSelectedGroupIds: _selectedGroupIds,
-                  onAssignSelectedPressed: (selectedUserIds, selectedGroupIds) {
+                  selectedUserIds: selectedUserIds,
+                  selectedGroupID: selectedGroupID,
+                  onAssignSelectedPressed: (userIDs, groupID) {
+                    // Handle the assign selected action here
                     setState(() {
-                      if (selectedUserIds.isNotEmpty) {
-                        widget.workflowLevel.userId = selectedUserIds.join(',');
-                        widget.workflowLevel.groupId = 0;
-                      } else if (selectedGroupIds.isNotEmpty) {
-                        widget.workflowLevel.userId = "0";
-                        widget.workflowLevel.groupId = selectedGroupIds.first;
-                      } else {
-                        widget.workflowLevel.userId = "0";
-                        widget.workflowLevel.groupId = 0;
-                      }
-                      debugPrint('Updated Level ${widget.workflowLevel.level} userIds: ${widget.workflowLevel.userId}, groupId: ${widget.workflowLevel.groupId}');
+                      selectedUserIds = userIDs;
+                      selectedGroupID = groupID;
+                      selectedUsersNames = widget.usersList
+                          .where(
+                            (user) => selectedUserIds.contains(user.userID),
+                          )
+                          .map((user) => user.userName)
+                          .join(', ');
+                      final selectedUserIDs = selectedUserIds.join(',');
+                      selectedGroupName = widget.groupUserList
+                          .where((group) => group.groupID == selectedGroupID)
+                          .map((group) => group.groupName)
+                          .join(', ');
+                      widget.workflowLevel.userId = selectedUserIDs.isNotEmpty
+                          ? selectedUserIDs
+                          : '0';
+                      widget.workflowLevel.groupId = selectedGroupID != -1
+                          ? selectedGroupID
+                          : 0;
+                      debugPrint('Selected Users: $selectedUsersNames');
+                      debugPrint('Selected Groups: $selectedGroupID');
                     });
                   },
                 );
@@ -184,7 +160,7 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                         ),
                         Expanded(
                           flex: 1,
-                          child: _buildHeader(context, 'Email'),
+                          child: _buildHeader(context, 'Email	'),
                         ),
                         Expanded(flex: 1, child: _buildHeader(context, 'SMS')),
                         Expanded(
@@ -211,7 +187,8 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                   ),
                   Divider(height: 1, color: AppColors.border),
                   SizedBox(height: 8),
-                  if (assignedDisplay.isEmpty) ...[
+                  if (selectedUsersNames.isEmpty &&
+                      selectedGroupName.isEmpty) ...[
                     SizedBox(
                       height: 64,
                       child: Center(
@@ -227,7 +204,8 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                         ),
                       ),
                     ),
-                  ] else ...[
+                  ] else if (selectedUsersNames.isNotEmpty ||
+                      selectedGroupName.isNotEmpty) ...[
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -235,19 +213,28 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                       ),
                       child: Row(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: _buildCellText(context, assignedDisplay),
-                          ),
+                          if (selectedUsersNames.isNotEmpty) ...[
+                            Expanded(
+                              flex: 1,
+                              child: _buildHeader(context, selectedUsersNames),
+                            ),
+                          ] else if (selectedGroupName.isNotEmpty) ...[
+                            Expanded(
+                              flex: 1,
+                              child: _buildHeader(context, selectedGroupName),
+                            ),
+                          ],
                           Expanded(
                             flex: 1,
                             child: Center(
                               child: Checkbox(
-                                value: widget.workflowLevel.isEmail == 1,
+                                value: (widget.workflowLevel.isEmail == 0
+                                    ? false
+                                    : true),
                                 onChanged: (value) {
                                   setState(() {
                                     widget.workflowLevel.isEmail =
-                                        value == true ? 1 : 0;
+                                        (value == true) ? 1 : 0;
                                   });
                                 },
                               ),
@@ -257,11 +244,14 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                             flex: 1,
                             child: Center(
                               child: Checkbox(
-                                value: widget.workflowLevel.isSMS == 1,
+                                value: widget.workflowLevel.isSMS == 0
+                                    ? false
+                                    : true,
                                 onChanged: (value) {
                                   setState(() {
-                                    widget.workflowLevel.isSMS =
-                                        value == true ? 1 : 0;
+                                    widget.workflowLevel.isSMS = value == true
+                                        ? 1
+                                        : 0;
                                   });
                                 },
                               ),
@@ -272,7 +262,9 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                             child: Center(
                               child: Checkbox(
                                 value:
-                                    widget.workflowLevel.isAppNotification == 1,
+                                    widget.workflowLevel.isAppNotification == 0
+                                    ? false
+                                    : true,
                                 onChanged: (value) {
                                   setState(() {
                                     widget.workflowLevel.isAppNotification =
@@ -287,7 +279,9 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                             child: Center(
                               child: Checkbox(
                                 value:
-                                    widget.workflowLevel.isWebNotification == 1,
+                                    widget.workflowLevel.isWebNotification == 0
+                                    ? false
+                                    : true,
                                 onChanged: (value) {
                                   setState(() {
                                     widget.workflowLevel.isWebNotification =
@@ -304,33 +298,22 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                                 height: 42,
                                 width: 80,
                                 child: TextField(
-                                  controller: TextEditingController(
-                                    text: widget.workflowLevel.escalateTime
-                                            ?.toString() ??
-                                        '',
-                                  )..selection = TextSelection.fromPosition(
-                                      TextPosition(
-                                        offset: widget.workflowLevel
-                                                .escalateTime
-                                                ?.toString()
-                                                .length ??
-                                            0,
-                                      ),
-                                    ),
                                   decoration: InputDecoration(
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 8,
-                                        ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 8,
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     hintText: 'Min',
                                   ),
+                                  maxLines: 1,
                                   onChanged: (value) {
-                                    widget.workflowLevel.escalateTime =
-                                        int.tryParse(value.trim());
+                                    setState(() {
+                                      widget.workflowLevel.escalateTime =
+                                          int.parse(value);
+                                    });
                                   },
                                   keyboardType: TextInputType.number,
                                 ),
@@ -345,9 +328,13 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                                   Icons.delete_sweep_outlined,
                                   color: AppColors.btnBgRed,
                                 ),
-                                tooltip: 'Remove Assigned User/Group',
                                 onPressed: () {
+                                  debugPrint(
+                                    'selectedUsersNames: $selectedUsersNames & selectedGroups: $selectedGroupName',
+                                  );
                                   setState(() {
+                                    selectedUsersNames = '';
+                                    selectedGroupName = '';
                                     widget.workflowLevel.userId = "0";
                                     widget.workflowLevel.groupId = 0;
                                   });
