@@ -17,7 +17,7 @@ class WorkflowAssignUserDialog {
     required int selectedGroupID,
     required Function(Set<int>, int) onAssignSelectedPressed,
   }) {
-    var selectedView = selectedUserIds.isNotEmpty ? 0 : 1;
+    var selectedView = selectedUserIds.isEmpty ? 0 : 1;
     var searchQuery = '';
 
     const List<String> headers = [
