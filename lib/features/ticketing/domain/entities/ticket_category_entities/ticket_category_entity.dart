@@ -10,4 +10,13 @@ class TicketCategoryEntity {
     this.departmentID,
     this.department,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'categoryID': categoryID,
+      'category': category,
+      'departmentID': departmentID,
+      'department': department,
+    };
+  }
 }

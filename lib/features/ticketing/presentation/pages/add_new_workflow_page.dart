@@ -217,6 +217,34 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                       if (workflow == null) {
                         return;
                       }
+                      _workflowController.text = workflow.workflowName ?? '';
+                      setState(() {
+                        if (categories.isNotEmpty) {
+                          _selectedCategory = categories
+                              .where(
+                                (category) =>
+                                    category.categoryID == workflow.categoryID,
+                              )
+                              .first;
+                          debugPrint('Selected Category: ${_selectedCategory?.toJson()}');
+                        }
+                        if (subCategories.isNotEmpty) {
+                          _selectedSubCategory = subCategories
+                              .where(
+                                (subCategory) =>
+                                    subCategory.subCategoryID ==
+                                    workflow.subCategoryID,
+                              )
+                              .first;
+                          debugPrint('Selected SubCategory: ${_selectedSubCategory?.toJson()}');
+                        }
+                      });
+
+                      final workflowDetails =
+                          state.workflowDetail?.workflowDetails;
+                      if (workflowDetails == null) {
+                        return;
+                      }
                     }
                   },
                 ),

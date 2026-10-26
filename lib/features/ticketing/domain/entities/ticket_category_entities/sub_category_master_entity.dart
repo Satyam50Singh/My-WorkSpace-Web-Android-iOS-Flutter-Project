@@ -12,4 +12,14 @@ class SubCategoryMasterEntity {
     this.category,
     this.priority,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'subCategoryID': subCategoryID,
+      'subCategory': subCategory,
+      'categoryID': categoryID,
+      'category': category,
+      'priority': priority,
+    };
+  }
 }
