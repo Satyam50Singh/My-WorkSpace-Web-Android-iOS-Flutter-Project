@@ -21,8 +21,9 @@ class CategoryActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 600;
+    final isTablet = MediaQuery.sizeOf(context).width >= 600 && MediaQuery.sizeOf(context).width < 1200;
 
-    return isMobile
+    return isMobile || isTablet
         ? IconButton(
             onPressed: onPressed,
             icon: Icon(icon, color: btnColor, size: 16),
