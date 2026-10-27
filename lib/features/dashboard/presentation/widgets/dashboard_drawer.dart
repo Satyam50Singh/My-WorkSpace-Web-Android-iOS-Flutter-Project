@@ -373,7 +373,7 @@ class DashboardDrawer extends StatelessWidget {
     }
 
     if (route.startsWith('/')) {
-      context.push(route);
+      context.go(route);
       return;
     }
 

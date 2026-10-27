@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/workflow_level_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
@@ -113,7 +114,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                   if (isMobile)
                     IconButton.filled(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        context.pop();
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -140,7 +141,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         size: 16,
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        context.pop();
                       },
                       label: Text('Back'),
                     ),
@@ -205,7 +206,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         context,
                         isEditing ? 'Workflow Updated Successfully' : 'Workflow Added Successfully',
                       );
-                      Navigator.of(context).pop(true);
+                      context.pop(true);
                     } else if (state is TicketWorkflowDetailByIDFailure) {
                       SnackBarUtils.showFloatingSnackBar(
                         context,
@@ -686,6 +687,13 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                               groupUserList: groupUserList ?? [],
                               onDeletePressed: (level) {
                                 return () {
+                                  if (workflowLevels.length == 1) {
+                                    SnackBarUtils.showFloatingSnackBar(
+                                      context,
+                                      'At least one level is required',
+                                    );
+                                    return;
+                                  }
                                   setState(() {
                                     workflowLevels.removeWhere(
                                       (workflowLevel) =>

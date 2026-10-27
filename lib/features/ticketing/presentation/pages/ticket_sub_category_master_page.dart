@@ -47,9 +47,12 @@ class _TicketSubCategoryMasterPageState
   int totalPages = 0;
   int currentPage = 0;
 
+  late final TextEditingController _searchController;
+
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
 
     _apiCallForSubCategoryList();
   }
@@ -57,6 +60,7 @@ class _TicketSubCategoryMasterPageState
   @override
   void dispose() {
     _debounceTimer?.cancel();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -152,6 +156,7 @@ class _TicketSubCategoryMasterPageState
   }
 
   void _apiCallForSubCategoryList() {
+    _searchController.clear();
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
       final employee = state.employeeDetail;
@@ -195,6 +200,7 @@ class _TicketSubCategoryMasterPageState
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearchBar(
+                      searchController: _searchController,
                       hintText: 'Search Here ...',
                       onChanged: _searchOperation,
                     ),
@@ -212,6 +218,7 @@ class _TicketSubCategoryMasterPageState
                 children: [
                   Expanded(
                     child: CustomSearchBar(
+                      searchController: _searchController,
                       hintText: 'Search...',
                       onChanged: _searchOperation,
                     ),
