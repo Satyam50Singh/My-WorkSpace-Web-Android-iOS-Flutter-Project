@@ -45,9 +45,12 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
     "Action Status",
   ];
 
+  late final TextEditingController _searchController;
+
   @override
   void initState() {
     _apiCallForFetchingTicketWorkflow();
+    _searchController = TextEditingController();
     super.initState();
   }
 
@@ -55,6 +58,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
   void dispose() {
     super.dispose();
     _debounceTimer?.cancel();
+    _searchController.dispose();
   }
 
   void _apiCallForFetchingTicketWorkflow() {
@@ -101,6 +105,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearchBar(
+                      searchController: _searchController,
                       hintText: 'Search Here ...',
                       onChanged: _searchOperation,
                     ),
@@ -118,6 +123,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                 children: [
                   Expanded(
                     child: CustomSearchBar(
+                      searchController: _searchController,
                       hintText: 'Search...',
                       onChanged: _searchOperation,
                     ),
@@ -156,6 +162,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                     } else if (state is TicketWorkflowMasterSuccess) {
                       LoaderUtils.hideLoader(context);
                       setState(() {
+                        _searchController.clear();
                         workflowList = state.ticketWorkflowList!;
                         if (kIsWeb) {
                           filteredWorkflows = workflowList;
@@ -411,6 +418,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
     );
     if (result == true) {
       debugPrint('navigated with true');
+      _searchController.clear();
       _apiCallForFetchingTicketWorkflow();
     }
   }

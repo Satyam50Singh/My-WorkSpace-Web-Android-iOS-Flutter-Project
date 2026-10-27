@@ -218,7 +218,13 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         return;
                       }
                       _workflowController.text = workflow.workflowName ?? '';
+                      final workflowDetails =
+                          state.workflowDetail?.workflowDetails;
                       setState(() {
+                        debugPrint('Categories count: ${categories.length}');
+                        debugPrint(
+                          'Sub-Categories count: ${subCategories.length}',
+                        );
                         if (categories.isNotEmpty) {
                           _selectedCategory = categories
                               .where(
@@ -226,25 +232,46 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                     category.categoryID == workflow.categoryID,
                               )
                               .first;
-                          debugPrint('Selected Category: ${_selectedCategory?.toJson()}');
+                          debugPrint(
+                            'Selected Category: ${_selectedCategory?.toJson()}',
+                          );
                         }
-                        if (subCategories.isNotEmpty) {
-                          _selectedSubCategory = subCategories
-                              .where(
-                                (subCategory) =>
-                                    subCategory.subCategoryID ==
-                                    workflow.subCategoryID,
-                              )
-                              .first;
-                          debugPrint('Selected SubCategory: ${_selectedSubCategory?.toJson()}');
+                        if (workflow.subCategoryID != 0) {
+                          if (subCategories.isNotEmpty) {
+                            filteredSubCategories = subCategories
+                                .where(
+                                  (subCategory) =>
+                                      subCategory.categoryID ==
+                                      workflow.categoryID,
+                                )
+                                .toList();
+                            _selectedSubCategory = filteredSubCategories
+                                .where(
+                                  (subCategory) =>
+                                      subCategory.subCategoryID ==
+                                      workflow.subCategoryID,
+                                )
+                                .first;
+                            debugPrint(
+                              'Selected SubCategory: ${_selectedSubCategory?.toJson()}',
+                            );
+                          }
+                        }
+                        if (workflowDetails != null) {
+                          workflowLevels = workflowDetails.map((w1) {
+                            return WorkflowLevelModel(
+                              level: w1.level ?? 0,
+                              userId: w1.userIDs ?? "0",
+                              groupId: w1.groupID ?? 0,
+                              escalateTime: w1.escalateTime ?? 0,
+                              isEmail: w1.isEmail ?? 0,
+                              isSMS: w1.isSMS ?? 0,
+                              isAppNotification: w1.isAppNotification ?? 0,
+                              isWebNotification: w1.isWebNotification ?? 0,
+                            );
+                          }).toList();
                         }
                       });
-
-                      final workflowDetails =
-                          state.workflowDetail?.workflowDetails;
-                      if (workflowDetails == null) {
-                        return;
-                      }
                     }
                   },
                 ),
@@ -262,6 +289,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                     } else if (state is TicketCategoryMasterSuccess) {
                       setState(() {
                         categories = state.categoryList;
+                        _apiCallForSubCategoryList(companyId);
                       });
                     }
                   },
@@ -280,6 +308,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                     } else if (state is TicketSubCategoryMasterSuccess) {
                       setState(() {
                         subCategories = state.subCategoryList;
+                        _apiCallForWorkflowUserGroupList(companyId);
                       });
                     }
                   },
@@ -722,16 +751,14 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
     }
   }
 
+  var companyId = 0;
+
   void _callInitialAPIsForFetchingDropdownValues() {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
       final employee = state.employeeDetail;
-      final companyId = employee.companyId;
-      if (companyId != null) {
-        _apiCallForCategoryList(companyId);
-        _apiCallForSubCategoryList(companyId);
-        _apiCallForWorkflowUserGroupList(companyId);
-      }
+      companyId = employee.companyId ?? 0;
+      _apiCallForCategoryList(companyId);
     }
   }
 

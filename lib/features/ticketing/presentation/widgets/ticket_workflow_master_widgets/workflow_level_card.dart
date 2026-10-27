@@ -25,6 +25,7 @@ class WorkflowLevelCard extends StatefulWidget {
 }
 
 class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
+
   Widget _buildHeader(BuildContext context, String label) {
     return Center(
       child: Text(
@@ -40,10 +41,35 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
   String selectedUsersNames = '', selectedGroupName = '';
   Set<int> selectedUserIds = {};
   int selectedGroupID = -1;
+  late final TextEditingController _escalateTimeController;
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.workflowLevel.userId != null &&
+        widget.workflowLevel.userId != "0" &&
+        widget.workflowLevel.userId!.isNotEmpty) {
+      selectedUserIds = widget.workflowLevel.userId!
+          .split(',')
+          .map((e) => int.tryParse(e.trim()) ?? 0)
+          .where((e) => e != 0)
+          .toSet();
+      debugPrint('Selected User IDs: $selectedUserIds');
+    }
+    // 2. Parse groupId
+    if (widget.workflowLevel.groupId != null &&
+        widget.workflowLevel.groupId != 0) {
+      selectedGroupID = widget.workflowLevel.groupId!;
+    }
+
+    _escalateTimeController = TextEditingController(
+      text: widget.workflowLevel.escalateTime != null &&
+          widget.workflowLevel.escalateTime != 0
+          ? widget.workflowLevel.escalateTime.toString()
+          : '',
+    );
+
     selectedUsersNames = widget.usersList
         .where((user) => selectedUserIds.contains(user.userID))
         .map((user) => user.userName)
@@ -292,7 +318,7 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                                 height: 42,
                                 width: 80,
                                 child: TextField(
-                                  controller: TextEditingController(),
+                                  controller: _escalateTimeController,
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 8,
