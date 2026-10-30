@@ -18,6 +18,7 @@ class AppRoutes {
 
   static const ticketWorkflow = '/ticket-workflow';
   static const addNewWorkflow = '/add-new-workflow';
+  static const ticketReport = '/ticket-report';
 
   static const checklist = '/checklist';
   static const workpermit = '/workpermit';

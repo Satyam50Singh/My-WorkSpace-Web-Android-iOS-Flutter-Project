@@ -101,7 +101,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: isMobile ? 408 : 400,
+                  width: 400,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearchBar(

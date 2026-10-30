@@ -44,4 +44,7 @@ class ApiEndpoints {
   static const fetchWorkPermitConfigUserGroupChecklistList = "/Workpermit/Fetch_WorkPermit_Config_User_Group_Checklist_List";
   static const fetchTicketWorkflowDetailsWeb  = "/Ticketing/Fetch_Ticket_Workflow_Details_Web";
 
+  static const fetchCatSubCatLocDeptTypeList  = "/Ticketing/Fetch_Cat_SubCat_Loc_Dept_Type_List";
+  static const fetchTicketReportWeb  = "/Ticketing/Fetch_Ticket_Report_Web_API";
+
 }

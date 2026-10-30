@@ -31,6 +31,7 @@ import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/view_ticket_details_usecases/ticket_action_history_usecase.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
+import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_report_master_bloc/ticket_report_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/view_ticket_details_bloc/view_ticket_details_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,18 +39,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/ticketing/data/datasources/ticket_category_master_data_source.dart';
+import '../../features/ticketing/data/datasources/ticket_report_master_data_source.dart';
 import '../../features/ticketing/data/datasources/ticketing_my_action_remote_data_source.dart';
 import '../../features/ticketing/data/repositories/add_new_request_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticket_category_master_repository_impl.dart';
+import '../../features/ticketing/data/repositories/ticket_report_master_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticket_sub_category_master_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticket_workflow_master_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticketing_my_action_repository_impl.dart';
 import '../../features/ticketing/data/repositories/ticketing_repository_impl.dart';
 import '../../features/ticketing/data/repositories/view_ticket_detail_repository_impl.dart';
 import '../../features/ticketing/domain/repositories/ticket_category_master_repository.dart';
+import '../../features/ticketing/domain/repositories/ticket_report_master_repository.dart';
 import '../../features/ticketing/domain/repositories/ticket_sub_category_master_repository.dart';
 import '../../features/ticketing/domain/repositories/ticketing_my_action_repository.dart';
 import '../../features/ticketing/domain/usecases/add_new_request/ticket_sub_category_usecase.dart';
+import '../../features/ticketing/domain/usecases/ticket_report_usecases/fetch_cat_sub_cat_loc_dept_type_list_usecase.dart';
+import '../../features/ticketing/domain/usecases/ticket_report_usecases/fetch_ticket_report_web_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticket_workflow_usecases/fetch_ticket_workflow_details_web_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticket_workflow_usecases/insert_update_workflow_usecase.dart';
 import '../../features/ticketing/domain/usecases/ticketing_my_action_usecases/accept_web_ticket_usecase.dart';
@@ -103,6 +109,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<TicketWorkflowMasterDataSource>(
     () => TicketWorkflowMasterDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<TicketReportMasterDataSource>(
+    () => TicketReportMasterDataSourceImpl(sl()),
+  );
 
   // ---------- Repositories ----------
   sl.registerLazySingleton<AuthRepository>(
@@ -128,6 +137,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<TicketWorkflowMasterRepository>(
     () => TicketWorkflowMasterRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<TicketReportMasterRepository>(
+    () => TicketReportMasterRepositoryImpl(sl()),
   );
 
   // ---------- Use cases ----------
@@ -206,6 +218,12 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<FetchTicketWorkflowDetailsWebUseCase>(
     () => FetchTicketWorkflowDetailsWebUseCase(sl()),
   );
+  sl.registerLazySingleton<FetchCatSubCatLocDeptTypeListUseCase>(
+    () => FetchCatSubCatLocDeptTypeListUseCase(sl()),
+  );
+  sl.registerLazySingleton<FetchTicketReportWebUseCase>(
+    () => FetchTicketReportWebUseCase(sl()),
+  );
 
   // ---------- Blocs / Cubits ----------
   sl.registerFactory(() => AuthBloc(sl(), sl()));
@@ -217,4 +235,5 @@ Future<void> configureDependencies() async {
   sl.registerFactory(() => TicketCategoryMasterBloc(sl(), sl(), sl()));
   sl.registerFactory(() => TicketSubCategoryMasterBloc(sl(), sl()));
   sl.registerFactory(() => TicketWorkflowMasterBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => TicketReportMasterBloc(sl(), sl()));
 }

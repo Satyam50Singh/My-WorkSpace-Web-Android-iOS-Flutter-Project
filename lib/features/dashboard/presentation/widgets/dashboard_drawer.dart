@@ -335,6 +335,8 @@ class DashboardDrawer extends StatelessWidget {
         return AppRoutes.ticketSubCategory;
       case 'ticket workflow':
         return AppRoutes.ticketWorkflow;
+      case 'ticket report':
+        return AppRoutes.ticketReport;
       case 'checklist':
         return AppRoutes.checklist;
       case 'workpermit':
