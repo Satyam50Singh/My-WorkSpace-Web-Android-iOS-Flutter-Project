@@ -40,11 +40,7 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
   @override
   void didUpdateWidget(covariant WorkflowLevelCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.workflowLevel != widget.workflowLevel ||
-        oldWidget.usersList != widget.usersList ||
-        oldWidget.groupUserList != widget.groupUserList) {
-      loadInitialData();
-    }
+    loadInitialData();
   }
 
   @override

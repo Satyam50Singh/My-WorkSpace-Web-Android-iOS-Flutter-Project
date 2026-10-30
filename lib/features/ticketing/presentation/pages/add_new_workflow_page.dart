@@ -655,9 +655,18 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                               groupUserList: groupUserList ?? [],
                               onDeletePressed: (level) {
                                 if (workflowLevels.length == 1) {
+                                  setState(() {
+                                    workflowLevels[0].userId = "0";
+                                    workflowLevels[0].groupId = 0;
+                                    workflowLevels[0].escalateTime = 0;
+                                    workflowLevels[0].isEmail = 0;
+                                    workflowLevels[0].isSMS = 0;
+                                    workflowLevels[0].isAppNotification = 0;
+                                    workflowLevels[0].isWebNotification = 0;
+                                  });
                                   SnackBarUtils.showFloatingSnackBar(
                                     context,
-                                    'At least one level is required',
+                                    'Level 1 reset. At least one level is required.',
                                   );
                                   return;
                                 }
