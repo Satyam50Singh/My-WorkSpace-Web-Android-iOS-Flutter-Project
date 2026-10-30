@@ -46,6 +46,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
   List<WorkflowUserItemEntity>? usersList;
 
   List<WorkflowGroupItemEntity>? groupUserList;
+  var companyId = 0;
 
   @override
   void initState() {
@@ -73,7 +74,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
   @override
   void dispose() {
-    _workflowController.clear();
     _workflowController.dispose();
     super.dispose();
   }
@@ -85,7 +85,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
     return Container(
       color: AppColors.white,
-
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -135,7 +134,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         ),
                         foregroundColor: AppColors.white,
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: AppColors.white,
                         size: 16,
@@ -143,7 +142,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                       onPressed: () {
                         context.pop();
                       },
-                      label: Text('Back'),
+                      label: const Text('Back'),
                     ),
                   SizedBox(width: isMobile ? 4 : 8),
                   if (isMobile)
@@ -165,19 +164,19 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                         ),
                         foregroundColor: AppColors.white,
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add_task,
                         color: AppColors.white,
                         size: 16,
                       ),
                       onPressed: _apiCallForAddNewWorkflow,
-                      label: Text('Save'),
+                      label: const Text('Save'),
                     ),
                 ],
               ),
             ),
-            Divider(color: AppColors.textHint),
-            SizedBox(height: 16),
+            const Divider(color: AppColors.textHint),
+            const SizedBox(height: 16),
             MultiBlocListener(
               listeners: [
                 BlocListener<
@@ -204,7 +203,9 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                       final isEditing = widget.selectedWorkflow != null;
                       SnackBarUtils.showFloatingSnackBar(
                         context,
-                        isEditing ? 'Workflow Updated Successfully' : 'Workflow Added Successfully',
+                        isEditing
+                            ? 'Workflow Updated Successfully'
+                            : 'Workflow Added Successfully',
                       );
                       context.pop(true);
                     } else if (state is TicketWorkflowDetailByIDFailure) {
@@ -222,20 +223,13 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                       final workflowDetails =
                           state.workflowDetail?.workflowDetails;
                       setState(() {
-                        debugPrint('Categories count: ${categories.length}');
-                        debugPrint(
-                          'Sub-Categories count: ${subCategories.length}',
-                        );
                         if (categories.isNotEmpty) {
                           _selectedCategory = categories
                               .where(
                                 (category) =>
                                     category.categoryID == workflow.categoryID,
                               )
-                              .first;
-                          debugPrint(
-                            'Selected Category: ${_selectedCategory?.toJson()}',
-                          );
+                              .firstOrNull;
                         }
                         if (workflow.subCategoryID != 0) {
                           if (subCategories.isNotEmpty) {
@@ -252,13 +246,11 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       subCategory.subCategoryID ==
                                       workflow.subCategoryID,
                                 )
-                                .first;
-                            debugPrint(
-                              'Selected SubCategory: ${_selectedSubCategory?.toJson()}',
-                            );
+                                .firstOrNull;
                           }
                         }
-                        if (workflowDetails != null) {
+                        if (workflowDetails != null &&
+                            workflowDetails.isNotEmpty) {
                           workflowLevels = workflowDetails.map((w1) {
                             return WorkflowLevelModel(
                               level: w1.level ?? 0,
@@ -276,7 +268,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                     }
                   },
                 ),
-
                 BlocListener<
                   TicketCategoryMasterBloc,
                   TicketCategoryMasterState
@@ -295,7 +286,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                     }
                   },
                 ),
-
                 BlocListener<
                   TicketSubCategoryMasterBloc,
                   TicketSubCategoryMasterState
@@ -330,17 +320,16 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                           if (!isMobile) ...[
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Expanded(
-                                  child: const LabelHeading(
+                                const Expanded(
+                                  child: LabelHeading(
                                     label: 'Workflow Description',
                                     icon: Icons.description,
                                   ),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
-                                  flex: isMobile ? 1 : 2,
+                                  flex: 2,
                                   child: TextFormField(
                                     controller: _workflowController,
                                     decoration: InputDecoration(
@@ -366,14 +355,13 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
                           if (isMobile) ...[
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const LabelHeading(
                                   label: 'Workflow Description',
                                   icon: Icons.description,
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 8),
                                 TextFormField(
                                   controller: _workflowController,
                                   decoration: InputDecoration(
@@ -406,28 +394,25 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
-                                        Expanded(
-                                          child: const LabelHeading(
+                                        const Expanded(
+                                          child: LabelHeading(
                                             label: 'Category',
                                             icon: Icons.bookmark_border,
                                           ),
                                         ),
                                         const SizedBox(width: 16),
-
                                         if (state
                                             is TicketCategoryMasterLoading)
-                                          Expanded(
-                                            flex: isMobile ? 1 : 2,
+                                          const Expanded(
+                                            flex: 2,
                                             child: CustomLoadingDropdown(
                                               label: 'Select Category',
                                             ),
                                           )
                                         else
                                           Expanded(
-                                            flex: isMobile ? 1 : 2,
+                                            flex: 2,
                                             child: CustomDropDown<TicketCategoryEntity>(
                                               listItems: categories,
                                               selectedValue: _selectedCategory,
@@ -453,9 +438,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                         .toList();
                                                     _selectedSubCategory = null;
                                                   });
-                                                  debugPrint(
-                                                    'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
-                                                  );
                                                 }
                                               },
                                               compareFn: (f1, f2) {
@@ -478,11 +460,10 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                           label: 'Category',
                                           icon: Icons.bookmark_border,
                                         ),
-                                        const SizedBox(height: 16),
-
+                                        const SizedBox(height: 8),
                                         if (state
                                             is TicketCategoryMasterLoading)
-                                          CustomLoadingDropdown(
+                                          const CustomLoadingDropdown(
                                             label: 'Select Category',
                                           )
                                         else
@@ -512,9 +493,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                           .toList();
                                                   _selectedSubCategory = null;
                                                 });
-                                                debugPrint(
-                                                  'Selected Category: CategoryID: ${value.categoryID} & ${value.category}',
-                                                );
                                               }
                                             },
                                             compareFn: (f1, f2) {
@@ -543,28 +521,25 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
-                                        Expanded(
-                                          child: const LabelHeading(
+                                        const Expanded(
+                                          child: LabelHeading(
                                             label: 'Sub-Category',
                                             icon: Icons.local_offer_outlined,
                                           ),
                                         ),
                                         const SizedBox(width: 16),
-
                                         if (state
                                             is TicketSubCategoryMasterLoading)
-                                          Expanded(
-                                            flex: isMobile ? 1 : 2,
+                                          const Expanded(
+                                            flex: 2,
                                             child: CustomLoadingDropdown(
                                               label: 'Select Sub-Category',
                                             ),
                                           )
                                         else
                                           Expanded(
-                                            flex: isMobile ? 1 : 2,
+                                            flex: 2,
                                             child:
                                                 CustomDropDown<
                                                   SubCategoryMasterEntity
@@ -573,7 +548,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                       filteredSubCategories,
                                                   selectedValue:
                                                       _selectedSubCategory,
-                                                  label: 'Category',
+                                                  label: 'Sub-Category',
                                                   hintText:
                                                       'Select Sub-Category',
                                                   searchHintText:
@@ -588,9 +563,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                         _selectedSubCategory =
                                                             value;
                                                       });
-                                                      debugPrint(
-                                                        'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
-                                                      );
                                                     }
                                                   },
                                                   compareFn: (f1, f2) {
@@ -611,13 +583,12 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                       children: [
                                         const LabelHeading(
                                           label: 'Sub-Category',
-                                          icon: Icons.bookmark_border,
+                                          icon: Icons.local_offer_outlined,
                                         ),
-                                        const SizedBox(height: 16),
-
+                                        const SizedBox(height: 8),
                                         if (state
                                             is TicketSubCategoryMasterLoading)
-                                          CustomLoadingDropdown(
+                                          const CustomLoadingDropdown(
                                             label: 'Select Sub-Category',
                                           )
                                         else
@@ -638,9 +609,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                                 setState(() {
                                                   _selectedSubCategory = value;
                                                 });
-                                                debugPrint(
-                                                  'Selected Sub-Category: SubCategoryID: ${value.subCategoryID} & ${value.subCategory}',
-                                                );
                                               }
                                             },
                                             compareFn: (f1, f2) {
@@ -660,7 +628,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
                           Row(
                             children: [
-                              Spacer(),
+                              const Spacer(),
                               WorkflowOutlinedButton(
                                 btnTitle: 'New Level',
                                 icon: Icons.add,
@@ -686,25 +654,23 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                               usersList: usersList ?? [],
                               groupUserList: groupUserList ?? [],
                               onDeletePressed: (level) {
-                                return () {
-                                  if (workflowLevels.length == 1) {
-                                    SnackBarUtils.showFloatingSnackBar(
-                                      context,
-                                      'At least one level is required',
-                                    );
-                                    return;
-                                  }
-                                  setState(() {
-                                    workflowLevels.removeWhere(
-                                      (workflowLevel) =>
-                                          workflowLevel.level == level,
-                                    );
-                                    _resetWorkflowLevels();
-                                  });
-                                };
+                                if (workflowLevels.length == 1) {
+                                  SnackBarUtils.showFloatingSnackBar(
+                                    context,
+                                    'At least one level is required',
+                                  );
+                                  return;
+                                }
+                                setState(() {
+                                  workflowLevels.removeWhere(
+                                    (workflowLevel) =>
+                                        workflowLevel.level == level,
+                                  );
+                                  _resetWorkflowLevels();
+                                });
                               },
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 12),
                           ],
                         ],
                       ),
@@ -737,7 +703,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
         final categoryID = _selectedCategory?.categoryID ?? 0;
         final subCategoryID = _selectedSubCategory?.subCategoryID ?? 0;
         final workflowId = widget.selectedWorkflow?.workflowID ?? 0;
-        final workflowName = _workflowController.text;
+        final workflowName = _workflowController.text.trim();
         final workflowDetails = workflowLevels.map((e) => e.toJson()).toList();
         debugPrint(
           'companyID: $companyID, loggedInUserID: $loggedInUserID, action: $action, categoryID: $categoryID, subCategoryID: $subCategoryID, workflowId: $workflowId, workflowName: $workflowName, workflowDetails: $workflowDetails',
@@ -758,8 +724,6 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
       }
     }
   }
-
-  var companyId = 0;
 
   void _callInitialAPIsForFetchingDropdownValues() {
     final state = context.read<EmployeeDetailCubit>().state;
@@ -789,7 +753,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
   }
 
   bool _validateForm() {
-    if (_workflowController.text.isEmpty) {
+    if (_workflowController.text.trim().isEmpty) {
       SnackBarUtils.showFloatingSnackBar(context, 'Enter Workflow Description');
       return false;
     } else if (_selectedCategory == null) {
@@ -798,28 +762,32 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
     } else if (_selectedSubCategory == null) {
       SnackBarUtils.showFloatingSnackBar(context, 'Select Sub-Category');
       return false;
-    } else if (workflowLevels.length == 1 &&
-        workflowLevels[0].userId == '0' &&
-        workflowLevels[0].groupId == 0) {
-      SnackBarUtils.showFloatingSnackBar(
-        context,
-        'At least one level is required',
-      );
-      return false;
-    } else {
-      for (var workflow in workflowLevels) {
-        if (((workflow.escalateTime == null || workflow.escalateTime == 0) &&
-                (workflow.userId != null && workflow.userId != '0')) ||
-            ((workflow.escalateTime == null || workflow.escalateTime == 0) &&
-                (workflow.groupId != null && workflow.groupId != 0))) {
-          SnackBarUtils.showFloatingSnackBar(
-            context,
-            'Escalation Time is required',
-          );
-          return false;
-        }
+    }
+
+    for (var workflow in workflowLevels) {
+      final hasUser =
+          workflow.userId != null &&
+          workflow.userId != '0' &&
+          workflow.userId!.isNotEmpty;
+      final hasGroup = workflow.groupId != null && workflow.groupId != 0;
+
+      if (!hasUser && !hasGroup) {
+        SnackBarUtils.showFloatingSnackBar(
+          context,
+          'Please assign a user or group to Level ${workflow.level}',
+        );
+        return false;
+      }
+
+      if (workflow.escalateTime == null || workflow.escalateTime == 0) {
+        SnackBarUtils.showFloatingSnackBar(
+          context,
+          'Escalation Time is required for Level ${workflow.level}',
+        );
+        return false;
       }
     }
+
     return true;
   }
 }
