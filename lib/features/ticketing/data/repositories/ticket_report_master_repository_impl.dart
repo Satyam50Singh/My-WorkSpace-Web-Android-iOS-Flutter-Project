@@ -47,7 +47,7 @@ class TicketReportMasterRepositoryImpl extends TicketReportMasterRepository {
       final response = await _dataSource.fetchTicketReportWeb(
         payload: payload,
       );
-      if (response.status == 1) {
+      if (response.status == 1 || response.status == 2) {
         return Right(response);
       } else {
         final message = response.message?.trim();
