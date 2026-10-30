@@ -40,10 +40,10 @@ class WorkflowAssignUserDialog {
       builder: (ctx) {
         String getValue(String? value) =>
             (value != null && value.isNotEmpty) ? value : '-';
+        final isMobile = MediaQuery.sizeOf(context).width < 600;
         return StatefulBuilder(
           builder: (ctx, setState) {
-            List<WorkflowUserItemEntity> filteredUserList = searchQuery
-                    .isEmpty
+            List<WorkflowUserItemEntity> filteredUserList = searchQuery.isEmpty
                 ? usersList
                 : usersList.where((u) {
                     final name = (u.userName ?? '').toLowerCase();
@@ -56,15 +56,16 @@ class WorkflowAssignUserDialog {
 
             List<WorkflowGroupItemEntity> filteredGroupUserList =
                 searchQuery.isEmpty
-                    ? groupUserList
-                    : groupUserList.where((g) {
-                        final name = (g.groupName ?? '').toLowerCase();
-                        final users = (g.groupUsers ?? '').toLowerCase();
-                        return name.contains(searchQuery) ||
-                            users.contains(searchQuery);
-                      }).toList();
+                ? groupUserList
+                : groupUserList.where((g) {
+                    final name = (g.groupName ?? '').toLowerCase();
+                    final users = (g.groupUsers ?? '').toLowerCase();
+                    return name.contains(searchQuery) ||
+                        users.contains(searchQuery);
+                  }).toList();
 
             return Dialog(
+              insetPadding: EdgeInsets.all(16.0),
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -117,11 +118,13 @@ class WorkflowAssignUserDialog {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            icon: Icon(
-                              Icons.person,
-                              color: AppColors.primaryDark,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            icon: isMobile
+                                ? null
+                                : Icon(
+                                    Icons.person,
+                                    color: AppColors.primaryDark,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.white,
                               shadowColor: AppColors.white,
@@ -129,7 +132,7 @@ class WorkflowAssignUserDialog {
                                 side: BorderSide(
                                   color: selectedView == 0
                                       ? AppColors.primaryDark
-                                      : Colors.transparent,
+                                      : AppColors.background,
                                   width: 2,
                                 ),
                               ),
@@ -149,12 +152,16 @@ class WorkflowAssignUserDialog {
                                 color: AppColors.primaryDark,
                                 fontWeight: FontWeight.bold,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            icon: Icon(
-                              Icons.group,
-                              color: AppColors.primaryDark,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            icon: isMobile
+                                ? null
+                                : Icon(
+                                    Icons.group,
+                                    color: AppColors.primaryDark,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.white,
                               shadowColor: AppColors.white,
@@ -162,7 +169,7 @@ class WorkflowAssignUserDialog {
                                 side: BorderSide(
                                   color: selectedView == 1
                                       ? AppColors.primaryDark
-                                      : Colors.transparent,
+                                      : AppColors.background,
                                   width: 2,
                                 ),
                               ),

@@ -25,17 +25,24 @@ class WorkflowLevelCard extends StatefulWidget {
 }
 
 class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
-
-  Widget _buildHeader(BuildContext context, String label) {
-    return Center(
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
+  Widget _buildHeader(BuildContext context, String label, {bool? isMobile}) {
+    return isMobile == true
+        ? Text(
+            label,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          )
+        : Center(
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          );
   }
 
   String selectedUsersNames = '', selectedGroupName = '';
@@ -46,7 +53,10 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
   @override
   void initState() {
     super.initState();
+    loadInitialData();
+  }
 
+  void loadInitialData() {
     if (widget.workflowLevel.userId != null &&
         widget.workflowLevel.userId != "0" &&
         widget.workflowLevel.userId!.isNotEmpty) {
@@ -64,8 +74,9 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
     }
 
     _escalateTimeController = TextEditingController(
-      text: widget.workflowLevel.escalateTime != null &&
-          widget.workflowLevel.escalateTime != 0
+      text:
+          widget.workflowLevel.escalateTime != null &&
+              widget.workflowLevel.escalateTime != 0
           ? widget.workflowLevel.escalateTime.toString()
           : '',
     );
@@ -80,8 +91,44 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
         .join(', ');
   }
 
+  void onTapOfAssignUserBtn() {
+    WorkflowAssignUserDialog.showAssignUserDialog(
+      context: context,
+      usersList: widget.usersList,
+      groupUserList: widget.groupUserList,
+      selectedUserIds: selectedUserIds,
+      selectedGroupID: selectedGroupID,
+      onAssignSelectedPressed: (userIDs, groupID) {
+        setState(() {
+          selectedUserIds = userIDs;
+          selectedGroupID = groupID;
+          selectedUsersNames = widget.usersList
+              .where((user) => selectedUserIds.contains(user.userID))
+              .map((user) => user.userName)
+              .join(', ');
+          final selectedUserIDs = selectedUserIds.join(',');
+          selectedGroupName = widget.groupUserList
+              .where((group) => group.groupID == selectedGroupID)
+              .map((group) => group.groupName)
+              .join(', ');
+          widget.workflowLevel.userId = selectedUserIDs.isNotEmpty
+              ? selectedUserIDs
+              : '0';
+          widget.workflowLevel.groupId = selectedGroupID != -1
+              ? selectedGroupID
+              : 0;
+          debugPrint('Selected Users: $selectedUsersNames');
+          debugPrint('Selected Groups: $selectedGroupID');
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 600;
+
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(
@@ -112,120 +159,19 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
             WorkflowOutlinedButton(
               btnTitle: 'Assign User',
               icon: Icons.person_add_alt_1_outlined,
-              onPressed: () {
-                debugPrint(
-                  '----------------------------------------------------',
-                );
-                debugPrint('Assign User button pressed');
-                debugPrint('Users: ${widget.usersList.length}');
-                debugPrint('Groups: ${widget.groupUserList.length}');
-                debugPrint(
-                  '----------------------------------------------------',
-                );
-                WorkflowAssignUserDialog.showAssignUserDialog(
-                  context: context,
-                  usersList: widget.usersList,
-                  groupUserList: widget.groupUserList,
-                  selectedUserIds: selectedUserIds,
-                  selectedGroupID: selectedGroupID,
-                  onAssignSelectedPressed: (userIDs, groupID) {
-                    // Handle the assign selected action here
-                    setState(() {
-                      selectedUserIds = userIDs;
-                      selectedGroupID = groupID;
-                      selectedUsersNames = widget.usersList
-                          .where(
-                            (user) => selectedUserIds.contains(user.userID),
-                          )
-                          .map((user) => user.userName)
-                          .join(', ');
-                      final selectedUserIDs = selectedUserIds.join(',');
-                      selectedGroupName = widget.groupUserList
-                          .where((group) => group.groupID == selectedGroupID)
-                          .map((group) => group.groupName)
-                          .join(', ');
-                      widget.workflowLevel.userId = selectedUserIDs.isNotEmpty
-                          ? selectedUserIDs
-                          : '0';
-                      widget.workflowLevel.groupId = selectedGroupID != -1
-                          ? selectedGroupID
-                          : 0;
-                      debugPrint('Selected Users: $selectedUsersNames');
-                      debugPrint('Selected Groups: $selectedGroupID');
-                    });
-                  },
-                );
-              },
+              onPressed: onTapOfAssignUserBtn,
             ),
             SizedBox(height: 8),
-            Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                side: BorderSide(color: AppColors.background),
-              ),
+            if (!isMobile)
+              Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  side: BorderSide(color: AppColors.background),
+                ),
 
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: _buildHeader(context, 'User/Group'),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: _buildHeader(context, 'Email	'),
-                        ),
-                        Expanded(flex: 1, child: _buildHeader(context, 'SMS')),
-                        Expanded(
-                          flex: 1,
-                          child: _buildHeader(context, 'App Notification'),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: _buildHeader(context, 'Web Notification'),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: _buildHeader(
-                            context,
-                            'Escalation Time (min.)',
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: _buildHeader(context, 'Action'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(height: 1, color: AppColors.border),
-                  SizedBox(height: 8),
-                  if (selectedUsersNames.isEmpty &&
-                      selectedGroupName.isEmpty) ...[
-                    SizedBox(
-                      height: 64,
-                      child: Center(
-                        child: Text(
-                          'No users assigned. Click "Assign User" to add one.',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                                color: AppColors.textHint,
-                              ),
-                        ),
-                      ),
-                    ),
-                  ] else if (selectedUsersNames.isNotEmpty ||
-                      selectedGroupName.isNotEmpty) ...[
+                child: Column(
+                  children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -233,6 +179,237 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                       ),
                       child: Row(
                         children: [
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(context, 'User/Group'),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(context, 'Email	'),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(context, 'SMS'),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(context, 'App Notification'),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(context, 'Web Notification'),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(
+                              context,
+                              'Escalation Time (min.)',
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(context, 'Action'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(height: 1, color: AppColors.border),
+                    SizedBox(height: 8),
+                    if (selectedUsersNames.isEmpty &&
+                        selectedGroupName.isEmpty) ...[
+                      SizedBox(
+                        height: 64,
+                        child: Center(
+                          child: Text(
+                            'No users assigned. Click "Assign User" to add one.',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                  color: AppColors.textHint,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ] else if (selectedUsersNames.isNotEmpty ||
+                        selectedGroupName.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            if (selectedUsersNames.isNotEmpty) ...[
+                              Expanded(
+                                flex: 1,
+                                child: _buildHeader(
+                                  context,
+                                  selectedUsersNames,
+                                ),
+                              ),
+                            ] else if (selectedGroupName.isNotEmpty) ...[
+                              Expanded(
+                                flex: 1,
+                                child: _buildHeader(context, selectedGroupName),
+                              ),
+                            ],
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Checkbox(
+                                  value: (widget.workflowLevel.isEmail == 0
+                                      ? false
+                                      : true),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      widget.workflowLevel.isEmail =
+                                          (value == true) ? 1 : 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Checkbox(
+                                  value: widget.workflowLevel.isSMS == 0
+                                      ? false
+                                      : true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      widget.workflowLevel.isSMS = value == true
+                                          ? 1
+                                          : 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Checkbox(
+                                  value:
+                                      widget.workflowLevel.isAppNotification ==
+                                          0
+                                      ? false
+                                      : true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      widget.workflowLevel.isAppNotification =
+                                          value == true ? 1 : 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Checkbox(
+                                  value:
+                                      widget.workflowLevel.isWebNotification ==
+                                          0
+                                      ? false
+                                      : true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      widget.workflowLevel.isWebNotification =
+                                          value == true ? 1 : 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: SizedBox(
+                                  height: 42,
+                                  width: 80,
+                                  child: TextField(
+                                    controller: _escalateTimeController,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 8,
+                                          ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      hintText: 'Min',
+                                    ),
+                                    maxLines: 1,
+                                    onChanged: (value) {
+                                      widget.workflowLevel.escalateTime =
+                                          int.tryParse(value) ?? 0;
+                                    },
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.delete_sweep_outlined,
+                                    color: AppColors.btnBgRed,
+                                  ),
+                                  onPressed: () {
+                                    debugPrint(
+                                      'selectedUsersNames: $selectedUsersNames & selectedGroups: $selectedGroupName',
+                                    );
+                                    setState(() {
+                                      selectedUsersNames = '';
+                                      selectedGroupName = '';
+                                      widget.workflowLevel.userId = "0";
+                                      widget.workflowLevel.groupId = 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            if (isMobile)
+              Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  side: BorderSide(color: AppColors.background),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 16.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              'User/Group',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ),
                           if (selectedUsersNames.isNotEmpty) ...[
                             Expanded(
                               flex: 1,
@@ -244,79 +421,174 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                               child: _buildHeader(context, selectedGroupName),
                             ),
                           ],
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
                           Expanded(
                             flex: 1,
-                            child: Center(
-                              child: Checkbox(
-                                value: (widget.workflowLevel.isEmail == 0
-                                    ? false
-                                    : true),
-                                onChanged: (value) {
-                                  setState(() {
-                                    widget.workflowLevel.isEmail =
-                                        (value == true) ? 1 : 0;
-                                  });
-                                },
-                              ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildHeader(
+                                    context,
+                                    'Email',
+                                    isMobile: isMobile,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Checkbox(
+                                      value: (widget.workflowLevel.isEmail == 0
+                                          ? false
+                                          : true),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.workflowLevel.isEmail =
+                                              (value == true) ? 1 : 0;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          SizedBox(height: 4),
                           Expanded(
                             flex: 1,
-                            child: Center(
-                              child: Checkbox(
-                                value: widget.workflowLevel.isSMS == 0
-                                    ? false
-                                    : true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    widget.workflowLevel.isSMS = value == true
-                                        ? 1
-                                        : 0;
-                                  });
-                                },
-                              ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildHeader(
+                                    context,
+                                    'SMS',
+                                    isMobile: isMobile,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Checkbox(
+                                      value: widget.workflowLevel.isSMS == 0
+                                          ? false
+                                          : true,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.workflowLevel.isSMS =
+                                              value == true ? 1 : 0;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
                           Expanded(
                             flex: 1,
-                            child: Center(
-                              child: Checkbox(
-                                value:
-                                    widget.workflowLevel.isAppNotification == 0
-                                    ? false
-                                    : true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    widget.workflowLevel.isAppNotification =
-                                        value == true ? 1 : 0;
-                                  });
-                                },
-                              ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildHeader(
+                                    context,
+                                    'App Notification',
+                                    isMobile: isMobile,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Checkbox(
+                                      value:
+                                          (widget
+                                                  .workflowLevel
+                                                  .isAppNotification ==
+                                              0
+                                          ? false
+                                          : true),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget
+                                                  .workflowLevel
+                                                  .isAppNotification =
+                                              (value == true) ? 1 : 0;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          SizedBox(height: 4),
                           Expanded(
                             flex: 1,
-                            child: Center(
-                              child: Checkbox(
-                                value:
-                                    widget.workflowLevel.isWebNotification == 0
-                                    ? false
-                                    : true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    widget.workflowLevel.isWebNotification =
-                                        value == true ? 1 : 0;
-                                  });
-                                },
-                              ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildHeader(
+                                    context,
+                                    'Web Notification',
+                                    isMobile: isMobile,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Checkbox(
+                                      value:
+                                          widget
+                                                  .workflowLevel
+                                                  .isWebNotification ==
+                                              0
+                                          ? false
+                                          : true,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget
+                                              .workflowLevel
+                                              .isWebNotification = value == true
+                                              ? 1
+                                              : 0;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: _buildHeader(
+                              context,
+                              'Escalation Time (min.)',
+                              isMobile: isMobile,
+                            ),
+                          ),
+                          SizedBox(height: 8),
                           Expanded(
                             flex: 1,
                             child: Center(
                               child: SizedBox(
                                 height: 42,
-                                width: 80,
                                 child: TextField(
                                   controller: _escalateTimeController,
                                   decoration: InputDecoration(
@@ -339,35 +611,12 @@ class _WorkflowLevelCardState extends State<WorkflowLevelCard> {
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.delete_sweep_outlined,
-                                  color: AppColors.btnBgRed,
-                                ),
-                                onPressed: () {
-                                  debugPrint(
-                                    'selectedUsersNames: $selectedUsersNames & selectedGroups: $selectedGroupName',
-                                  );
-                                  setState(() {
-                                    selectedUsersNames = '';
-                                    selectedGroupName = '';
-                                    widget.workflowLevel.userId = "0";
-                                    widget.workflowLevel.groupId = 0;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
                         ],
                       ),
-                    ),
-                  ],
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ),
             SizedBox(height: 16),
           ],
         ),
