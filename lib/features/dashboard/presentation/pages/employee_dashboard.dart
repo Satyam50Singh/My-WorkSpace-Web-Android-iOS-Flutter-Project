@@ -35,6 +35,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       return 'Ticket Categories';
     } else if (location.startsWith(AppRoutes.ticketSubCategory)) {
       return 'Ticket Sub Categories';
+    } else if (location.startsWith(AppRoutes.ticketWorkflow)) {
+      return 'Ticket Workflows';
+    } else if (location.startsWith(AppRoutes.ticketReport)) {
+      return 'Ticket Report';
     }
     return 'My Worksphere';
   }
@@ -89,9 +93,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           );
         }
 
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }

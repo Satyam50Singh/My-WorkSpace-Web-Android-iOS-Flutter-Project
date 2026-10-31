@@ -5,22 +5,26 @@ class LabelHeading extends StatelessWidget {
   final String label;
   final IconData icon;
   final bool isRequired;
+  final Color iconColor;
+  final bool isUppercase;
 
   const LabelHeading({
     super.key,
     required this.label,
     required this.icon,
     this.isRequired = true,
+    this.iconColor = AppColors.primary,
+    this.isUppercase = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: AppColors.primary),
+        Icon(icon, size: 16, color: iconColor),
         const SizedBox(width: 4),
         Text(
-          label.toUpperCase(),
+          isUppercase ? label.toUpperCase() : label,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.textSecondary,
