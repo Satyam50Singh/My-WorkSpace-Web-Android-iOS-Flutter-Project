@@ -325,6 +325,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                   child: LabelHeading(
                                     label: 'Workflow Description',
                                     icon: Icons.description,
+                                    isUppercase: false,
                                   ),
                                 ),
                                 const SizedBox(width: 16),
@@ -360,6 +361,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                 const LabelHeading(
                                   label: 'Workflow Description',
                                   icon: Icons.description,
+                                  isUppercase: false,
                                 ),
                                 const SizedBox(height: 8),
                                 TextFormField(
@@ -399,6 +401,8 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                           child: LabelHeading(
                                             label: 'Category',
                                             icon: Icons.bookmark_border,
+                                            isUppercase: false,
+                                            iconColor: AppColors.btnBgGreen,
                                           ),
                                         ),
                                         const SizedBox(width: 16),
@@ -459,6 +463,8 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                         const LabelHeading(
                                           label: 'Category',
                                           icon: Icons.bookmark_border,
+                                          isUppercase: false,
+                                          iconColor: AppColors.btnBgGreen,
                                         ),
                                         const SizedBox(height: 8),
                                         if (state
@@ -526,6 +532,8 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                           child: LabelHeading(
                                             label: 'Sub-Category',
                                             icon: Icons.local_offer_outlined,
+                                            isUppercase: false,
+                                            iconColor: AppColors.orange,
                                           ),
                                         ),
                                         const SizedBox(width: 16),
@@ -584,6 +592,8 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
                                         const LabelHeading(
                                           label: 'Sub-Category',
                                           icon: Icons.local_offer_outlined,
+                                          isUppercase: false,
+                                          iconColor: AppColors.orange,
                                         ),
                                         const SizedBox(height: 8),
                                         if (state
