@@ -34,31 +34,30 @@ class TicketReportFilterDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
-      child: Column(
-        children: [
-          LabelHeading(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LabelHeading(
+          label: label,
+          icon: icon,
+          isRequired: false,
+          isUppercase: false,
+          iconColor: iconColor,
+        ),
+        const SizedBox(height: 8),
+        if (items.isNotEmpty == true)
+          CustomDropDown<T>(
+            listItems: items,
+            selectedValue: selectedValue,
             label: label,
-            icon: icon,
-            isRequired: false,
-            isUppercase: false,
-            iconColor: iconColor,
+            hintText: hintText,
+            searchHintText: searchHintText,
+            itemAsString: itemAsString,
+            onSelected: onSelected,
+            compareFn: compareFn,
           ),
-          const SizedBox(height: 8),
-          if (items.isNotEmpty == true)
-            CustomDropDown<T>(
-              listItems: items,
-              selectedValue: selectedValue,
-              label: label,
-              hintText: hintText,
-              searchHintText: searchHintText,
-              itemAsString: itemAsString,
-              onSelected: onSelected,
-              compareFn: compareFn,
-            ),
-        ],
-      ),
+      ],
     );
   }
 }

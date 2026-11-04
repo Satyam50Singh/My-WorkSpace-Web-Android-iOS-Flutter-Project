@@ -10,6 +10,7 @@ class CategoryMasterTableViewWeb<T> extends StatefulWidget {
   final List<String> headers;
   final List<DataCell> Function(T item, bool isMobile) cellBuilder;
   final double minWidth;
+  final double? Function(String header)? columnWidthBuilder;
 
   const CategoryMasterTableViewWeb({
     super.key,
@@ -17,6 +18,7 @@ class CategoryMasterTableViewWeb<T> extends StatefulWidget {
     required this.headers,
     required this.cellBuilder,
     this.minWidth = 640,
+    this.columnWidthBuilder,
   });
 
   @override
@@ -27,7 +29,10 @@ class CategoryMasterTableViewWeb<T> extends StatefulWidget {
 class _CategoryMasterTableViewWebState<T>
     extends State<CategoryMasterTableViewWeb<T>> {
   DataColumn2 _buildColumnHeaderCell(String header) {
+    final fixedWidth = widget.columnWidthBuilder?.call(header);
     return DataColumn2(
+      size: ColumnSize.M,
+      fixedWidth: fixedWidth,
       label: Center(
         child: Text(
           header,
@@ -36,8 +41,9 @@ class _CategoryMasterTableViewWebState<T>
             color: AppColors.white,
             fontWeight: FontWeight.w400,
           ),
-          softWrap: false,
-          maxLines: 1,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
         ),
       ),
     );
@@ -56,7 +62,8 @@ class _CategoryMasterTableViewWebState<T>
         bottom: 16,
       ),
       child: PaginatedDataTable2(
-        minWidth: 640,
+        minWidth: widget.minWidth,
+        fixedCornerColor: AppColors.primaryDark,
         headingRowColor: WidgetStateColor.resolveWith(
           (states) => AppColors.primaryDark,
         ),

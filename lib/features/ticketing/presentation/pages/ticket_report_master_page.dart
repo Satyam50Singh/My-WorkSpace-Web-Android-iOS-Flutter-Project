@@ -13,6 +13,8 @@ import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_report_entities/fetch_cat_sub_cat_loc_dept_type_list_entity.dart';
 import '../../domain/entities/ticket_report_entities/fetch_ticket_report_web_entity.dart';
 import '../blocs/ticket_report_master_bloc/ticket_report_master_bloc.dart';
+import '../widgets/ticket_category_master_widgets/build_master_cell.dart';
+import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_count_horizontal_list.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_filter_dropdown.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
@@ -48,6 +50,31 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
   String? _currentFromDate;
   String? _currentToDate;
   String _currentActionStatus = '';
+
+  List<TicketReportDetailEntity>? _ticketReportList;
+
+  final List<String> _headers = [
+    'Ticket Number',
+    'Request Status',
+    'Action Status',
+    'Ticket Date Time',
+    'Ticket Closing Date Time',
+    'Location',
+    'Category',
+    'Sub Category',
+    'Assigned To Department',
+    'Raised From Department',
+    'Ticket RaisedBy',
+    'Ticket Remarks',
+    'Priority',
+    'Closing Remarks',
+    'Accepted By User',
+    'Closed By User',
+    'Turnaround Time',
+    'Aging',
+    'Hold Duration',
+    'Ticket Type',
+  ];
 
   @override
   void initState() {
@@ -129,7 +156,6 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
           },
         ),
       ],
-      SizedBox(width: 8),
       if (subCategoryList != null) ...[
         TicketReportFilterDropdown<TicketReportSubCategoryEntity>(
           items: filteredSubCategoryList ?? [],
@@ -151,7 +177,6 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
           },
         ),
       ],
-      SizedBox(width: 8),
       if (locationList != null) ...[
         TicketReportFilterDropdown<TicketReportLocationEntity>(
           items: locationList ?? [],
@@ -173,7 +198,6 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
           },
         ),
       ],
-      SizedBox(width: 8),
       if (departmentList != null) ...[
         TicketReportFilterDropdown<TicketReportDepartmentEntity>(
           items: departmentList ?? [],
@@ -195,7 +219,6 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
           },
         ),
       ],
-      SizedBox(width: 8),
       if (ticketTypeList != null) ...[
         TicketReportFilterDropdown<TicketReportTicketTypeEntity>(
           items: ticketTypeList ?? [],
@@ -208,7 +231,7 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
           itemAsString: (item) => item.ticketType ?? '',
           compareFn: (a, b) => a.ticketTypeID == b.ticketTypeID,
           onSelected: (value) {
-            if (value != null && value.ticketTypeID != 0) {
+            if (value != null) {
               setState(() {
                 _selectedTicketType = value;
                 apiCallForFetchTicketReportWeb();
@@ -305,132 +328,196 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
             ),
           ],
 
-          Expanded(
-            child:
-                BlocConsumer<TicketReportMasterBloc, TicketReportMasterState>(
-                  listener: (context, state) {
-                    if (state is TicketReportMasterLoading) {
-                      LoaderUtils.showLoader(context);
-                    } else if (state is FetchCatSubCatLocDeptTypeListFailure) {
-                      LoaderUtils.hideLoader(context);
-                      SnackBarUtils.showFloatingSnackBar(
-                        context,
-                        state.errorMessage,
-                      );
-                    } else if (state is FetchCatSubCatLocDeptTypeListSuccess) {
-                      LoaderUtils.hideLoader(context);
-                      setState(() {
-                        categoryList = state.data?.category ?? [];
-                        subCategoryList = state.data?.subcategory ?? [];
-                        filteredSubCategoryList = state.data?.subcategory ?? [];
-                        locationList = state.data?.location ?? [];
-                        departmentList = state.data?.department ?? [];
-                        ticketTypeList = state.data?.ticketType ?? [];
-                      });
-                    } else if (state is FetchTicketReportWebFailure) {
-                      LoaderUtils.hideLoader(context);
-                      SnackBarUtils.showFloatingSnackBar(
-                        context,
-                        state.errorMessage,
-                      );
-                    } else if (state is FetchTicketReportWebSuccess) {
-                      LoaderUtils.hideLoader(context);
-                      setState(() {
-                        _ticketReportStatusCount =
-                            state.data?.statusCount?.isNotEmpty == true
-                            ? state.data?.statusCount![0]
-                            : null;
-                      });
-                    }
-                  },
-                  builder: (context, state) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 16),
-                          if (_ticketReportStatusCount != null) ...[
-                            TicketReportCountHorizontalList(
-                              ticketRequestCount: _ticketReportStatusCount,
-                              onPressed: (actionStatus) {
+          BlocConsumer<TicketReportMasterBloc, TicketReportMasterState>(
+            listener: (context, state) {
+              if (state is TicketReportMasterLoading) {
+                LoaderUtils.showLoader(context);
+              } else if (state is FetchCatSubCatLocDeptTypeListFailure) {
+                LoaderUtils.hideLoader(context);
+                SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
+              } else if (state is FetchCatSubCatLocDeptTypeListSuccess) {
+                LoaderUtils.hideLoader(context);
+                setState(() {
+                  categoryList = state.data?.category ?? [];
+                  subCategoryList = state.data?.subcategory ?? [];
+                  filteredSubCategoryList = state.data?.subcategory ?? [];
+                  locationList = state.data?.location ?? [];
+                  departmentList = state.data?.department ?? [];
+                  ticketTypeList = state.data?.ticketType ?? [];
+                });
+              } else if (state is FetchTicketReportWebFailure) {
+                LoaderUtils.hideLoader(context);
+                SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
+              } else if (state is FetchTicketReportWebSuccess) {
+                LoaderUtils.hideLoader(context);
+                setState(() {
+                  _ticketReportStatusCount =
+                      state.data?.statusCount?.isNotEmpty == true
+                      ? state.data?.statusCount![0]
+                      : null;
+                  _ticketReportList = state.data?.ticketDetails ?? [];
+                });
+              }
+            },
+            builder: (context, state) {
+              return Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (_ticketReportStatusCount != null) ...[
+                          TicketReportCountHorizontalList(
+                            ticketRequestCount: _ticketReportStatusCount,
+                            onPressed: (actionStatus) {
+                              _currentActionStatus = actionStatus;
+                              apiCallForFetchTicketReportWeb();
+                              setState(() {
                                 _currentActionStatus = actionStatus;
-                                apiCallForFetchTicketReportWeb();
-                                setState(() {
-                                  _currentActionStatus = actionStatus;
-                                });
-                              },
-                              selectedStatus: _currentActionStatus,
-                            ),
-
-                            SizedBox(height: 16),
-                          ],
-
-                          Card(
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.tune),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'Filter Settings',
+                              });
+                            },
+                            selectedStatus: _currentActionStatus,
+                          ),
+                          SizedBox(height: 16),
+                        ],
+                        Card(
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.tune),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Filter Settings',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    InkWell(
+                                      onTap: _resetAllFilterValues,
+                                      child: Text(
+                                        'Reset',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: AppColors.textSecondary,
+                                          color: AppColors.primary,
                                         ),
                                       ),
-                                      Spacer(),
-                                      InkWell(
-                                        onTap: _resetAllFilterValues,
-                                        child: Text(
-                                          'Reset',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 16),
-                                  LayoutBuilder(
-                                    builder: (context, constraints) {
-                                      final isMobile =
-                                          constraints.maxWidth < 600;
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 16),
+                                LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    final isMobile = constraints.maxWidth < 600;
 
-                                      final filters = _buildFilters();
+                                    final filters = _buildFilters();
 
-                                      if (isMobile) {
-                                        return Wrap(
-                                          spacing: 8,
-                                          runSpacing: 4,
-                                          children: filters,
-                                        );
-                                      }
+                                    if (isMobile) {
+                                      return Wrap(
+                                        spacing: 8,
+                                        runSpacing: 8,
+                                        children: filters
+                                            .map(
+                                              (f) => SizedBox(
+                                                width: constraints.maxWidth,
+                                                child: f,
+                                              ),
+                                            )
+                                            .toList(),
+                                      );
+                                    }
 
-                                      return Row(children: filters);
-                                    },
-                                  ),
-                                ],
-                              ),
+                                    return Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        for (
+                                          int i = 0;
+                                          i < filters.length;
+                                          i++
+                                        ) ...[
+                                          if (i > 0) const SizedBox(width: 8),
+                                          Expanded(child: filters[i]),
+                                        ],
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
+                        ),
+                        SizedBox(height: 16),
+                        if (!isMobile && _ticketReportList != null) ...[
+                          SizedBox(
+                            height: 650,
+                            child:
+                                CategoryMasterTableViewWeb<
+                                  TicketReportDetailEntity
+                                >(
+                                  filteredItems: _ticketReportList!,
+                                  headers: _headers,
+                                  minWidth: 3360,
+                                  columnWidthBuilder: _getColumnWidth,
+                                  cellBuilder: (item, isMobile) =>
+                                      _buildTicketReportCell(item, isMobile),
+                                ),
+                          ),
                         ],
-                      ),
-                    );
-                  },
+                      ],
+                    ),
+                  ),
                 ),
+              );
+            },
           ),
         ],
       ),
     );
+  }
+
+  double _getColumnWidth(String header) {
+    switch (header) {
+      case 'Ticket Number':
+      case 'Request Status':
+      case 'Action Status':
+      case 'Hold Duration':
+        return 130;
+      case 'Ticket Date Time':
+      case 'Ticket Closing Date Time':
+      case 'Assigned To Department':
+      case 'Raised From Department':
+        return 180;
+      case 'Location':
+      case 'Sub Category':
+        return 220;
+      case 'Category':
+      case 'Turnaround Time':
+      case 'Ticket Type':
+        return 150;
+      case 'Ticket RaisedBy':
+      case 'Accepted By User':
+      case 'Closed By User':
+        return 160;
+      case 'Ticket Remarks':
+      case 'Closing Remarks':
+        return 200;
+      case 'Priority':
+        return 120;
+      case 'Aging':
+        return 140;
+      default:
+        return 150;
+    }
   }
 
   void _searchOperation(String query) {}
@@ -450,5 +537,39 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
 
       apiCallForFetchTicketReportWeb();
     });
+  }
+
+  List<DataCell> _buildTicketReportCell(
+    TicketReportDetailEntity item,
+    bool isMobile,
+  ) {
+    return [
+      DataCell(buildMasterCell(context, "TKT${item.ticketID}", isMobile)),
+      DataCell(buildMasterCell(context, item.tktStatus ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.tktActionStatus ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.ticketDate ?? '-', isMobile)),
+      DataCell(
+        buildMasterCell(context, item.ticketClosingDateTime ?? '-', isMobile),
+      ),
+      DataCell(buildMasterCell(context, item.location ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.category ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.subCategory ?? '-', isMobile)),
+      DataCell(
+        buildMasterCell(context, item.assignedToDepartment ?? '-', isMobile),
+      ),
+      DataCell(
+        buildMasterCell(context, item.raisedFromDepartment ?? '-', isMobile),
+      ),
+      DataCell(buildMasterCell(context, item.raisedByUser ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.ticketRemarks ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.priorityDesc ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.closingRemarks ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.acceptedByUser ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.closedByUser ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.downTime ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.aging ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.holdDuration ?? '-', isMobile)),
+      DataCell(buildMasterCell(context, item.ticketType ?? '-', isMobile)),
+    ];
   }
 }
