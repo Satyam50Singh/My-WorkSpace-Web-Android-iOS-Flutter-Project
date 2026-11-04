@@ -83,6 +83,9 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
 
   Timer? _debounceTimer;
 
+  int _totalRecords = 0;
+  String action = '';
+
   @override
   void initState() {
     _searchController = TextEditingController();
@@ -110,7 +113,6 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       final employee = state.employeeDetail;
       final companyID = employee.companyId ?? 0;
       final dateFormatter = DateFormat("dd/MM/yyyy");
-      debugPrint('_currentActionStatus: $_currentActionStatus');
 
       final payload = FetchTicketReportWebRequestModel(
         companyID: companyID,
@@ -122,7 +124,8 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
         subCategoryId: _selectedSubCategory?.subCategoryID ?? 0,
         locationId: _selectedLocation?.locationID ?? 0,
         departmentId: _selectedDepartment?.departmentID ?? 0,
-        searchText: _searchController?.text.toLowerCase().toString(),
+        searchText: _searchController?.text.toLowerCase().trim(),
+        pageSize: action == 'E' ? (_totalRecords > 0 ? _totalRecords : 10) : 10,
       );
 
       context.read<TicketReportMasterBloc>().add(
@@ -269,7 +272,10 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
               showAddNewBtn: false,
               showExportToExcelBtn: true,
               addNewBtnTitleText: '',
-              onTapExportToExcel: () {},
+              onTapExportToExcel: () {
+                action = 'E';
+                apiCallForFetchTicketReportWeb();
+              },
               onTapAddNewRequest: () {},
             ),
             SizedBox(height: 8),
@@ -360,13 +366,27 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
                 SnackBarUtils.showFloatingSnackBar(context, state.errorMessage);
               } else if (state is FetchTicketReportWebSuccess) {
                 LoaderUtils.hideLoader(context);
-                setState(() {
-                  _ticketReportStatusCount =
-                      state.data?.statusCount?.isNotEmpty == true
-                      ? state.data?.statusCount![0]
-                      : null;
-                  _ticketReportList = state.data?.ticketDetails ?? [];
-                });
+                if (action == 'E') {
+                  action = '';
+                  final exportList = state.data?.ticketDetails ?? [];
+                  if (exportList.isNotEmpty) {
+                    _performExportOperation(exportList);
+                  } else {
+                    SnackBarUtils.showFloatingSnackBar(
+                      context,
+                      'No records found to export.',
+                    );
+                  }
+                } else {
+                  setState(() {
+                    _ticketReportStatusCount =
+                        state.data?.statusCount?.isNotEmpty == true
+                        ? state.data?.statusCount![0]
+                        : null;
+                    _ticketReportList = state.data?.ticketDetails ?? [];
+                    _totalRecords = state.data?.totalRecords ?? 0;
+                  });
+                }
               }
             },
             builder: (context, state) {
@@ -595,8 +615,8 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
     ];
   }
 
-  void _performExportOperation() {
-    if (_ticketReportList != null && _ticketReportList!.isNotEmpty) {
+  void _performExportOperation(List<TicketReportDetailEntity> exportList) {
+    if (exportList.isNotEmpty) {
       SnackBarUtils.showFloatingSnackBar(context, 'Downloading excel file...');
       final currentDate = DateTime.now();
       final formattedDate =
@@ -606,9 +626,10 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
         fileName: 'ticket_report_$formattedDate.xlsx',
         sheetName: 'Ticket Report Records',
         headers: _headers,
-        dataList: _ticketReportList!,
+        dataList: exportList,
         fillRowData: (sheet, row, item) {
-          sheet.getRangeByIndex(row, 1).setText(item.ticketID.toString());
+          final ticketCode = item.ticketCode ?? "TKT${item.ticketID}";
+          sheet.getRangeByIndex(row, 1).setText(ticketCode);
           sheet.getRangeByIndex(row, 2).setText(item.tktStatus ?? '');
           sheet.getRangeByIndex(row, 3).setText(item.tktActionStatus ?? '');
           sheet.getRangeByIndex(row, 4).setText(item.ticketDate ?? '');
