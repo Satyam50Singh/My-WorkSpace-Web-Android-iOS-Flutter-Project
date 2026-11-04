@@ -466,6 +466,19 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
       sheetName: 'Ticket Records',
       headers: headers,
       dataList: exportList,
+      fillRowData: (sheet, row, item) {
+        sheet.getRangeByIndex(row, 1).setText(item.ticketCode ?? '');
+        sheet.getRangeByIndex(row, 2).setText(item.level ?? '');
+        sheet.getRangeByIndex(row, 3).setText(item.ticketDate ?? '');
+        sheet.getRangeByIndex(row, 4).setText(item.ticketStatus ?? '');
+        sheet.getRangeByIndex(row, 5).setText(item.ticketActionStatus ?? '');
+        sheet.getRangeByIndex(row, 6).setText(item.raisedByUser ?? '');
+        sheet.getRangeByIndex(row, 7).setText(item.ticketType ?? '');
+        sheet.getRangeByIndex(row, 8).setText(item.subCategory ?? '');
+        sheet.getRangeByIndex(row, 9).setText(item.lastActionBy ?? '');
+        sheet.getRangeByIndex(row, 10).setText(item.location ?? '');
+        return sheet;
+      },
     );
   }
 

@@ -9,9 +9,10 @@ class ExcelExporter {
     required String sheetName,
     required List<String> headers,
     required List<dynamic> dataList,
+    required Worksheet Function(Worksheet, int, dynamic) fillRowData,
   }) async {
     final Workbook workbook = Workbook();
-    final Worksheet sheet = workbook.worksheets[0];
+    Worksheet sheet = workbook.worksheets[0];
     sheet.name = sheetName;
     sheet.showGridlines = true;
 
@@ -28,30 +29,7 @@ class ExcelExporter {
     for (int i = 0; i < dataList.length; i++) {
       final ticket = dataList[i];
       final int row = i + 2;
-
-      if (sheetName.toLowerCase() == 'ticket records') {
-        sheet.getRangeByIndex(row, 1).setText(ticket.ticketCode ?? '');
-        sheet.getRangeByIndex(row, 2).setText(ticket.level ?? '');
-        sheet.getRangeByIndex(row, 3).setText(ticket.ticketDate ?? '');
-        sheet.getRangeByIndex(row, 4).setText(ticket.ticketStatus ?? '');
-        sheet.getRangeByIndex(row, 5).setText(ticket.ticketActionStatus ?? '');
-        sheet.getRangeByIndex(row, 6).setText(ticket.raisedByUser ?? '');
-        sheet.getRangeByIndex(row, 7).setText(ticket.ticketType ?? '');
-        sheet.getRangeByIndex(row, 8).setText(ticket.subCategory ?? '');
-        sheet.getRangeByIndex(row, 9).setText(ticket.lastActionBy ?? '');
-        sheet.getRangeByIndex(row, 10).setText(ticket.location ?? '');
-      } else if (sheetName.toLowerCase() == 'category records') {
-        sheet.getRangeByIndex(row, 1).setText(ticket.categoryID.toString());
-        sheet.getRangeByIndex(row, 2).setText(ticket.category ?? '');
-        sheet.getRangeByIndex(row, 3).setText(ticket.department ?? '');
-        sheet.getRangeByIndex(row, 4).setText('Active');
-      } else if (sheetName.toLowerCase() == 'sub-category records') {
-        sheet.getRangeByIndex(row, 1).setText(ticket.subCategoryID.toString());
-        sheet.getRangeByIndex(row, 2).setText(ticket.subCategory ?? '');
-        sheet.getRangeByIndex(row, 3).setText(ticket.category ?? '');
-        sheet.getRangeByIndex(row, 4).setText(ticket.priority ?? '');
-        sheet.getRangeByIndex(row, 5).setText('Active');
-      }
+      sheet = fillRowData(sheet, row, ticket);
     }
 
     // 4. Apply data style to all rows at once and auto-fit

@@ -11,6 +11,7 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticket_report_m
 
 import '../../../../core/common/widgets/custom_date_range_picker.dart';
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_report_entities/fetch_cat_sub_cat_loc_dept_type_list_entity.dart';
@@ -320,12 +321,13 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
                     Flexible(
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(
-                          maxWidth: 272,
+                          maxWidth: 400,
                           maxHeight: 48,
                         ),
                         child: CustomSearchBar(
                           searchController: _searchController,
-                          hintText: 'Search by ticket details...',
+                          hintText:
+                              'By ticket #, location, category, sub-category...',
                           onChanged: _searchOperation,
                         ),
                       ),
@@ -591,5 +593,50 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       DataCell(buildMasterCell(context, item.holdDuration ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.ticketType ?? '-', isMobile)),
     ];
+  }
+
+  void _performExportOperation() {
+    if (_ticketReportList != null && _ticketReportList!.isNotEmpty) {
+      SnackBarUtils.showFloatingSnackBar(context, 'Downloading excel file...');
+      final currentDate = DateTime.now();
+      final formattedDate =
+          '${currentDate.year}-${currentDate.month}-${currentDate.day}';
+
+      ExcelExporter().export(
+        fileName: 'ticket_report_$formattedDate.xlsx',
+        sheetName: 'Ticket Report Records',
+        headers: _headers,
+        dataList: _ticketReportList!,
+        fillRowData: (sheet, row, item) {
+          sheet.getRangeByIndex(row, 1).setText(item.ticketID.toString());
+          sheet.getRangeByIndex(row, 2).setText(item.tktStatus ?? '');
+          sheet.getRangeByIndex(row, 3).setText(item.tktActionStatus ?? '');
+          sheet.getRangeByIndex(row, 4).setText(item.ticketDate ?? '');
+          sheet
+              .getRangeByIndex(row, 5)
+              .setText(item.ticketClosingDateTime ?? '');
+          sheet.getRangeByIndex(row, 6).setText(item.location ?? '');
+          sheet.getRangeByIndex(row, 7).setText(item.category ?? '');
+          sheet.getRangeByIndex(row, 8).setText(item.subCategory ?? '');
+          sheet
+              .getRangeByIndex(row, 9)
+              .setText(item.assignedToDepartment ?? '');
+          sheet
+              .getRangeByIndex(row, 10)
+              .setText(item.raisedFromDepartment ?? '');
+          sheet.getRangeByIndex(row, 11).setText(item.raisedByUser ?? '');
+          sheet.getRangeByIndex(row, 12).setText(item.ticketRemarks ?? '');
+          sheet.getRangeByIndex(row, 13).setText(item.priorityDesc ?? '');
+          sheet.getRangeByIndex(row, 14).setText(item.closingRemarks ?? '');
+          sheet.getRangeByIndex(row, 15).setText(item.acceptedByUser ?? '');
+          sheet.getRangeByIndex(row, 16).setText(item.closedByUser ?? '');
+          sheet.getRangeByIndex(row, 17).setText(item.downTime ?? '');
+          sheet.getRangeByIndex(row, 18).setText(item.aging ?? '');
+          sheet.getRangeByIndex(row, 19).setText(item.holdDuration ?? '');
+          sheet.getRangeByIndex(row, 20).setText(item.ticketType ?? '');
+          return sheet;
+        },
+      );
+    }
   }
 }

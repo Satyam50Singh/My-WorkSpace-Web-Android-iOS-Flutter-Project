@@ -414,6 +414,13 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         sheetName: 'Category Records',
         headers: ['Category ID', ..._headers],
         dataList: categories,
+        fillRowData: (sheet, row, item) {
+          sheet.getRangeByIndex(row, 1).setText(item.categoryID.toString());
+          sheet.getRangeByIndex(row, 2).setText(item.category ?? '');
+          sheet.getRangeByIndex(row, 3).setText(item.department ?? '');
+          sheet.getRangeByIndex(row, 4).setText('Active');
+          return sheet;
+        },
       );
     }
   }

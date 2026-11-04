@@ -437,6 +437,14 @@ class _TicketSubCategoryMasterPageState
         sheetName: 'Sub-Category Records',
         headers: ['SubCategory ID', ..._headers],
         dataList: subCategories,
+        fillRowData: (sheet, row, item) {
+          sheet.getRangeByIndex(row, 1).setText(item.subCategoryID.toString());
+          sheet.getRangeByIndex(row, 2).setText(item.subCategory ?? '');
+          sheet.getRangeByIndex(row, 3).setText(item.category ?? '');
+          sheet.getRangeByIndex(row, 4).setText(item.priority ?? '');
+          sheet.getRangeByIndex(row, 5).setText('Active');
+          return sheet;
+        },
       );
     }
   }
