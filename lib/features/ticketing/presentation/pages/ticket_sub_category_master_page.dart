@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_worksphere_web/core/common/widgets/priority_cell.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_sub_category_models/insert_update_sub_category_request_model.dart';
@@ -75,52 +76,7 @@ class _TicketSubCategoryMasterPageState
     return [
       DataCell(buildMasterCell(context, item.subCategory ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.category ?? '-', isMobile)),
-      DataCell(
-        Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: priorityText == 'Major'
-                  ? AppColors.btnBgRed.withValues(alpha: 0.1)
-                  : AppColors.amber.withValues(alpha: 0.1),
-              border: Border.all(
-                color: priorityText == 'Major'
-                    ? AppColors.btnBgRed
-                    : AppColors.amber,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 4.0,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.circle,
-                    color: priorityText == 'Major'
-                        ? AppColors.btnBgRed
-                        : AppColors.orange,
-                    size: 8,
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    priorityText,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontSize: 12,
-                      color: priorityText == 'Major'
-                          ? AppColors.btnBgRed
-                          : AppColors.orange,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      DataCell(PriorityCell(priorityText: priorityText)),
       DataCell(
         Row(
           crossAxisAlignment: isMobile

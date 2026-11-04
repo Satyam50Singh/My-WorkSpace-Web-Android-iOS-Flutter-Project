@@ -169,8 +169,8 @@ class _CustomDateRangePickerState extends State<CustomDateRangePicker> {
       }),
       _buildMenuItem("Last 6 months", () {
         final now = DateTime.now();
-        final firstDay = DateTime(now.year, now.month - 5, 1);
-        final lastDay = DateTime(now.year, now.month, 0);
+        final firstDay = DateTime(now.year, now.month - 6, now.day);
+        final lastDay = DateTime(now.year, now.month, now.day);
         _setUpdatedSelectedRange(firstDay, lastDay, "Last 6 months");
       }),
       _buildMenuItem("Custom Range", () {

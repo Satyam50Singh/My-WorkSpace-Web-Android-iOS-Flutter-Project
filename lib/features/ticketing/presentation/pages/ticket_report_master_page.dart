@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:my_worksphere_web/core/common/widgets/priority_cell.dart';
 import 'package:my_worksphere_web/core/utils/loader_utils.dart';
 import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_report_models/fetch_ticket_report_web_request_model.dart';
@@ -18,6 +21,7 @@ import '../widgets/ticket_category_master_widgets/category_master_table_view_web
 import '../widgets/ticket_report_master_widget/ticket_report_count_horizontal_list.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_filter_dropdown.dart';
 import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
+import '../widgets/ticketing_my_request_action/status_cell.dart';
 
 class TicketReportMasterPage extends StatefulWidget {
   const TicketReportMasterPage({super.key});
@@ -76,6 +80,8 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
     'Ticket Type',
   ];
 
+  Timer? _debounceTimer;
+
   @override
   void initState() {
     _searchController = TextEditingController();
@@ -115,6 +121,7 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
         subCategoryId: _selectedSubCategory?.subCategoryID ?? 0,
         locationId: _selectedLocation?.locationID ?? 0,
         departmentId: _selectedDepartment?.departmentID ?? 0,
+        searchText: _searchController?.text.toLowerCase().toString(),
       );
 
       context.read<TicketReportMasterBloc>().add(
@@ -126,6 +133,7 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
   @override
   void dispose() {
     _searchController?.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -489,7 +497,6 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
     switch (header) {
       case 'Ticket Number':
       case 'Request Status':
-      case 'Action Status':
       case 'Hold Duration':
         return 130;
       case 'Ticket Date Time':
@@ -500,10 +507,10 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       case 'Location':
       case 'Sub Category':
         return 220;
-      case 'Category':
       case 'Turnaround Time':
       case 'Ticket Type':
         return 150;
+      case 'Category':
       case 'Ticket RaisedBy':
       case 'Accepted By User':
       case 'Closed By User':
@@ -512,15 +519,28 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       case 'Closing Remarks':
         return 200;
       case 'Priority':
-        return 120;
       case 'Aging':
+      case 'Action Status':
         return 140;
       default:
         return 150;
     }
   }
 
-  void _searchOperation(String query) {}
+  void _searchOperation(String value) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+    if (value.isNotEmpty && value.isNotEmpty) {
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          apiCallForFetchTicketReportWeb();
+        });
+      });
+    } else {
+      setState(() {
+        apiCallForFetchTicketReportWeb();
+      });
+    }
+  }
 
   void _resetAllFilterValues() {
     setState(() {
@@ -545,8 +565,8 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
   ) {
     return [
       DataCell(buildMasterCell(context, "TKT${item.ticketID}", isMobile)),
-      DataCell(buildMasterCell(context, item.tktStatus ?? '-', isMobile)),
-      DataCell(buildMasterCell(context, item.tktActionStatus ?? '-', isMobile)),
+      DataCell(StatusCell(text: item.tktStatus ?? '-')),
+      DataCell(StatusCell(text: item.tktActionStatus ?? '-')),
       DataCell(buildMasterCell(context, item.ticketDate ?? '-', isMobile)),
       DataCell(
         buildMasterCell(context, item.ticketClosingDateTime ?? '-', isMobile),
@@ -562,7 +582,7 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       ),
       DataCell(buildMasterCell(context, item.raisedByUser ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.ticketRemarks ?? '-', isMobile)),
-      DataCell(buildMasterCell(context, item.priorityDesc ?? '-', isMobile)),
+      DataCell(PriorityCell(priorityText: item.priorityDesc ?? '')),
       DataCell(buildMasterCell(context, item.closingRemarks ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.acceptedByUser ?? '-', isMobile)),
       DataCell(buildMasterCell(context, item.closedByUser ?? '-', isMobile)),
