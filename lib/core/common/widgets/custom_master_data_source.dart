@@ -1,13 +1,13 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
-class CategoryDataSource<T> extends DataTableSource {
+class CustomMasterDataSource<T> extends DataTableSource {
   final BuildContext context;
   final List<T> items;
   final int firstRowIndex;
   final List<DataCell> Function(T item, bool isMobile) cellBuilder;
 
-  CategoryDataSource(
+  CustomMasterDataSource(
     this.context,
     this.items,
     this.firstRowIndex, {

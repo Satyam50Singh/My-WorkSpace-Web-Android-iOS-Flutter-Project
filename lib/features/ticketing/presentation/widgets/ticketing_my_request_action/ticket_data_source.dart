@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/entities/ticket_detail_entity.dart';
-import 'status_cell.dart';
+import '../../../../../core/common/widgets/status_cell.dart';
 
 class TicketDataSource extends DataTableSource {
   final BuildContext context;

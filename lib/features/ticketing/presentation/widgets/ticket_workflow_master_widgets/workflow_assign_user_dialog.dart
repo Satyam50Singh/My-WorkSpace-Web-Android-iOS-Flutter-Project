@@ -4,9 +4,9 @@ import 'package:my_worksphere_web/core/common/widgets/custom_search_bar.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_outlined_button.dart';
 
+import 'package:my_worksphere_web/core/common/widgets/custom_master_table_view_web.dart';
 import '../../../domain/entities/ticket_workflow_entities/workflow_user_group_list_entity.dart';
-import '../ticket_category_master_widgets/build_master_cell.dart';
-import '../ticket_category_master_widgets/category_master_table_view_web.dart';
+import '../common/build_master_cell.dart';
 
 class WorkflowAssignUserDialog {
   static void showAssignUserDialog({
@@ -261,7 +261,7 @@ class WorkflowAssignUserDialog {
                         if (selectedView == 0)
                           Expanded(
                             child:
-                                CategoryMasterTableViewWeb<
+                                CustomMasterTableViewWeb<
                                   WorkflowUserItemEntity
                                 >(
                                   filteredItems: filteredUserList,
@@ -322,7 +322,7 @@ class WorkflowAssignUserDialog {
                         if (selectedView == 1)
                           Expanded(
                             child:
-                                CategoryMasterTableViewWeb<
+                                CustomMasterTableViewWeb<
                                   WorkflowGroupItemEntity
                                 >(
                                   filteredItems: filteredGroupUserList,

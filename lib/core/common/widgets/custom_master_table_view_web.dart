@@ -1,18 +1,18 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:my_worksphere_web/core/common/widgets/ticket_list_empty_view.dart';
 
-import '../../../../../core/theme/app_colors.dart';
-import '../ticketing_my_request_action/ticket_list_empty_view.dart';
-import 'category_data_source.dart';
+import '../../theme/app_colors.dart';
+import 'custom_master_data_source.dart';
 
-class CategoryMasterTableViewWeb<T> extends StatefulWidget {
+class CustomMasterTableViewWeb<T> extends StatefulWidget {
   final List<T> filteredItems;
   final List<String> headers;
   final List<DataCell> Function(T item, bool isMobile) cellBuilder;
   final double minWidth;
   final double? Function(String header)? columnWidthBuilder;
 
-  const CategoryMasterTableViewWeb({
+  const CustomMasterTableViewWeb({
     super.key,
     required this.filteredItems,
     required this.headers,
@@ -22,12 +22,12 @@ class CategoryMasterTableViewWeb<T> extends StatefulWidget {
   });
 
   @override
-  State<CategoryMasterTableViewWeb<T>> createState() =>
-      _CategoryMasterTableViewWebState<T>();
+  State<CustomMasterTableViewWeb<T>> createState() =>
+      _CustomMasterTableViewWebState<T>();
 }
 
-class _CategoryMasterTableViewWebState<T>
-    extends State<CategoryMasterTableViewWeb<T>> {
+class _CustomMasterTableViewWebState<T>
+    extends State<CustomMasterTableViewWeb<T>> {
   DataColumn2 _buildColumnHeaderCell(String header) {
     final fixedWidth = widget.columnWidthBuilder?.call(header);
     return DataColumn2(
@@ -67,7 +67,7 @@ class _CategoryMasterTableViewWebState<T>
       columns: widget.headers.map((header) {
         return _buildColumnHeaderCell(header);
       }).toList(),
-      source: CategoryDataSource<T>(
+      source: CustomMasterDataSource<T>(
         context,
         widget.filteredItems,
         0,

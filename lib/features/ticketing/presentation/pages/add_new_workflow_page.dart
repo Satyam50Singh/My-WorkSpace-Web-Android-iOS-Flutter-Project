@@ -9,6 +9,7 @@ import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_workflow_master_widgets/workflow_outlined_button.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
+import '../../../../core/common/widgets/custom_label_heading.dart';
 import '../../../../core/common/widgets/custom_loading_dropdown.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
@@ -19,7 +20,6 @@ import '../../domain/entities/ticket_category_entities/ticket_category_entity.da
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
 import '../blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
 import '../blocs/ticket_workflow_master_bloc/ticket_workflow_master_bloc.dart';
-import '../widgets/add_new_request/label_heading.dart';
 
 class AddNewWorkflowPage extends StatefulWidget {
   final TicketWorkflowMasterEntity? selectedWorkflow;

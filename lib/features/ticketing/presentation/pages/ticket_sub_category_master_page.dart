@@ -10,17 +10,17 @@ import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_sub_category_models/insert_update_sub_category_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/sub_category_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_sub_category_master_bloc/ticket_sub_category_master_bloc.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/build_master_cell.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
+import 'package:my_worksphere_web/core/common/widgets/custom_master_table_view_web.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/sub_category_master_list_view_mobile.dart';
 
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/common/widgets/custom_web_app_bar.dart';
 import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
-import '../widgets/ticket_category_master_widgets/category_action_button.dart';
+import '../widgets/common/build_master_cell.dart';
+import '../widgets/common/master_action_button.dart';
 import '../widgets/ticket_category_master_widgets/category_action_dialog_utils.dart';
-import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 
 class TicketSubCategoryMasterPage extends StatefulWidget {
   const TicketSubCategoryMasterPage({super.key});
@@ -257,7 +257,7 @@ class _TicketSubCategoryMasterPageState
                     if (!isMobile) {
                       return Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: CategoryMasterTableViewWeb<
+                        child: CustomMasterTableViewWeb<
                           SubCategoryMasterEntity
                         >(
                           filteredItems: filteredSubCategories,

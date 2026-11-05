@@ -7,13 +7,13 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticket_category
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_category_entities/department_entity.dart';
 
 import '../../../../core/common/widgets/custom_drop_down.dart';
+import '../../../../core/common/widgets/custom_label_heading.dart';
 import '../../../../core/common/widgets/custom_loading_dropdown.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_category_entities/ticket_category_entity.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
 import '../widgets/add_new_request/add_new_request_header.dart';
-import '../widgets/add_new_request/label_heading.dart';
 
 class AddNewCategoryPage extends StatefulWidget {
   final TicketCategoryEntity? selectedCategory;

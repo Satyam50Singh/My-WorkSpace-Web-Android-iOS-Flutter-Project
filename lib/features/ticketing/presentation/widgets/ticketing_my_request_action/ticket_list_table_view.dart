@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:my_worksphere_web/core/theme/app_colors.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_detail_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticketing_my_request_action/ticket_data_source.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticketing_my_request_action/ticket_list_empty_view.dart';
+import 'package:my_worksphere_web/core/common/widgets/ticket_list_empty_view.dart';
 
 class TicketListTableView extends StatefulWidget {
   final List<TicketDetailList>? ticketingDetailList;

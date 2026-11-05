@@ -21,12 +21,12 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/add_new_req
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/add_new_request_bloc/add_new_ticket_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/add_new_request_header.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/file_upload_section.dart';
-import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/label_heading.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/add_new_request/workflow_details_section.dart';
 import 'package:my_worksphere_web/core/utils/permission_utils.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:my_worksphere_web/core/routes/app_routes.dart';
+import '../../../../core/common/widgets/custom_label_heading.dart';
 import '../../data/models/add_new_request/ticket_location_category_request.dart';
 
 class AddNewRequestPage extends StatefulWidget {

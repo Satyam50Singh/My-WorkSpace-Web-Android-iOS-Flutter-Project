@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 
-class CategoryActionButton extends StatelessWidget {
+class MasterActionButton extends StatelessWidget {
   final String btnTitle;
   final Color btnColor;
   final Color btnTextColor;
   final IconData icon;
   final void Function() onPressed;
 
-  const CategoryActionButton({
+  const MasterActionButton({
     super.key,
     required this.btnTitle,
     required this.btnColor,
@@ -21,7 +21,8 @@ class CategoryActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 600;
-    final isTablet = MediaQuery.sizeOf(context).width >= 600 && MediaQuery.sizeOf(context).width < 1200;
+    final isTablet = MediaQuery.sizeOf(context).width >= 600 &&
+        MediaQuery.sizeOf(context).width < 1200;
 
     return isMobile || isTablet
         ? IconButton(
@@ -30,7 +31,7 @@ class CategoryActionButton extends StatelessWidget {
           )
         : OutlinedButton.icon(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -45,3 +46,5 @@ class CategoryActionButton extends StatelessWidget {
           );
   }
 }
+
+typedef CategoryActionButton = MasterActionButton;

@@ -11,15 +11,15 @@ import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_cate
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_action_dialog_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/widgets/ticket_category_master_widgets/category_master_list_view_mobile.dart';
 
+import '../../../../core/common/widgets/custom_master_table_view_web.dart';
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/common/widgets/custom_web_app_bar.dart';
 import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ticket_category_models/insert_update_ticket_category_request_model.dart';
 import '../blocs/ticket_category_master_bloc/ticket_category_master_bloc.dart';
-import '../widgets/ticket_category_master_widgets/build_master_cell.dart';
-import '../widgets/ticket_category_master_widgets/category_action_button.dart';
-import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
-import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
+import '../widgets/common/build_master_cell.dart';
+import '../widgets/common/master_action_button.dart';
 
 class TicketCategoryMasterPage extends StatefulWidget {
   const TicketCategoryMasterPage({super.key});
@@ -232,7 +232,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                     if (!isMobile) {
                       return Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: CategoryMasterTableViewWeb<TicketCategoryEntity>(
+                        child: CustomMasterTableViewWeb<TicketCategoryEntity>(
                           filteredItems: filteredCategories,
                           headers: _headers,
                           minWidth: 720,

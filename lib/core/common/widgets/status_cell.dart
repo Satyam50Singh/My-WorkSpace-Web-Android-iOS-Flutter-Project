@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/utils/ticket_status_utils.dart';
+import '../../theme/app_colors.dart';
+import '../../utils/ticket_status_utils.dart';
 
 class StatusCell extends StatelessWidget {
   final String text;
@@ -25,7 +25,7 @@ class StatusCell extends StatelessWidget {
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: TicketStatusUtils.getStatusTextColor(text)
+          color: TicketStatusUtils.getStatusTextColor(text),
         ),
       ),
     );

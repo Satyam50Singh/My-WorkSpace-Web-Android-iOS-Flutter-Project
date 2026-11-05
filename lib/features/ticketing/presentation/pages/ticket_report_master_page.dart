@@ -11,18 +11,18 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticket_report_m
 
 import '../../../../core/common/widgets/custom_date_range_picker.dart';
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/common/widgets/custom_web_app_bar.dart';
+import '../../../../core/common/widgets/status_cell.dart';
 import '../../../../core/export/excel_exporter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_report_entities/fetch_cat_sub_cat_loc_dept_type_list_entity.dart';
 import '../../domain/entities/ticket_report_entities/fetch_ticket_report_web_entity.dart';
 import '../blocs/ticket_report_master_bloc/ticket_report_master_bloc.dart';
-import '../widgets/ticket_category_master_widgets/build_master_cell.dart';
-import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
+import '../../../../core/common/widgets/custom_master_table_view_web.dart';
+import '../widgets/common/build_master_cell.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_count_horizontal_list.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_filter_dropdown.dart';
-import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
-import '../widgets/ticketing_my_request_action/status_cell.dart';
 
 class TicketReportMasterPage extends StatefulWidget {
   const TicketReportMasterPage({super.key});
@@ -488,10 +488,10 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
                         ),
                         SizedBox(height: 16),
                         if (!isMobile && _ticketReportList != null) ...[
-                          Container(
+                          SizedBox(
                             height: 680,
                             child:
-                                CategoryMasterTableViewWeb<
+                                CustomMasterTableViewWeb<
                                   TicketReportDetailEntity
                                 >(
                                   filteredItems: _ticketReportList!,

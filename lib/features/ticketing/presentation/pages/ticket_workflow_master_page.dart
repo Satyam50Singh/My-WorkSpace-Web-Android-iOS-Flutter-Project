@@ -8,17 +8,17 @@ import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/ticket_workflow_master_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/presentation/blocs/ticket_workflow_master_bloc/ticket_workflow_master_bloc.dart';
 
+import '../../../../core/common/widgets/custom_master_table_view_web.dart';
 import '../../../../core/common/widgets/custom_search_bar.dart';
+import '../../../../core/common/widgets/custom_web_app_bar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/loader_utils.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
-import '../widgets/ticket_category_master_widgets/build_master_cell.dart';
-import '../widgets/ticket_category_master_widgets/category_action_button.dart';
+import '../widgets/common/build_master_cell.dart';
+import '../widgets/common/master_action_button.dart';
 import '../widgets/ticket_category_master_widgets/category_action_dialog_utils.dart';
-import '../widgets/ticket_category_master_widgets/category_master_table_view_web.dart';
 import '../widgets/ticket_workflow_master_widgets/workflow_master_list_view_mobile.dart';
-import '../widgets/ticketing_my_request_action/my_request_web_app_bar.dart';
 
 class TicketWorkflowMasterPage extends StatefulWidget {
   const TicketWorkflowMasterPage({super.key});
@@ -189,7 +189,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                     if (!isMobile) {
                       return Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: CategoryMasterTableViewWeb<
+                        child: CustomMasterTableViewWeb<
                           TicketWorkflowMasterEntity
                         >(
                           filteredItems: filteredWorkflows,
