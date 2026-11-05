@@ -488,15 +488,15 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
                         ),
                         SizedBox(height: 16),
                         if (!isMobile && _ticketReportList != null) ...[
-                          SizedBox(
-                            height: 650,
+                          Container(
+                            height: 680,
                             child:
                                 CategoryMasterTableViewWeb<
                                   TicketReportDetailEntity
                                 >(
                                   filteredItems: _ticketReportList!,
                                   headers: _headers,
-                                  minWidth: 3360,
+                                  minWidth: 3380,
                                   columnWidthBuilder: _getColumnWidth,
                                   cellBuilder: (item, isMobile) =>
                                       _buildTicketReportCell(item, isMobile),
@@ -536,13 +536,13 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       case 'Ticket RaisedBy':
       case 'Accepted By User':
       case 'Closed By User':
+      case 'Action Status':
         return 160;
       case 'Ticket Remarks':
       case 'Closing Remarks':
         return 200;
       case 'Priority':
       case 'Aging':
-      case 'Action Status':
         return 140;
       default:
         return 150;

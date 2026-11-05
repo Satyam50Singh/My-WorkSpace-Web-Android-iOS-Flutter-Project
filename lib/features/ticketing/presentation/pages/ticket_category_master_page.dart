@@ -160,9 +160,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                     style: IconButton.styleFrom(
                       minimumSize: const Size(36, 36),
                       backgroundColor: AppColors.primaryDark,
-                      // shape: RoundedRectangleBorder(
-                      //   borderRadius: BorderRadius.circular(8),
-                      // ),
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -179,9 +176,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                         color: AppColors.primaryDark,
                         width: 1,
                       ),
-                      // shape: RoundedRectangleBorder(
-                      //   borderRadius: BorderRadius.circular(8),
-                      // ),
                     ),
                   ),
                 ],
@@ -236,63 +230,66 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                   },
                   builder: (context, state) {
                     if (!isMobile) {
-                      return CategoryMasterTableViewWeb<TicketCategoryEntity>(
-                        filteredItems: filteredCategories,
-                        headers: _headers,
-                        minWidth: 720,
-                        cellBuilder: (item, isMobile) {
-                          return [
-                            DataCell(
-                              buildMasterCell(
-                                context,
-                                item.category ?? '-',
-                                isMobile,
+                      return Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: CategoryMasterTableViewWeb<TicketCategoryEntity>(
+                          filteredItems: filteredCategories,
+                          headers: _headers,
+                          minWidth: 720,
+                          cellBuilder: (item, isMobile) {
+                            return [
+                              DataCell(
+                                buildMasterCell(
+                                  context,
+                                  item.category ?? '-',
+                                  isMobile,
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              buildMasterCell(
-                                context,
-                                item.department ?? '-',
-                                isMobile,
-                                color: AppColors.textSecondary,
+                              DataCell(
+                                buildMasterCell(
+                                  context,
+                                  item.department ?? '-',
+                                  isMobile,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Row(
-                                crossAxisAlignment: isMobile
-                                    ? CrossAxisAlignment.start
-                                    : CrossAxisAlignment.center,
-                                mainAxisAlignment: isMobile
-                                    ? MainAxisAlignment.start
-                                    : MainAxisAlignment.center,
-                                children: [
-                                  CategoryActionButton(
-                                    btnTitle: 'Edit',
-                                    btnColor: AppColors.primary,
-                                    btnTextColor: AppColors.white,
-                                    icon: Icons.edit,
-                                    onPressed: () {
-                                      _performEditDeleteOperation("Edit", item);
-                                    },
-                                  ),
-                                  SizedBox(width: 8),
-                                  CategoryActionButton(
-                                    btnTitle: 'Delete',
-                                    btnColor: AppColors.rose,
-                                    btnTextColor: AppColors.white,
-                                    icon: Icons.delete,
-                                    onPressed: () {
-                                      _performEditDeleteOperation(
-                                        "Delete",
-                                        item,
-                                      );
-                                    },
-                                  ),
-                                ],
+                              DataCell(
+                                Row(
+                                  crossAxisAlignment: isMobile
+                                      ? CrossAxisAlignment.start
+                                      : CrossAxisAlignment.center,
+                                  mainAxisAlignment: isMobile
+                                      ? MainAxisAlignment.start
+                                      : MainAxisAlignment.center,
+                                  children: [
+                                    CategoryActionButton(
+                                      btnTitle: 'Edit',
+                                      btnColor: AppColors.primary,
+                                      btnTextColor: AppColors.white,
+                                      icon: Icons.edit,
+                                      onPressed: () {
+                                        _performEditDeleteOperation("Edit", item);
+                                      },
+                                    ),
+                                    SizedBox(width: 8),
+                                    CategoryActionButton(
+                                      btnTitle: 'Delete',
+                                      btnColor: AppColors.rose,
+                                      btnTextColor: AppColors.white,
+                                      icon: Icons.delete,
+                                      onPressed: () {
+                                        _performEditDeleteOperation(
+                                          "Delete",
+                                          item,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ];
-                        },
+                            ];
+                          },
+                        ),
                       );
                     }
 
@@ -310,9 +307,6 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
                                   icon: Icon(Icons.chevron_left_rounded),
                                   style: IconButton.styleFrom(
                                     minimumSize: const Size(24, 24),
-                                    // shape: RoundedRectangleBorder(
-                                    //   borderRadius: BorderRadius.circular(10),
-                                    // ),
                                   ),
                                 ),
                                 Spacer(),

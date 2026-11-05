@@ -51,45 +51,34 @@ class _CategoryMasterTableViewWebState<T>
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final isMobile = width < 600;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
-        top: isMobile ? 08 : 16,
-        bottom: 16,
+    return PaginatedDataTable2(
+      minWidth: widget.minWidth,
+      fixedCornerColor: AppColors.primaryDark,
+      headingRowColor: WidgetStateColor.resolveWith(
+        (states) => AppColors.primaryDark,
       ),
-      child: PaginatedDataTable2(
-        minWidth: widget.minWidth,
-        fixedCornerColor: AppColors.primaryDark,
-        headingRowColor: WidgetStateColor.resolveWith(
-          (states) => AppColors.primaryDark,
+      headingRowDecoration: const BoxDecoration(
+        color: AppColors.primaryDark,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
         ),
-        headingRowDecoration: const BoxDecoration(
-          color: AppColors.primaryDark,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8),
-            topRight: Radius.circular(8),
-          ),
-        ),
-        columns: widget.headers.map((header) {
-          return _buildColumnHeaderCell(header);
-        }).toList(),
-        source: CategoryDataSource<T>(
-          context,
-          widget.filteredItems,
-          0,
-          cellBuilder: (item, isMobile) => widget.cellBuilder(item, isMobile),
-        ),
-        onRowsPerPageChanged: (value) {
-          if (value == null) return;
-        },
-        dataRowHeight: 54,
-        empty: const TicketListEmptyView(),
-        renderEmptyRowsInTheEnd: false,
       ),
+      columns: widget.headers.map((header) {
+        return _buildColumnHeaderCell(header);
+      }).toList(),
+      source: CategoryDataSource<T>(
+        context,
+        widget.filteredItems,
+        0,
+        cellBuilder: (item, isMobile) => widget.cellBuilder(item, isMobile),
+      ),
+      onRowsPerPageChanged: (value) {
+        if (value == null) return;
+      },
+      dataRowHeight: 54,
+      empty: const TicketListEmptyView(),
+      renderEmptyRowsInTheEnd: false,
     );
   }
 }

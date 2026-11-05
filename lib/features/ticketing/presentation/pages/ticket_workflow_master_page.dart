@@ -187,14 +187,17 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
                   },
                   builder: (context, state) {
                     if (!isMobile) {
-                      return CategoryMasterTableViewWeb<
-                        TicketWorkflowMasterEntity
-                      >(
-                        filteredItems: filteredWorkflows,
-                        headers: _headers,
-                        minWidth: 720,
-                        cellBuilder: (item, isMobile) =>
-                            _buildWorkflowCell(item, isMobile),
+                      return Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: CategoryMasterTableViewWeb<
+                          TicketWorkflowMasterEntity
+                        >(
+                          filteredItems: filteredWorkflows,
+                          headers: _headers,
+                          minWidth: 720,
+                          cellBuilder: (item, isMobile) =>
+                              _buildWorkflowCell(item, isMobile),
+                        ),
                       );
                     }
                     return Column(

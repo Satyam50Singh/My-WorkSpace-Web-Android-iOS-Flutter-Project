@@ -255,14 +255,17 @@ class _TicketSubCategoryMasterPageState
                   },
                   builder: (context, state) {
                     if (!isMobile) {
-                      return CategoryMasterTableViewWeb<
-                        SubCategoryMasterEntity
-                      >(
-                        filteredItems: filteredSubCategories,
-                        headers: _headers,
-                        minWidth: 720,
-                        cellBuilder: (item, isMobile) =>
-                            _buildSubCategoriesCell(item, isMobile),
+                      return Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: CategoryMasterTableViewWeb<
+                          SubCategoryMasterEntity
+                        >(
+                          filteredItems: filteredSubCategories,
+                          headers: _headers,
+                          minWidth: 720,
+                          cellBuilder: (item, isMobile) =>
+                              _buildSubCategoriesCell(item, isMobile),
+                        ),
                       );
                     }
                     return Column(
