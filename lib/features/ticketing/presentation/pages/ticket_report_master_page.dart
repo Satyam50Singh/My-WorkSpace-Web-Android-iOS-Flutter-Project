@@ -10,6 +10,7 @@ import 'package:my_worksphere_web/core/utils/snackbar_utils.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_report_models/fetch_ticket_report_web_request_model.dart';
 
 import '../../../../core/common/widgets/custom_date_range_picker.dart';
+import '../../../../core/common/widgets/custom_master_table_view_web.dart';
 import '../../../../core/common/widgets/custom_search_bar.dart';
 import '../../../../core/common/widgets/custom_web_app_bar.dart';
 import '../../../../core/common/widgets/status_cell.dart';
@@ -19,7 +20,6 @@ import '../../../auth/presentation/cubit/employee_detail_cubit.dart';
 import '../../domain/entities/ticket_report_entities/fetch_cat_sub_cat_loc_dept_type_list_entity.dart';
 import '../../domain/entities/ticket_report_entities/fetch_ticket_report_web_entity.dart';
 import '../blocs/ticket_report_master_bloc/ticket_report_master_bloc.dart';
-import '../../../../core/common/widgets/custom_master_table_view_web.dart';
 import '../widgets/common/build_master_cell.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_count_horizontal_list.dart';
 import '../widgets/ticket_report_master_widget/ticket_report_filter_dropdown.dart';
@@ -85,6 +85,8 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
 
   int _totalRecords = 0;
   String action = '';
+
+  bool showDropdown = true;
 
   @override
   void initState() {
@@ -393,10 +395,94 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
               return Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8,
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (isMobile) ...[
+                          SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  child: CustomDateRangePicker(
+                                    selectedRange: selectedRange,
+                                    onDateRangeChanged:
+                                        (fromDate, toDate, updatedDateRange) {
+                                          _currentFromDate = fromDate;
+                                          _currentToDate = toDate;
+
+                                          setState(() {
+                                            selectedRange = updatedDateRange;
+                                          });
+
+                                          apiCallForFetchTicketReportWeb();
+                                        },
+                                  ),
+                                ),
+
+                                SizedBox(width: 4),
+
+                                IconButton.outlined(
+                                  onPressed: () {
+                                    action = 'E';
+                                    apiCallForFetchTicketReportWeb();
+                                  },
+                                  icon: const Icon(
+                                    Icons.download_sharp,
+                                    color: AppColors.primaryDark,
+                                  ),
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(24, 24),
+                                    backgroundColor: AppColors.white,
+                                    side: const BorderSide(
+                                      color: AppColors.primaryDark,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 400,
+                                    maxHeight: 48,
+                                  ),
+                                  child: CustomSearchBar(
+                                    searchController: _searchController,
+                                    hintText:
+                                        'By ticket #, location, category, sub-category...',
+                                    onChanged: _searchOperation,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              IconButton.filled(
+                                onPressed: () =>
+                                    _resetAllFilterValues(isMobile: isMobile),
+                                icon: Icon(Icons.filter_alt_off),
+                                style: IconButton.styleFrom(
+                                  minimumSize: const Size(24, 24),
+                                  backgroundColor: AppColors.primaryDark,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16),
+                        ],
+
                         if (_ticketReportStatusCount != null) ...[
                           TicketReportCountHorizontalList(
                             ticketRequestCount: _ticketReportStatusCount,
@@ -432,62 +518,83 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
                                       ),
                                     ),
                                     Spacer(),
-                                    InkWell(
-                                      onTap: _resetAllFilterValues,
-                                      child: Text(
-                                        'Reset',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.primary,
+                                    Visibility(
+                                      visible: !isMobile,
+                                      child: InkWell(
+                                        onTap: _resetAllFilterValues,
+                                        child: Text(
+                                          'Reset',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: isMobile,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            showDropdown = !showDropdown;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.keyboard_arrow_down_rounded,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 16),
-                                LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    final isMobile = constraints.maxWidth < 600;
+                                if (!isMobile && showDropdown)
+                                  SizedBox(height: 16),
+                                Visibility(
+                                  visible: showDropdown,
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final isMobile =
+                                          constraints.maxWidth < 600;
 
-                                    final filters = _buildFilters();
+                                      final filters = _buildFilters();
 
-                                    if (isMobile) {
-                                      return Wrap(
-                                        spacing: 8,
-                                        runSpacing: 8,
-                                        children: filters
-                                            .map(
-                                              (f) => SizedBox(
-                                                width: constraints.maxWidth,
-                                                child: f,
-                                              ),
-                                            )
-                                            .toList(),
-                                      );
-                                    }
+                                      if (isMobile) {
+                                        return Wrap(
+                                          spacing: 8,
+                                          runSpacing: 8,
+                                          children: filters
+                                              .map(
+                                                (f) => SizedBox(
+                                                  width: constraints.maxWidth,
+                                                  child: f,
+                                                ),
+                                              )
+                                              .toList(),
+                                        );
+                                      }
 
-                                    return Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        for (
-                                          int i = 0;
-                                          i < filters.length;
-                                          i++
-                                        ) ...[
-                                          if (i > 0) const SizedBox(width: 8),
-                                          Expanded(child: filters[i]),
+                                      return Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          for (
+                                            int i = 0;
+                                            i < filters.length;
+                                            i++
+                                          ) ...[
+                                            if (i > 0) const SizedBox(width: 8),
+                                            Expanded(child: filters[i]),
+                                          ],
                                         ],
-                                      ],
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
-                        if (!isMobile && _ticketReportList != null) ...[
+                        SizedBox(height: 8),
+                        if (_ticketReportList != null) ...[
                           SizedBox(
                             height: 680,
                             child:
@@ -564,7 +671,7 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
     }
   }
 
-  void _resetAllFilterValues() {
+  void _resetAllFilterValues({bool? isMobile}) {
     setState(() {
       _selectedCategory = null;
       _selectedSubCategory = null;
@@ -576,6 +683,10 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
       _currentToDate = null;
       _searchController?.clear();
       selectedRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
+
+      if (isMobile == true) {
+        showDropdown = false;
+      }
 
       apiCallForFetchTicketReportWeb();
     });
