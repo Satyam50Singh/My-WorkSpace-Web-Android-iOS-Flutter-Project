@@ -21,6 +21,13 @@ samples, guidance on mobile development, and a full API reference.
 open -na "Google Chrome" --args --disable-web-security --user-data-dir="/tmp/chrome-dev"
 ```
 
+## Command to build and verify the flutter web project.
+```
+Build - flutter build web --release
+
+Verify - cd build/web
+       - python3 -m http.server 8080
+```
 
 ## Questions or Concepts (Interview Preparation)
 
