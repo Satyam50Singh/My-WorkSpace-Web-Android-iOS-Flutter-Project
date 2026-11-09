@@ -4,7 +4,7 @@ class UpdateTicketActionRequestModel {
   final String? ticketAction;
   final int? currentLevel;
   final String? empCD;
-  final int? companyID;
+  final int? companyId;
   final String? holdTillDatetime;
   final String? platformType;
   final int? isImageUploaded;
@@ -16,7 +16,7 @@ class UpdateTicketActionRequestModel {
     this.ticketAction,
     this.currentLevel,
     this.empCD,
-    this.companyID,
+    this.companyId,
     this.holdTillDatetime,
     this.platformType,
     this.isImageUploaded,
@@ -30,7 +30,7 @@ class UpdateTicketActionRequestModel {
       "TicketAction": ticketAction,
       "CurrentLevel": currentLevel,
       "EmpCD": empCD,
-      "CompanyID": companyID,
+      "CompanyID": companyId,
       "Hold_Till_Datetime": holdTillDatetime,
       "Platform_Type": platformType,
       "Is_Image_Uploaded": isImageUploaded,

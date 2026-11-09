@@ -10,10 +10,10 @@ class FetchCatSubCatLocDeptTypeListUseCase {
   FetchCatSubCatLocDeptTypeListUseCase(this._repository);
 
   Future<Either<Failure, FetchCatSubCatLocDeptTypeListEntity>> call({
-    required int companyID,
+    required int companyId,
   }) async {
     return await _repository.fetchCatSubCatLocDeptTypeList(
-      companyID: companyID,
+      companyId: companyId,
     );
   }
 }

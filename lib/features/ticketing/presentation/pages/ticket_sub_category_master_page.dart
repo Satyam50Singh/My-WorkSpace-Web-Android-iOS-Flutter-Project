@@ -119,7 +119,7 @@ class _TicketSubCategoryMasterPageState
       final companyId = employee.companyId;
       if (companyId != null) {
         context.read<TicketSubCategoryMasterBloc>().add(
-          TicketSubCategoryListRequested(companyID: companyId),
+          TicketSubCategoryListRequested(companyId: companyId),
         );
       }
     }
@@ -418,7 +418,7 @@ class _TicketSubCategoryMasterPageState
         categoryID: categoryID,
         subCategoryID: subCategoryID,
         subCategory: subCategory,
-        companyID: companyID,
+        companyId: companyID,
         loggedInUserID: loggedInUserID,
         action: action,
         priority: priority,

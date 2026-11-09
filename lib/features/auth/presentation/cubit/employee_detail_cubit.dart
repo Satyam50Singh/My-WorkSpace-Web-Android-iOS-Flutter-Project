@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/auth/domain/repositories/auth_repository.dart';
 
 import '../../domain/entities/employee_detail.dart';

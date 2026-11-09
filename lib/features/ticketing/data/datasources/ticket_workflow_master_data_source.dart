@@ -15,7 +15,7 @@ import '../models/ticket_workflow_models/ticket_workflow_detail_response_model.d
 
 abstract class TicketWorkflowMasterDataSource {
   Future<TicketWorkflowListResponseModel> fetchTicketWorkflowList({
-    required int companyID,
+    required int companyId,
   });
 
   Future<CommonResponseModel> insertUpdateTicketWorkflow({
@@ -23,10 +23,10 @@ abstract class TicketWorkflowMasterDataSource {
   });
 
   Future<WorkflowUserGroupListResponseModel>
-  fetchWorkPermitConfigUserGroupChecklistList({required int companyID});
+  fetchWorkPermitConfigUserGroupChecklistList({required int companyId});
 
   Future<TicketWorkflowDetailResponseModel> fetchTicketWorkflowDetailsWeb({
-    required int companyID,
+    required int companyId,
     required int workflowID,
   });
 }
@@ -39,12 +39,12 @@ class TicketWorkflowMasterDataSourceImpl
 
   @override
   Future<TicketWorkflowListResponseModel> fetchTicketWorkflowList({
-    required int companyID,
+    required int companyId,
   }) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchTicketWorkflowList,
-        queryParameters: {'CompanyID': companyID},
+        queryParameters: {'CompanyID': companyId},
       );
       return TicketWorkflowListResponseModel.fromJson(json);
     } on ApiException catch (e) {
@@ -77,11 +77,11 @@ class TicketWorkflowMasterDataSourceImpl
 
   @override
   Future<WorkflowUserGroupListResponseModel>
-  fetchWorkPermitConfigUserGroupChecklistList({required int companyID}) async {
+  fetchWorkPermitConfigUserGroupChecklistList({required int companyId}) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchWorkPermitConfigUserGroupChecklistList,
-        queryParameters: {'CompanyID': companyID},
+        queryParameters: {'CompanyID': companyId},
       );
       return WorkflowUserGroupListResponseModel.fromJson(json);
     } on ApiException catch (e) {
@@ -95,13 +95,13 @@ class TicketWorkflowMasterDataSourceImpl
 
   @override
   Future<TicketWorkflowDetailResponseModel> fetchTicketWorkflowDetailsWeb({
-    required int companyID,
+    required int companyId,
     required int workflowID,
   }) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchTicketWorkflowDetailsWeb,
-        queryParameters: {'CompanyID': companyID, 'WorkflowID': workflowID},
+        queryParameters: {'CompanyID': companyId, 'WorkflowID': workflowID},
       );
       return TicketWorkflowDetailResponseModel.fromJson(json);
     } on ApiException catch (e) {

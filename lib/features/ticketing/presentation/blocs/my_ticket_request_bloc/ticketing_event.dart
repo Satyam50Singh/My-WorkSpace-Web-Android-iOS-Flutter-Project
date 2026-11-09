@@ -1,15 +1,26 @@
 part of 'ticketing_bloc.dart';
 
-abstract class TicketingEvent {}
+abstract class TicketingEvent extends Equatable {
+  const TicketingEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class TicketingMyRequestDetailRequested extends TicketingEvent {
-  TicketMyRequestRequest? payload;
+  final TicketMyRequestRequest? payload;
 
-  TicketingMyRequestDetailRequested({this.payload});
+  const TicketingMyRequestDetailRequested({this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }
 
 class TicketingExportRequested extends TicketingEvent {
-  TicketMyRequestRequest? payload;
+  final TicketMyRequestRequest? payload;
 
-  TicketingExportRequested({this.payload});
+  const TicketingExportRequested({this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }

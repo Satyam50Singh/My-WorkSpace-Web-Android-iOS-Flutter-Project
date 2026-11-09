@@ -14,11 +14,11 @@ import '../../../../core/network/api_exceptions.dart';
 
 abstract class TicketCategoryMasterDataSource {
   Future<FetchTicketCategoryListResponseModel> fetchTicketCategoryList({
-    required int companyID,
+    required int companyId,
   });
 
   Future<FetchDepartmentListResponseModel> fetchDepartmentList({
-    required int companyID,
+    required int companyId,
   });
 
   Future<CommonResponseModel> insertUpdateTicketCategory({
@@ -34,12 +34,12 @@ class TicketCategoryMasterDataSourceImpl
 
   @override
   Future<FetchTicketCategoryListResponseModel> fetchTicketCategoryList({
-    required int companyID,
+    required int companyId,
   }) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchTicketCategoryList,
-        queryParameters: {'CompanyID': companyID, 'Category_ID': 0},
+        queryParameters: {'CompanyID': companyId, 'Category_ID': 0},
       );
 
       return FetchTicketCategoryListResponseModel.fromJson(json);
@@ -54,12 +54,12 @@ class TicketCategoryMasterDataSourceImpl
 
   @override
   Future<FetchDepartmentListResponseModel> fetchDepartmentList({
-    required int companyID,
+    required int companyId,
   }) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchMasterDepartmentList,
-        queryParameters: {'CompanyID': companyID},
+        queryParameters: {'CompanyID': companyId},
       );
 
       return FetchDepartmentListResponseModel.fromJson(json);

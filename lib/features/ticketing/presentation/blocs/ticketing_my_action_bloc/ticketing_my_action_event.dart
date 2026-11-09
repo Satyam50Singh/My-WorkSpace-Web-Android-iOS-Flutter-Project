@@ -1,34 +1,54 @@
 part of 'ticketing_my_action_bloc.dart';
 
-abstract class TicketingMyActionEvent {}
+abstract class TicketingMyActionEvent extends Equatable {
+  const TicketingMyActionEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class AcceptWebTicketRequested extends TicketingMyActionEvent {
-  AcceptWebTicketRequestModel payload;
+  final AcceptWebTicketRequestModel payload;
 
-  AcceptWebTicketRequested({required this.payload});
+  const AcceptWebTicketRequested({required this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }
 
 class UpdateTicketActionRequested extends TicketingMyActionEvent {
-  UpdateTicketActionRequestModel payload;
-  List<AppMultipartFile>? images;
+  final UpdateTicketActionRequestModel payload;
+  final List<AppMultipartFile>? images;
 
-  UpdateTicketActionRequested({required this.payload, this.images});
+  const UpdateTicketActionRequested({required this.payload, this.images});
+
+  @override
+  List<Object?> get props => [payload, images];
 }
 
 class TicketTransferUserListRequested extends TicketingMyActionEvent {
-  int ticketId;
+  final int ticketId;
 
-  TicketTransferUserListRequested({required this.ticketId});
+  const TicketTransferUserListRequested({required this.ticketId});
+
+  @override
+  List<Object?> get props => [ticketId];
 }
 
 class TransferTicketWebRequested extends TicketingMyActionEvent {
-  TransferTicketWebRequestModel payload;
+  final TransferTicketWebRequestModel payload;
 
-  TransferTicketWebRequested({required this.payload});
+  const TransferTicketWebRequested({required this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }
 
 class TransferToOtherWorkflowRequested extends TicketingMyActionEvent {
-  TransferToOtherWorkflowRequestBody payload;
+  final TransferToOtherWorkflowRequestBody payload;
 
-  TransferToOtherWorkflowRequested({required this.payload});
+  const TransferToOtherWorkflowRequested({required this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }

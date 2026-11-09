@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_sub_category_models/insert_update_sub_category_request_model.dart';
 
 import '../../../domain/entities/ticket_category_entities/sub_category_master_entity.dart';
@@ -30,7 +31,7 @@ class TicketSubCategoryMasterBloc
     emit(TicketSubCategoryMasterLoading());
     try {
       final result = await _subCategoryMasterUseCase.call(
-        companyID: event.companyID,
+        companyId: event.companyId,
       );
       result.fold(
         (error) =>

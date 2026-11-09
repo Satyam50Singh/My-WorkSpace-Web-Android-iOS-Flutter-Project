@@ -64,7 +64,7 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
         context.read<TicketWorkflowMasterBloc>().add(
           TicketWorkflowDetailByIDRequested(
-            companyID: companyID,
+            companyId: companyID,
             workflowID: workflowID,
           ),
         );
@@ -755,19 +755,19 @@ class _AddNewWorkflowPageState extends State<AddNewWorkflowPage> {
 
   void _apiCallForCategoryList(int companyId) {
     context.read<TicketCategoryMasterBloc>().add(
-      TicketCategoryListRequested(companyID: companyId),
+      TicketCategoryListRequested(companyId: companyId),
     );
   }
 
   void _apiCallForSubCategoryList(int companyId) {
     context.read<TicketSubCategoryMasterBloc>().add(
-      TicketSubCategoryListRequested(companyID: companyId),
+      TicketSubCategoryListRequested(companyId: companyId),
     );
   }
 
   void _apiCallForWorkflowUserGroupList(int companyId) {
     context.read<TicketWorkflowMasterBloc>().add(
-      WorkflowUserGroupListRequested(companyID: companyId),
+      WorkflowUserGroupListRequested(companyId: companyId),
     );
   }
 

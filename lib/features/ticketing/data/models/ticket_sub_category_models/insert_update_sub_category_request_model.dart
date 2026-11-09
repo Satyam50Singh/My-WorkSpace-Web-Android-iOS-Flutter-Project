@@ -2,7 +2,7 @@ class InsertUpdateSubCategoryRequestModel {
   final int categoryID;
   final int subCategoryID;
   final String subCategory;
-  final int companyID;
+  final int companyId;
   final String loggedInUserID;
   final String action;
   final String priority;
@@ -11,7 +11,7 @@ class InsertUpdateSubCategoryRequestModel {
     required this.categoryID,
     required this.subCategoryID,
     required this.subCategory,
-    required this.companyID,
+    required this.companyId,
     required this.loggedInUserID,
     required this.action,
     required this.priority,
@@ -22,7 +22,7 @@ class InsertUpdateSubCategoryRequestModel {
       'Category_ID': categoryID,
       'SubCategory_ID': subCategoryID,
       'SubCategory': subCategory,
-      'CompanyID': companyID,
+      'CompanyID': companyId,
       'LoggedInUserID': loggedInUserID,
       'Action': action,
       'Priority': priority,

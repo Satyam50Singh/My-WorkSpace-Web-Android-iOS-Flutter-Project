@@ -7,7 +7,7 @@ import '../entities/ticket_report_entities/fetch_ticket_report_web_entity.dart';
 
 abstract class TicketReportMasterRepository {
   Future<Either<Failure, FetchCatSubCatLocDeptTypeListEntity>>
-  fetchCatSubCatLocDeptTypeList({required int companyID});
+  fetchCatSubCatLocDeptTypeList({required int companyId});
 
   Future<Either<Failure, FetchTicketReportWebEntity>> fetchTicketReportWeb({
     required FetchTicketReportWebRequestModel payload,

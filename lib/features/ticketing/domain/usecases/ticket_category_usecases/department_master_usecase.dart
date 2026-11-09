@@ -10,10 +10,10 @@ class DepartmentMasterUseCase {
   DepartmentMasterUseCase(this._repository);
 
   Future<Either<Failure, List<DepartmentEntity>>> call({
-    required int companyID,
+    required int companyId,
   }) async {
     return await _repository.fetchDepartmentMasterList(
-      companyID: companyID,
+      companyId: companyId,
     );
   }
 }

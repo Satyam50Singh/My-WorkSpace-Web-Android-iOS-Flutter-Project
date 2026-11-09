@@ -2,7 +2,7 @@ class InsertUpdateTicketCategoryRequestModel {
   final int categoryID;
   final String category;
   final int departmentID;
-  final int companyID;
+  final int companyId;
   final String loggedInUserID;
   final String action;
 
@@ -10,7 +10,7 @@ class InsertUpdateTicketCategoryRequestModel {
     required this.categoryID,
     required this.category,
     required this.departmentID,
-    required this.companyID,
+    required this.companyId,
     required this.loggedInUserID,
     required this.action,
   });
@@ -20,7 +20,7 @@ class InsertUpdateTicketCategoryRequestModel {
       'Category_ID': categoryID,
       'Category': category,
       'DepartmentID': departmentID,
-      'CompanyID': companyID,
+      'CompanyID': companyId,
       'LoggedInUserID': loggedInUserID,
       'Action': action,
     };

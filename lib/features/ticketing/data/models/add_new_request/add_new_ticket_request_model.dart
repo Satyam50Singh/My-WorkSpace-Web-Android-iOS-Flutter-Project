@@ -4,7 +4,7 @@ class AddNewTicketRequestModel {
   final int? subCategoryID;
   final String? ticketMessage;
   final String? empCD;
-  final int? companyID;
+  final int? companyId;
   final String? platformType;
   final int? isImageUploaded;
   final int? imageCount;
@@ -16,7 +16,7 @@ class AddNewTicketRequestModel {
     this.subCategoryID,
     this.ticketMessage,
     this.empCD,
-    this.companyID,
+    this.companyId,
     this.platformType,
     this.isImageUploaded,
     this.imageCount,
@@ -30,7 +30,7 @@ class AddNewTicketRequestModel {
       'SubCategoryID': subCategoryID,
       'Ticket_Message': ticketMessage,
       'EmpCD': empCD,
-      'CompanyID': companyID,
+      'CompanyID': companyId,
       'Platform_Type': platformType,
       'Is_Image_Uploaded': isImageUploaded,
       'Image_Count': imageCount,

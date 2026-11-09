@@ -4,7 +4,7 @@ class TransferToOtherWorkflowRequestBody {
   final int? subCategoryId;
   final String? transferReason;
   final String? empCD;
-  final int? companyID;
+  final int? companyId;
   final String? platformType;
 
   TransferToOtherWorkflowRequestBody({
@@ -13,7 +13,7 @@ class TransferToOtherWorkflowRequestBody {
     required this.subCategoryId,
     required this.transferReason,
     required this.empCD,
-    required this.companyID,
+    required this.companyId,
     required this.platformType,
   });
 
@@ -24,7 +24,7 @@ class TransferToOtherWorkflowRequestBody {
       'SubCategoryID': subCategoryId,
       'Transfer_Reason': transferReason,
       'EmpCD': empCD,
-      'CompanyID': companyID,
+      'CompanyID': companyId,
       'Platform_Type': platformType,
     };
   }

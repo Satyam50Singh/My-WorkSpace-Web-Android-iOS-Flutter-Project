@@ -3,7 +3,7 @@ class TransferTicketWebRequestModel {
   final String? remarks;
   final String? empCD;
   final int? transferToUserId;
-  final int? companyID;
+  final int? companyId;
   final String? platformType;
 
   TransferTicketWebRequestModel({
@@ -11,13 +11,13 @@ class TransferTicketWebRequestModel {
     required this.remarks,
     required this.empCD,
     required this.transferToUserId,
-    required this.companyID,
+    required this.companyId,
     required this.platformType,
   });
 
   @override
   String toString() {
-    return 'TransferTicketWebRequestModel(ticketId: $ticketId, remarks: $remarks, empCD: $empCD, transferToUserId: $transferToUserId, companyID: $companyID, platformType: $platformType)';
+    return 'TransferTicketWebRequestModel(ticketId: $ticketId, remarks: $remarks, empCD: $empCD, transferToUserId: $transferToUserId, companyId: $companyId, platformType: $platformType)';
   }
 
   Map<String, dynamic> toJson() {
@@ -26,7 +26,7 @@ class TransferTicketWebRequestModel {
       'Remarks': remarks,
       'EmpCD': empCD,
       'TransferToUserId': transferToUserId,
-      'CompanyID': companyID,
+      'CompanyID': companyId,
       'Platform_Type': platformType,
     };
   }

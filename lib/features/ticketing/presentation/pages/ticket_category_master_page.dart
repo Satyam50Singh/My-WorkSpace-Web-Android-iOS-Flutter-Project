@@ -56,7 +56,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
       final companyId = employee.companyId;
       if (companyId != null) {
         context.read<TicketCategoryMasterBloc>().add(
-          TicketCategoryListRequested(companyID: companyId),
+          TicketCategoryListRequested(companyId: companyId),
         );
       }
     }
@@ -443,7 +443,7 @@ class _TicketCategoryMasterPageState extends State<TicketCategoryMasterPage> {
         categoryID: categoryID,
         category: category,
         departmentID: departmentID,
-        companyID: companyID,
+        companyId: companyID,
         loggedInUserID: loggedInUserID,
         action: action,
       );

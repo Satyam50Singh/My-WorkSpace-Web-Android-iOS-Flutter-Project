@@ -1,6 +1,11 @@
 part of 'ticket_report_master_bloc.dart';
 
-abstract class TicketReportMasterState {}
+abstract class TicketReportMasterState extends Equatable {
+  const TicketReportMasterState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 final class TicketReportMasterInitial extends TicketReportMasterState {}
 
@@ -8,26 +13,38 @@ final class TicketReportMasterLoading extends TicketReportMasterState {}
 
 final class FetchCatSubCatLocDeptTypeListSuccess
     extends TicketReportMasterState {
-  FetchCatSubCatLocDeptTypeListEntity? data;
+  final FetchCatSubCatLocDeptTypeListEntity? data;
 
-  FetchCatSubCatLocDeptTypeListSuccess({this.data});
+  const FetchCatSubCatLocDeptTypeListSuccess({this.data});
+
+  @override
+  List<Object?> get props => [data];
 }
 
 final class FetchCatSubCatLocDeptTypeListFailure
     extends TicketReportMasterState {
   final String errorMessage;
 
-  FetchCatSubCatLocDeptTypeListFailure({required this.errorMessage});
+  const FetchCatSubCatLocDeptTypeListFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class FetchTicketReportWebSuccess extends TicketReportMasterState {
-  FetchTicketReportWebEntity? data;
+  final FetchTicketReportWebEntity? data;
 
-  FetchTicketReportWebSuccess({this.data});
+  const FetchTicketReportWebSuccess({this.data});
+
+  @override
+  List<Object?> get props => [data];
 }
 
 final class FetchTicketReportWebFailure extends TicketReportMasterState {
   final String errorMessage;
 
-  FetchTicketReportWebFailure({required this.errorMessage});
+  const FetchTicketReportWebFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }

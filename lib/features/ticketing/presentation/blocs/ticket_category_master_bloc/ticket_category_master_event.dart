@@ -1,21 +1,35 @@
 part of 'ticket_category_master_bloc.dart';
 
-abstract class TicketCategoryMasterEvent {}
+abstract class TicketCategoryMasterEvent extends Equatable {
+  const TicketCategoryMasterEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class TicketCategoryListRequested extends TicketCategoryMasterEvent {
-  final int companyID;
+  final int companyId;
 
-  TicketCategoryListRequested({required this.companyID});
+  const TicketCategoryListRequested({required this.companyId});
+
+  @override
+  List<Object?> get props => [companyId];
 }
 
 class DepartmentMasterListRequested extends TicketCategoryMasterEvent {
-  final int companyID;
+  final int companyId;
 
-  DepartmentMasterListRequested({required this.companyID});
+  const DepartmentMasterListRequested({required this.companyId});
+
+  @override
+  List<Object?> get props => [companyId];
 }
 
 class InsertUpdateCategoryRequested extends TicketCategoryMasterEvent {
   final InsertUpdateTicketCategoryRequestModel payload;
 
-  InsertUpdateCategoryRequested({required this.payload});
+  const InsertUpdateCategoryRequested({required this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }

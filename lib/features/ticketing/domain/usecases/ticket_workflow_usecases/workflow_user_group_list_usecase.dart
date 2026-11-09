@@ -10,10 +10,10 @@ class WorkflowUserGroupListUseCase {
   WorkflowUserGroupListUseCase(this._repository);
 
   Future<Either<Failure, WorkflowUserGroupListEntity>> call({
-    required int companyID,
+    required int companyId,
   }) async {
     return await _repository.fetchWorkPermitConfigUserGroupChecklistList(
-      companyID: companyID,
+      companyId: companyId,
     );
   }
 }

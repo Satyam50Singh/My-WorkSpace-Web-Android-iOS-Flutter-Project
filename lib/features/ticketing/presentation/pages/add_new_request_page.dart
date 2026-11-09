@@ -439,7 +439,7 @@ class _AddNewRequestPageState extends State<AddNewRequestPage> {
         subCategoryID: _selectedSubCategory?.subCategoryId,
         ticketMessage: _descriptionController.text,
         empCD: state.employeeDetail.empCd,
-        companyID: state.employeeDetail.companyId,
+        companyId: state.employeeDetail.companyId,
         platformType: kIsWeb ? "Web" : "Mobile",
         isImageUploaded: imageFiles.isNotEmpty ? 1 : 0,
         imageCount: imageFiles.length,

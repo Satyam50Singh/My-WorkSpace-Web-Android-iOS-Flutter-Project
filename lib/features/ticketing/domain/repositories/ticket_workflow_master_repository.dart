@@ -8,17 +8,17 @@ import '../../data/models/ticket_workflow_models/insert_update_workflow_request_
 
 abstract class TicketWorkflowMasterRepository {
   Future<Either<Failure, List<TicketWorkflowMasterEntity>>>
-  fetchTicketWorkflowList({required int companyID});
+  fetchTicketWorkflowList({required int companyId});
 
   Future<Either<Failure, String>> insertUpdateTicketWorkflow({
     required InsertUpdateWorkflowRequestModel payload,
   });
 
   Future<Either<Failure, WorkflowUserGroupListEntity>>
-  fetchWorkPermitConfigUserGroupChecklistList({required int companyID});
+  fetchWorkPermitConfigUserGroupChecklistList({required int companyId});
 
   Future<Either<Failure, TicketWorkflowDetailEntity>> fetchTicketWorkflowDetailsWeb({
-    required int companyID,
+    required int companyId,
     required int workflowID,
   });
 }

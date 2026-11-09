@@ -1,29 +1,46 @@
 part of 'add_new_ticket_bloc.dart';
 
-abstract class AddNewTicketEvent {}
+abstract class AddNewTicketEvent extends Equatable {
+  const AddNewTicketEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 final class FetchTicketLocationCategoryRequested extends AddNewTicketEvent {
-  TicketLocationCategoryRequest payload;
+  final TicketLocationCategoryRequest payload;
 
-  FetchTicketLocationCategoryRequested(this.payload);
+  const FetchTicketLocationCategoryRequested(this.payload);
+
+  @override
+  List<Object?> get props => [payload];
 }
 
 final class FetchTicketSubCategoryRequested extends AddNewTicketEvent {
-  int categoryID;
+  final int categoryID;
 
-  FetchTicketSubCategoryRequested(this.categoryID);
+  const FetchTicketSubCategoryRequested(this.categoryID);
+
+  @override
+  List<Object?> get props => [categoryID];
 }
 
 final class FetchTicketWorkFlowDetailsRequested extends AddNewTicketEvent {
-  int categoryID;
-  int subCategoryID;
+  final int categoryID;
+  final int subCategoryID;
 
-  FetchTicketWorkFlowDetailsRequested(this.categoryID, this.subCategoryID);
+  const FetchTicketWorkFlowDetailsRequested(this.categoryID, this.subCategoryID);
+
+  @override
+  List<Object?> get props => [categoryID, subCategoryID];
 }
 
 final class AddNewTicketSubmitted extends AddNewTicketEvent {
-  AddNewTicketRequestModel payload;
-  List<AppMultipartFile> imageFiles;
+  final AddNewTicketRequestModel payload;
+  final List<AppMultipartFile> imageFiles;
 
-  AddNewTicketSubmitted(this.payload, this.imageFiles);
+  const AddNewTicketSubmitted(this.payload, this.imageFiles);
+
+  @override
+  List<Object?> get props => [payload, imageFiles];
 }

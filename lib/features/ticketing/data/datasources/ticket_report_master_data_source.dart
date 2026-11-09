@@ -11,7 +11,7 @@ import '../models/ticket_report_models/fetch_ticket_report_web_response_model.da
 
 abstract class TicketReportMasterDataSource {
   Future<FetchCatSubCatLocDeptTypeListResponseModel>
-  fetchCatSubCatLocDeptTypeList({required int companyID});
+  fetchCatSubCatLocDeptTypeList({required int companyId});
 
   Future<FetchTicketReportWebResponseModel> fetchTicketReportWeb({
     required FetchTicketReportWebRequestModel payload,
@@ -25,11 +25,11 @@ class TicketReportMasterDataSourceImpl extends TicketReportMasterDataSource {
 
   @override
   Future<FetchCatSubCatLocDeptTypeListResponseModel>
-  fetchCatSubCatLocDeptTypeList({required int companyID}) async {
+  fetchCatSubCatLocDeptTypeList({required int companyId}) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchCatSubCatLocDeptTypeList,
-        queryParameters: {'CompanyID': companyID},
+        queryParameters: {'CompanyID': companyId},
       );
 
       return FetchCatSubCatLocDeptTypeListResponseModel.fromJson(json);
@@ -50,7 +50,7 @@ class TicketReportMasterDataSourceImpl extends TicketReportMasterDataSource {
       final json = await _apiClient.get(
         ApiEndpoints.fetchTicketReportWeb,
         queryParameters: {
-          'CompanyID': payload.companyID,
+          'CompanyID': payload.companyId,
           'FromDate': payload.fromDate,
           'ToDate': payload.toDate,
           'PageSize': payload.pageSize,

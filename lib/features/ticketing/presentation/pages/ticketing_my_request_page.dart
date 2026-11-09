@@ -68,6 +68,33 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     super.dispose();
   }
 
+  TicketMyRequestRequest _buildRequestPayload({
+    required dynamic employee,
+    int? pageCount,
+    int? pageSize,
+    String? actionStatus,
+    String? searchText,
+    String? fromDate,
+    String? toDate,
+  }) {
+    final dateFormatter = DateFormat("dd/MM/yyyy");
+    final defaultDate = dateFormatter.format(DateTime.now());
+
+    return TicketMyRequestRequest(
+      pageTag: widget.pageTag,
+      companyId: employee.companyId,
+      empCd: employee.empCd,
+      fromDate: _currentFromDate ?? fromDate ?? defaultDate,
+      toDate: _currentToDate ?? toDate ?? defaultDate,
+      pageCount: pageCount ?? 1,
+      pageSize: pageSize ?? _currentPageSize ?? 10,
+      departmentId: 0,
+      categoryId: 0,
+      actionStatus: _currentActionStatus ?? actionStatus ?? '',
+      searchText: _currentSearchText ?? searchText ?? '',
+    );
+  }
+
   void _fetchTicketDetails({
     String? actionStatus = "",
     int? pageCount = 1,
@@ -82,25 +109,14 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     final employeeState = context.read<EmployeeDetailCubit>().state;
 
     if (employeeState is EmployeeDetailFetched) {
-      final employee = employeeState.employeeDetail;
-      final dateFormatter = DateFormat("dd/MM/yyyy");
-
-      final payload = TicketMyRequestRequest(
-        pageTag: widget.pageTag,
-        companyId: employee.companyId,
-        empCd: employee.empCd,
-        fromDate:
-            _currentFromDate ??
-            fromDate ??
-            dateFormatter.format(DateTime.now()),
-        toDate:
-            _currentToDate ?? toDate ?? dateFormatter.format(DateTime.now()),
+      final payload = _buildRequestPayload(
+        employee: employeeState.employeeDetail,
         pageCount: pageCount,
-        pageSize: _currentPageSize ?? pageSize,
-        departmentId: 0,
-        categoryId: 0,
-        actionStatus: _currentActionStatus ?? actionStatus,
-        searchText: _currentSearchText ?? searchText ?? '',
+        pageSize: pageSize,
+        actionStatus: actionStatus,
+        searchText: searchText,
+        fromDate: fromDate,
+        toDate: toDate,
       );
 
       context.read<TicketingBloc>().add(
@@ -113,18 +129,9 @@ class _TicketingMyRequestPageState extends State<TicketingMyRequestPage> {
     final employeeState = context.read<EmployeeDetailCubit>().state;
 
     if (employeeState is EmployeeDetailFetched) {
-      final employee = employeeState.employeeDetail;
-      final dateFormatter = DateFormat("dd/MM/yyyy");
-
-      final payload = TicketMyRequestRequest(
-        pageTag: widget.pageTag,
+      final payload = _buildRequestPayload(
+        employee: employeeState.employeeDetail,
         pageCount: 1,
-        departmentId: 0,
-        categoryId: 0,
-        companyId: employee.companyId,
-        empCd: employee.empCd,
-        fromDate: _currentFromDate ?? dateFormatter.format(DateTime.now()),
-        toDate: _currentToDate ?? dateFormatter.format(DateTime.now()),
         pageSize: _totalRecordsCount,
         actionStatus: _currentActionStatus ?? '',
         searchText: _currentSearchText ?? '',

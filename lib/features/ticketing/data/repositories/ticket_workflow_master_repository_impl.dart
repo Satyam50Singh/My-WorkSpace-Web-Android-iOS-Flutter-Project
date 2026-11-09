@@ -18,10 +18,10 @@ class TicketWorkflowMasterRepositoryImpl
 
   @override
   Future<Either<Failure, List<TicketWorkflowMasterEntity>>>
-  fetchTicketWorkflowList({required int companyID}) async {
+  fetchTicketWorkflowList({required int companyId}) async {
     try {
       final response = await _dataSource.fetchTicketWorkflowList(
-        companyID: companyID,
+        companyId: companyId,
       );
       if (response.status == 1 && response.workflowList != null) {
         final ticketWorkflowList = response.workflowList!
@@ -72,10 +72,10 @@ class TicketWorkflowMasterRepositoryImpl
 
   @override
   Future<Either<Failure, WorkflowUserGroupListEntity>>
-  fetchWorkPermitConfigUserGroupChecklistList({required int companyID}) async {
+  fetchWorkPermitConfigUserGroupChecklistList({required int companyId}) async {
     try {
       final response = await _dataSource
-          .fetchWorkPermitConfigUserGroupChecklistList(companyID: companyID);
+          .fetchWorkPermitConfigUserGroupChecklistList(companyId: companyId);
       if (response.status == 1) {
         return Right(response);
       } else {
@@ -97,12 +97,12 @@ class TicketWorkflowMasterRepositoryImpl
   @override
   Future<Either<Failure, TicketWorkflowDetailEntity>>
   fetchTicketWorkflowDetailsWeb({
-    required int companyID,
+    required int companyId,
     required int workflowID,
   }) async {
     try {
       final response = await _dataSource.fetchTicketWorkflowDetailsWeb(
-        companyID: companyID,
+        companyId: companyId,
         workflowID: workflowID,
       );
       if (response.status == 1) {

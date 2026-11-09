@@ -17,10 +17,10 @@ class TicketCategoryMasterRepositoryImpl
 
   @override
   Future<Either<Failure, List<TicketCategoryEntity>>>
-  fetchTicketCategoryMasterList({required int companyID}) async {
+  fetchTicketCategoryMasterList({required int companyId}) async {
     try {
       final response = await _dataSource.fetchTicketCategoryList(
-        companyID: companyID,
+        companyId: companyId,
       );
       if (response.status == 1 && response.categoryList != null) {
         return Right(
@@ -47,11 +47,11 @@ class TicketCategoryMasterRepositoryImpl
 
   @override
   Future<Either<Failure, List<DepartmentEntity>>> fetchDepartmentMasterList({
-    required int companyID,
+    required int companyId,
   }) async {
     try {
       final response = await _dataSource.fetchDepartmentList(
-        companyID: companyID,
+        companyId: companyId,
       );
       if (response.status == 1 && response.departmentList != null) {
         return Right(

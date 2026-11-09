@@ -1,6 +1,11 @@
 part of 'ticket_sub_category_master_bloc.dart';
 
-abstract class TicketSubCategoryMasterState {}
+abstract class TicketSubCategoryMasterState extends Equatable {
+  const TicketSubCategoryMasterState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 final class TicketSubCategoryMasterInitial
     extends TicketSubCategoryMasterState {}
@@ -18,54 +23,78 @@ final class TicketSubCategoryMasterFailure
     extends TicketSubCategoryMasterState {
   final String errorMessage;
 
-  TicketSubCategoryMasterFailure({required this.errorMessage});
+  const TicketSubCategoryMasterFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class TicketSubCategoryMasterSuccess
     extends TicketSubCategoryMasterState {
   final List<SubCategoryMasterEntity> subCategoryList;
 
-  TicketSubCategoryMasterSuccess({required this.subCategoryList});
+  const TicketSubCategoryMasterSuccess({required this.subCategoryList});
+
+  @override
+  List<Object?> get props => [subCategoryList];
 }
 
 final class InsertTicketSubCategorySuccess
     extends TicketSubCategoryMasterState {
   final String message;
 
-  InsertTicketSubCategorySuccess({required this.message});
+  const InsertTicketSubCategorySuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class InsertTicketSubCategoryFailure
     extends TicketSubCategoryMasterState {
   final String errorMessage;
 
-  InsertTicketSubCategoryFailure({required this.errorMessage});
+  const InsertTicketSubCategoryFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class UpdateTicketSubCategorySuccess
     extends TicketSubCategoryMasterState {
   final String message;
 
-  UpdateTicketSubCategorySuccess({required this.message});
+  const UpdateTicketSubCategorySuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class UpdateTicketSubCategoryFailure
     extends TicketSubCategoryMasterState {
   final String errorMessage;
 
-  UpdateTicketSubCategoryFailure({required this.errorMessage});
+  const UpdateTicketSubCategoryFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class DeleteTicketSubCategorySuccess
     extends TicketSubCategoryMasterState {
   final String message;
 
-  DeleteTicketSubCategorySuccess({required this.message});
+  const DeleteTicketSubCategorySuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class DeleteTicketSubCategoryFailure
     extends TicketSubCategoryMasterState {
   final String errorMessage;
 
-  DeleteTicketSubCategoryFailure({required this.errorMessage});
+  const DeleteTicketSubCategoryFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/auth/domain/entities/company.dart';
 import 'package:my_worksphere_web/features/auth/domain/usecases/validate_company_code_usecase.dart';
 

@@ -10,8 +10,8 @@ class TicketWorkflowMasterUseCase {
   TicketWorkflowMasterUseCase(this._repository);
 
   Future<Either<Failure, List<TicketWorkflowMasterEntity>>> call({
-    required int companyID,
+    required int companyId,
   }) async {
-    return await _repository.fetchTicketWorkflowList(companyID: companyID);
+    return await _repository.fetchTicketWorkflowList(companyId: companyId);
   }
 }

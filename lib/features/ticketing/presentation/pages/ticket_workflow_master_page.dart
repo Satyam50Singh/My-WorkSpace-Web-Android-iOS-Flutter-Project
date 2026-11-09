@@ -68,7 +68,7 @@ class _TicketWorkflowMasterPageState extends State<TicketWorkflowMasterPage> {
       final companyId = employee.companyId;
       if (companyId != null) {
         context.read<TicketWorkflowMasterBloc>().add(
-          TicketWorkflowListRequested(companyID: companyId),
+          TicketWorkflowListRequested(companyId: companyId),
         );
       }
     }

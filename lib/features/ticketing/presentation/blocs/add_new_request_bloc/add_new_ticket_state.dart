@@ -1,6 +1,11 @@
 part of 'add_new_ticket_bloc.dart';
 
-abstract class AddNewTicketState {}
+abstract class AddNewTicketState extends Equatable {
+  const AddNewTicketState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 final class AddNewTicketInitial extends AddNewTicketState {}
 
@@ -13,29 +18,44 @@ final class AddNewTicketSubmitLoading extends AddNewTicketState {}
 final class AddNewTicketFailure extends AddNewTicketState {
   final String errorMessage;
 
-  AddNewTicketFailure(this.errorMessage);
+  const AddNewTicketFailure(this.errorMessage);
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class TicketLocationCategorySuccess extends AddNewTicketState {
   final TicketLocationCategoryEntity data;
 
-  TicketLocationCategorySuccess(this.data);
+  const TicketLocationCategorySuccess(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }
 
 final class TicketSubCategorySuccess extends AddNewTicketState {
   final TicketSubCategoryEntity data;
 
-  TicketSubCategorySuccess(this.data);
+  const TicketSubCategorySuccess(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }
 
 final class TicketWorkFlowDetailsSuccess extends AddNewTicketState {
   final TicketWorkflowDetailsEntity data;
 
-  TicketWorkFlowDetailsSuccess(this.data);
+  const TicketWorkFlowDetailsSuccess(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }
 
 final class AddNewTicketSubmitSuccess extends AddNewTicketState {
   final AddNewTicketRequestEntity data;
 
-  AddNewTicketSubmitSuccess(this.data);
+  const AddNewTicketSubmitSuccess(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }

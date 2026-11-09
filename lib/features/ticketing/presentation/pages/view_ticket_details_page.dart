@@ -139,7 +139,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         final employee = state.employeeDetail;
         final payload = AcceptWebTicketRequestModel(
           empCD: employee.empCd,
-          companyID: employee.companyId,
+          companyId: employee.companyId,
           platformType: _currentPlatform,
           ticketId: viewTicketDetailV6Response?.ticketID?.toString(),
           isAcceptedByAnotherUser: isAcceptedByAnotherUser,
@@ -177,7 +177,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
         closeTicketDesc: remarks,
         ticketAction: action,
         empCD: employee.empCd,
-        companyID: employee.companyId,
+        companyId: employee.companyId,
         platformType: _currentPlatform,
         holdTillDatetime: holdUntil ?? "",
         isImageUploaded: (images != null && images.isNotEmpty) ? 1 : 0,
@@ -272,7 +272,7 @@ class _ViewTicketDetailsPageState extends State<ViewTicketDetailsPage> {
               remarks: remarks,
               empCD: state.employeeDetail.empCd,
               transferToUserId: userCode,
-              companyID: state.employeeDetail.companyId,
+              companyId: state.employeeDetail.companyId,
               platformType: _currentPlatform,
             );
 

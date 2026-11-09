@@ -10,10 +10,10 @@ class TicketSubCategoryMasterUseCase {
   TicketSubCategoryMasterUseCase(this._repository);
 
   Future<Either<Failure, List<SubCategoryMasterEntity>>> call({
-    required int companyID,
+    required int companyId,
   }) async {
     return await _repository.fetchTicketSubCategoryMasterList(
-      companyID: companyID,
+      companyId: companyId,
     );
   }
 }

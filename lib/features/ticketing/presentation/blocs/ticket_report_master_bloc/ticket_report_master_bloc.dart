@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_report_entities/fetch_cat_sub_cat_loc_dept_type_list_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_report_usecases/fetch_cat_sub_cat_loc_dept_type_list_usecase.dart';
@@ -33,7 +34,7 @@ class TicketReportMasterBloc
     emit(TicketReportMasterLoading());
     try {
       final result = await _catSubCatLocDeptTypeListUseCase.call(
-        companyID: event.companyID,
+        companyId: event.companyId,
       );
       result.fold(
         (error) => emit(

@@ -1,37 +1,57 @@
 part of 'ticket_workflow_master_bloc.dart';
 
-abstract class TicketWorkflowMasterEvent {}
+abstract class TicketWorkflowMasterEvent extends Equatable {
+  const TicketWorkflowMasterEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class TicketWorkflowListRequested extends TicketWorkflowMasterEvent {
-  final int companyID;
+  final int companyId;
 
-  TicketWorkflowListRequested({required this.companyID});
+  const TicketWorkflowListRequested({required this.companyId});
+
+  @override
+  List<Object?> get props => [companyId];
 }
 
 class DeleteWorkflowListRequested extends TicketWorkflowMasterEvent {
   final InsertUpdateWorkflowRequestModel payload;
 
-  DeleteWorkflowListRequested({required this.payload});
+  const DeleteWorkflowListRequested({required this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }
 
 class WorkflowUserGroupListRequested extends TicketWorkflowMasterEvent {
-  final int companyID;
+  final int companyId;
 
-  WorkflowUserGroupListRequested({required this.companyID});
+  const WorkflowUserGroupListRequested({required this.companyId});
+
+  @override
+  List<Object?> get props => [companyId];
 }
 
 class InsertUpdateWorkflowListRequested extends TicketWorkflowMasterEvent {
   final InsertUpdateWorkflowRequestModel payload;
 
-  InsertUpdateWorkflowListRequested({required this.payload});
+  const InsertUpdateWorkflowListRequested({required this.payload});
+
+  @override
+  List<Object?> get props => [payload];
 }
 
 class TicketWorkflowDetailByIDRequested extends TicketWorkflowMasterEvent {
-  final int companyID;
+  final int companyId;
   final int workflowID;
 
-  TicketWorkflowDetailByIDRequested({
-    required this.companyID,
+  const TicketWorkflowDetailByIDRequested({
+    required this.companyId,
     required this.workflowID,
   });
+
+  @override
+  List<Object?> get props => [companyId, workflowID];
 }

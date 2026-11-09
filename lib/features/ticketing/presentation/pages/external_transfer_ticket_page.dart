@@ -325,7 +325,7 @@ class _ExternalTransferTicketPageState
         subCategoryId: _selectedSubCategory?.subCategoryId,
         transferReason: _descriptionController.text,
         empCD: state.employeeDetail.empCd,
-        companyID: state.employeeDetail.companyId,
+        companyId: state.employeeDetail.companyId,
         platformType: kIsWeb ? "Web" : "Mobile",
         ticketId: widget.ticketId,
       );

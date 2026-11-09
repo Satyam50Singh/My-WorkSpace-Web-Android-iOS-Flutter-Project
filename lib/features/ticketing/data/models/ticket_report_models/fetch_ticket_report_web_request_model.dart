@@ -1,5 +1,5 @@
 class FetchTicketReportWebRequestModel {
-  final int? companyID;
+  final int? companyId;
   final String? fromDate;
   final String? toDate;
   final int? pageSize;
@@ -13,7 +13,7 @@ class FetchTicketReportWebRequestModel {
   final String? ticketType;
 
   FetchTicketReportWebRequestModel({
-    this.companyID,
+    this.companyId,
     this.fromDate = "09-10-2026",
     this.toDate = "30-10-2026",
     this.pageSize = 10,

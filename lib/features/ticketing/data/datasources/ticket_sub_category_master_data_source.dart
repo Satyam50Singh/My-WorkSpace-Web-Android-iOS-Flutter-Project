@@ -13,7 +13,7 @@ import '../models/ticketing_my_action_models/common_response_model.dart';
 
 abstract class TicketSubCategoryMasterDataSource {
   Future<FetchTicketSubCategoryListResponseModel> fetchTicketSubCategoryList({
-    required int companyID,
+    required int companyId,
   });
 
   Future<CommonResponseModel> insertUpdateTicketCategory({
@@ -29,12 +29,12 @@ class TicketSubCategoryMasterDataSourceImpl
 
   @override
   Future<FetchTicketSubCategoryListResponseModel> fetchTicketSubCategoryList({
-    required int companyID,
+    required int companyId,
   }) async {
     try {
       final json = await _apiClient.get(
         ApiEndpoints.fetchTicketSubCategoryList,
-        queryParameters: {'CompanyID': companyID, 'SubCategory_ID': 0},
+        queryParameters: {'CompanyID': companyId, 'SubCategory_ID': 0},
       );
 
       return FetchTicketSubCategoryListResponseModel.fromJson(json);

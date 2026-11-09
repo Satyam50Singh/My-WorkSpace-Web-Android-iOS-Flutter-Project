@@ -102,33 +102,36 @@ class _TicketReportMasterPageState extends State<TicketReportMasterPage> {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
       final employee = state.employeeDetail;
-      final companyID = employee.companyId ?? 0;
+      final companyId = employee.companyId ?? 0;
       context.read<TicketReportMasterBloc>().add(
-        FetchCatSubCatLocDeptTypeListRequested(companyID: companyID),
+        FetchCatSubCatLocDeptTypeListRequested(companyId: companyId),
       );
     }
+  }
+
+  FetchTicketReportWebRequestModel _buildReportPayload(int companyId) {
+    final dateFormatter = DateFormat("dd/MM/yyyy");
+    final defaultDate = dateFormatter.format(DateTime.now());
+
+    return FetchTicketReportWebRequestModel(
+      companyId: companyId,
+      fromDate: _currentFromDate ?? defaultDate,
+      toDate: _currentToDate ?? defaultDate,
+      ticketType: _currentActionStatus.isEmpty ? "All" : "",
+      actionStatus: _currentActionStatus,
+      categoryId: _selectedCategory?.categoryID ?? 0,
+      subCategoryId: _selectedSubCategory?.subCategoryID ?? 0,
+      locationId: _selectedLocation?.locationID ?? 0,
+      departmentId: _selectedDepartment?.departmentID ?? 0,
+      searchText: _searchController?.text.toLowerCase().trim(),
+      pageSize: action == 'E' ? (_totalRecords > 0 ? _totalRecords : 10) : 10,
+    );
   }
 
   void apiCallForFetchTicketReportWeb() {
     final state = context.read<EmployeeDetailCubit>().state;
     if (state is EmployeeDetailFetched) {
-      final employee = state.employeeDetail;
-      final companyID = employee.companyId ?? 0;
-      final dateFormatter = DateFormat("dd/MM/yyyy");
-
-      final payload = FetchTicketReportWebRequestModel(
-        companyID: companyID,
-        fromDate: _currentFromDate ?? dateFormatter.format(DateTime.now()),
-        toDate: _currentToDate ?? dateFormatter.format(DateTime.now()),
-        ticketType: _currentActionStatus.isEmpty ? "All" : "",
-        actionStatus: _currentActionStatus,
-        categoryId: _selectedCategory?.categoryID ?? 0,
-        subCategoryId: _selectedSubCategory?.subCategoryID ?? 0,
-        locationId: _selectedLocation?.locationID ?? 0,
-        departmentId: _selectedDepartment?.departmentID ?? 0,
-        searchText: _searchController?.text.toLowerCase().trim(),
-        pageSize: action == 'E' ? (_totalRecords > 0 ? _totalRecords : 10) : 10,
-      );
+      final payload = _buildReportPayload(state.employeeDetail.companyId ?? 0);
 
       context.read<TicketReportMasterBloc>().add(
         FetchTicketReportWebRequested(payload: payload),

@@ -16,10 +16,10 @@ class TicketReportMasterRepositoryImpl extends TicketReportMasterRepository {
 
   @override
   Future<Either<Failure, FetchCatSubCatLocDeptTypeListEntity>>
-  fetchCatSubCatLocDeptTypeList({required int companyID}) async {
+  fetchCatSubCatLocDeptTypeList({required int companyId}) async {
     try {
       final response = await _dataSource.fetchCatSubCatLocDeptTypeList(
-        companyID: companyID,
+        companyId: companyId,
       );
       if (response.status == 1) {
         return Right(response);

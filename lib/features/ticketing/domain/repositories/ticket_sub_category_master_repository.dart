@@ -6,7 +6,7 @@ import '../../../../core/error/failures.dart';
 
 abstract class TicketSubCategoryMasterRepository {
   Future<Either<Failure, List<SubCategoryMasterEntity>>>
-  fetchTicketSubCategoryMasterList({required int companyID});
+  fetchTicketSubCategoryMasterList({required int companyId});
 
   Future<Either<Failure, String>> insertUpdateTicketSubCategory({
     required InsertUpdateSubCategoryRequestModel payload,

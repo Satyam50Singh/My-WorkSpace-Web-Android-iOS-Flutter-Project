@@ -1,44 +1,68 @@
 part of 'ticketing_my_action_bloc.dart';
 
-abstract class TicketingMyActionState {}
+abstract class TicketingMyActionState extends Equatable {
+  const TicketingMyActionState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 final class TicketingMyActionInitial extends TicketingMyActionState {}
 
 final class TicketingMyActionLoading extends TicketingMyActionState {}
+
 final class TicketTransferUserListLoading extends TicketingMyActionState {}
 
 final class TicketingMyActionFailure extends TicketingMyActionState {
   final String errorMessage;
 
-  TicketingMyActionFailure({required this.errorMessage});
+  const TicketingMyActionFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class TransferToOtherWorkflowFailure extends TicketingMyActionState {
   final String errorMessage;
 
-  TransferToOtherWorkflowFailure({required this.errorMessage});
+  const TransferToOtherWorkflowFailure({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 final class AcceptTicketSuccess extends TicketingMyActionState {
   final String message;
 
-  AcceptTicketSuccess({required this.message});
+  const AcceptTicketSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class UpdateTicketActionSuccess extends TicketingMyActionState {
   final String message;
 
-  UpdateTicketActionSuccess({required this.message});
+  const UpdateTicketActionSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class TransferToOtherWorkflowSuccess extends TicketingMyActionState {
   final String message;
 
-  TransferToOtherWorkflowSuccess({required this.message});
+  const TransferToOtherWorkflowSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class TicketTransferUserListSuccess extends TicketingMyActionState {
   final List<TicketTransferUserListEntity> userList;
 
-  TicketTransferUserListSuccess({required this.userList});
+  const TicketTransferUserListSuccess({required this.userList});
+
+  @override
+  List<Object?> get props => [userList];
 }

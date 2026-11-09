@@ -7,11 +7,11 @@ import '../entities/ticket_category_entities/department_entity.dart';
 
 abstract class TicketCategoryMasterRepository {
   Future<Either<Failure, List<TicketCategoryEntity>>> fetchTicketCategoryMasterList({
-    required int companyID,
+    required int companyId,
   });
 
   Future<Either<Failure, List<DepartmentEntity>>> fetchDepartmentMasterList({
-    required int companyID,
+    required int companyId,
   });
 
   Future<Either<Failure, String>> insertUpdateTicketCategory({

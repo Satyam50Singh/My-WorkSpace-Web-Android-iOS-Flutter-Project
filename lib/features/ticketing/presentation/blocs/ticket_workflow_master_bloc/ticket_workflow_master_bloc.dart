@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:my_worksphere_web/features/ticketing/data/models/ticket_workflow_models/insert_update_workflow_request_model.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/entities/ticket_workflow_entities/workflow_user_group_list_entity.dart';
 import 'package:my_worksphere_web/features/ticketing/domain/usecases/ticket_workflow_usecases/fetch_ticket_workflow_details_web_usecase.dart';
@@ -42,7 +43,7 @@ class TicketWorkflowMasterBloc
 
     try {
       final result = await _ticketWorkflowMasterUseCase.call(
-        companyID: event.companyID,
+        companyId: event.companyId,
       );
       result.fold(
         (error) =>
@@ -82,7 +83,7 @@ class TicketWorkflowMasterBloc
 
     try {
       final result = await _workflowUserGroupListUseCase.call(
-        companyID: event.companyID,
+        companyId: event.companyId,
       );
       result.fold(
         (error) =>
@@ -122,7 +123,7 @@ class TicketWorkflowMasterBloc
 
     try {
       final result = await _ticketWorkflowDetailsWebUseCase.call(
-        companyID: event.companyID,
+        companyId: event.companyId,
         workflowID: event.workflowID,
       );
       result.fold(

@@ -10,11 +10,11 @@ class FetchTicketWorkflowDetailsWebUseCase {
   FetchTicketWorkflowDetailsWebUseCase(this._repository);
 
   Future<Either<Failure, TicketWorkflowDetailEntity>> call({
-    required int companyID,
+    required int companyId,
     required int workflowID,
   }) async {
     return await _repository.fetchTicketWorkflowDetailsWeb(
-      companyID: companyID,
+      companyId: companyId,
       workflowID: workflowID,
     );
   }

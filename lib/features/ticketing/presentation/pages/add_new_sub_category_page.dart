@@ -58,7 +58,7 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
       final companyId = state.employeeDetail.companyId;
       if (companyId != null) {
         context.read<TicketCategoryMasterBloc>().add(
-          TicketCategoryListRequested(companyID: companyId),
+          TicketCategoryListRequested(companyId: companyId),
         );
       }
     }
@@ -104,7 +104,7 @@ class _AddNewSubCategoryPageState extends State<AddNewSubCategoryPage> {
             categoryID: categoryID,
             subCategoryID: subCategoryID,
             subCategory: subCategory,
-            companyID: companyID,
+            companyId: companyID,
             loggedInUserID: loggedInUserID,
             action: action,
             priority: priority,

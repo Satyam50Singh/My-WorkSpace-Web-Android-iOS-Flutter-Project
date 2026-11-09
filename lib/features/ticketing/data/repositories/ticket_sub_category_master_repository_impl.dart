@@ -16,10 +16,10 @@ class TicketSubCategoryMasterRepositoryImpl
 
   @override
   Future<Either<Failure, List<SubCategoryMasterEntity>>>
-  fetchTicketSubCategoryMasterList({required int companyID}) async {
+  fetchTicketSubCategoryMasterList({required int companyId}) async {
     try {
       final response = await _dataSource.fetchTicketSubCategoryList(
-        companyID: companyID,
+        companyId: companyId,
       );
       if (response.status == 1 && response.subCategoryList != null) {
         return Right(
