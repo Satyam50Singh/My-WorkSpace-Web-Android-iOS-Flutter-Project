@@ -1,6 +1,6 @@
 # my_worksphere_web
 
-A new Flutter project.
+- Hosting URL: https://my-workspace-web.web.app
 
 ## Getting Started
 
